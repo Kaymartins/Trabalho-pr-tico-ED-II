@@ -32,15 +32,9 @@ ProductReview::~ProductReview()
 
 void ProductReview::print()
 {
-    //converte dados do arquivo binários para os tipos desejados:
-    string auxUserId = reinterpret_cast<string>(this->userId);
-    string auxProductId = reinterpret_cast<string>(this->productId);
-    float auxRating = reinterpret_cast<float>(this->rating);
-    string auxTimestamp = reinterpret_cast<string>(this->timestamp);
-
-    //imprime o conteúdo do registro binário em seus tipos desejados:
-    cout << "User ID: " << auxUserId << endl;
-    cout << "Product ID: " << auxProductId << endl;
-    cout << "Rating: " << auxRating << endl;
-    cout << "Timestamp: " << auxTimestamp << endl;
+    //imprime o conteúdo do registro:
+    cout << "userId: " << this->userId << endl;
+    cout << "productId: " << this->productId << endl;
+    cout << "rating: " << this->rating << endl;
+    cout << "timestamp: " << this->timestamp << endl;
 }
