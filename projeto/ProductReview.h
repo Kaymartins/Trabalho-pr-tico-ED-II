@@ -12,7 +12,7 @@ class ProductReview{
         float rating;
         string timestamp;
     public:
-        ProductReview(int registro);
+        ProductReview();
         ~ProductReview();
         void ProductReview::print();
 };
