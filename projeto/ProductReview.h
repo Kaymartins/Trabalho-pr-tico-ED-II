@@ -14,6 +14,10 @@ class ProductReview{
     public:
         ProductReview();
         ~ProductReview();
+        void setUserId(string userId){this->userId = userId;};
+        void setProductId(string productId){this->productId = productId;};
+        void setRating(float rating){this->rating = rating;};
+        void setTimestamp(string timestamp){this->timestamp = timestamp;};
         void ProductReview::print();
 };
 
