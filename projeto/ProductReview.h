@@ -5,13 +5,15 @@
 
 using namespace std;
 
-class ProductReview {
+class ProductReview{
     private:
         string userId;
         int productId;
         float rating;
         int timestamp;
     public:
+        ProductReview(int registro);
+        ~ProductReview();
         void ProductReview::print();
 };
 
