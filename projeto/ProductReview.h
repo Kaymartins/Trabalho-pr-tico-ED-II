@@ -8,9 +8,9 @@ using namespace std;
 class ProductReview{
     private:
         string userId;
-        int productId;
+        string productId;
         float rating;
-        int timestamp;
+        string timestamp;
     public:
         ProductReview(int registro);
         ~ProductReview();
