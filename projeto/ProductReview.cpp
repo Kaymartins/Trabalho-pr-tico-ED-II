@@ -16,9 +16,15 @@ ProductReview::ProductReview(int registro)
         return;
     }
 
-    //posiciona o cursor no início do registro
+    //posiciona o cursor no início do registro:
 
-    //lê o registro
+    //lê o registro e armazena em userId:
+
+    //lê o registro e armazena em productId:
+
+    //lê o registro e armazena em rating:
+
+    //lê o registro e armazena em timestamp:
 }
 
 ProductReview::~ProductReview()
@@ -26,7 +32,16 @@ ProductReview::~ProductReview()
 
 void ProductReview::print()
 {
-    //imprime o conteúdo do registro do arquivo binário:
+
+    //transforma userId binário em string:
+
+    //transforma productId binário em inteiro:
+
+    //transforma rating binário em float:
+
+    //transforma timestamp binário em inteiro:
+
+    //imprime o conteúdo do registro do arquivo binário em texto:
     cout << "User ID: " << this->userId << endl;
     cout << "Product ID: " << this->productId << endl;
     cout << "Rating: " << this->rating << endl;
