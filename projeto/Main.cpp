@@ -4,14 +4,14 @@
 
 using namespace std;
 
-
 void createBinary(string& path)
 {
     //abre o arquivo de texto no diretório path:
     ifstream arq(path);
 
     //cria vetor de objetos ProductReview:
-    ProductReview *reviews = new ProductReview[100];
+    int tam = 100;
+    ProductReview *reviews = new ProductReview[tam];
 
     if(!arq.is_open())
     {
@@ -23,6 +23,11 @@ void createBinary(string& path)
     int i = 0;
     while(!arq.eof())
     {
+        if (i == tam)
+        {
+            ampliaVetor(reviews, &tam);
+        }
+        
         string userId, productId, strRating, timestamp;
         float rating;
 
@@ -47,7 +52,7 @@ void createBinary(string& path)
     arq.close();
 
     //abre o arquivo binário:
-    ofstream arqBin("arquive/ratings_Electronics.bin", ios::binary);
+    ofstream arqBin("path/ratings_Electronics.bin", ios::binary);
 
     if(!arqBin.is_open())
     {
@@ -58,9 +63,24 @@ void createBinary(string& path)
     //escreve o arquivo binário:
     for(i = 0; i < 100; i++)
     {
+        if(i == tam - 1)
         arqBin.write((char*)&reviews[i], sizeof(ProductReview));
     }
 }
+
+
+void ampliaVetor(ProductReview *vetor, int *tamanho)
+{
+    ProductReview *aux = new ProductReview[(*tamanho) * 2];
+    for (int i = 0; i < *tamanho; i++)
+    {
+        aux[i] = vetor[i];
+    }
+    delete[] vetor;
+    vetor = aux;
+    *tamanho = (*tamanho) * 2;
+}
+
 
 int main()
 {
