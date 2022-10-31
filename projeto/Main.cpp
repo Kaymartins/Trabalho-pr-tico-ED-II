@@ -82,6 +82,32 @@ void ampliaVetor(ProductReview *vetor, int *tamanho)
 }
 
 
+void getReview(int i)
+{
+    //abre o arquivo binário para leitura:
+    ifstream arqBin("path/ratings_Electronics.bin", ios::binary);
+
+    if(!arqBin.is_open())
+    {
+        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        return;
+    }
+
+    //posiciona o cursor no registro i:
+    arqBin.seekg(i * sizeof(ProductReview));
+
+    //lê o registro i:
+    ProductReview review;
+    arqBin.read((char*)&review, sizeof(ProductReview));
+
+    //fecha o arquivo binário:
+    arqBin.close();
+
+    //imprime o conteúdo do registro:
+    review.print();
+}
+
+
 int main()
 {
     cout<<"Hello World";
