@@ -18,6 +18,10 @@ class ProductReview{
         void setProductId(string productId){this->productId = productId;};
         void setRating(float rating){this->rating = rating;};
         void setTimestamp(string timestamp){this->timestamp = timestamp;};
+        string getUserId(){return this->userId;};
+        string getProductId(){return this->productId;};
+        float getRating(){return this->rating;};
+        string getTimestamp(){return this->timestamp;};
         void ProductReview::print();
 };
 
