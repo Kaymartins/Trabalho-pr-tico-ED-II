@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 #include "ProductReview.h"
 
 using namespace std;
@@ -132,6 +133,39 @@ void getReview(int i)
 
     // imprime o conteúdo do registro:
     review.print();
+}
+
+ProductReview* import(int n)
+{
+    // abre o arquivo binário para leitura:
+    ifstream arqBin("path/ratings_Electronics.bin", ios::binary);
+
+    if (!arqBin.is_open())
+    {
+        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        return;
+    }
+
+    // cria vetor de objetos ProductReview com n posições:
+    ProductReview *reviews = new ProductReview[n];
+
+    // lê o arquivo binário e armazena no vetor aleatório de objetos:
+    for (int i = 0; i < n; i++)
+    {
+        int aux = rand();
+
+        // posiciona o cursor no registro aux:
+        arqBin.seekg(aux * sizeof(ProductReview));
+
+        // armaneza registro aux no vetor:
+        arqBin.read((char *)&reviews[i], sizeof(ProductReview));
+    }
+
+
+    // fecha o arquivo binário:
+    arqBin.close();
+
+    return reviews;
 }
 
 int main()
