@@ -94,6 +94,10 @@ void getReview(int i)
     // posiciona o cursor no registro i:
     arqBin.seekg(i * sizeof(ProductReview));
 
+    // // lê o registro i:
+    // ProductReview review;
+    // arqBin.read((char *)&review, sizeof(ProductReview));
+
     // inicializa variável do tipo ProductReview:
     ProductReview review;
 
