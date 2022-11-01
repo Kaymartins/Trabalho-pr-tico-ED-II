@@ -66,7 +66,6 @@ void createBinary(string &path)
         rating = stof(strRating);
         reviews[i].setRating(rating);
         reviews[i].setTimestamp(timestamp);
-
         // atualiza o contador:
         i++;
     }
@@ -75,19 +74,19 @@ void createBinary(string &path)
     arq.close();
 
     // abre o arquivo binário:
-    ofstream arqBin("path/ratings_Electronics.bin", ios::binary);
+    ofstream file;
+    file.open("../archive/reviews.bin", ios::binary);
 
-    if (!arqBin.is_open())
+    if (!file.is_open())
     {
         cout << "ERRO: Erro ao abrir o arquivo!" << endl;
         return;
     }
 
     // escreve o arquivo binário:
-    for (i = 0; i < 100; i++)
+    for (i = 0; i < tam; i++)
     {
-        if (i == tam - 1)
-            arqBin.write((char *)&reviews[i], sizeof(ProductReview));
+        file.write((char *)&reviews[i], sizeof(ProductReview));
     }
 }
 
@@ -95,7 +94,7 @@ void createBinary(string &path)
 void getReview(int i)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin("path/ratings_Electronics.bin", ios::binary);
+    ifstream arqBin("../archive/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -111,8 +110,13 @@ void getReview(int i)
     // arqBin.read((char *)&review, sizeof(ProductReview));
 
     // inicializa variável do tipo ProductReview:
-    ProductReview review;
+    ProductReview *review = new ProductReview;
 
+    // lê o registro i:
+    arqBin.read((char *)review, sizeof(ProductReview));
+    review->print();
+
+    /*
     // inicializa variáveis de dados auxiliares:
     string userId, productId, strRating, timestamp;
     float rating;
@@ -129,35 +133,36 @@ void getReview(int i)
     rating = stof(strRating);
     review.setRating(rating);
     review.setTimestamp(timestamp);
+    */
 
     // fecha o arquivo binário:
     arqBin.close();
 
-    // imprime o conteúdo do registro:
-    review.print();
 }
 
 bool verificaSorteado(int *vet, int i)
 {
     for (int j = 0; j < i; j++)
     {
-        if (vet[i] == vet[j])
+        if (vet[i] == vet[j]){
             return true;
+        }
     }
-
     return false;
+
+   
 }
 
-/*
+
 ProductReview* import(int n)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin("path/ratings_Electronics.bin", ios::binary);
+    ifstream arqBin("../archive/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
         cout << "ERRO: Erro ao abrir o arquivo!" << endl;
-        return;
+        return NULL;
     }
 
     // cria vetor de objetos ProductReview com n posições:
@@ -174,11 +179,13 @@ ProductReview* import(int n)
         vet[i] = aux;
 
         // verifica se o número sorteado já foi sorteado anteriormente:
+        /*
         while(verificaSorteado(vet, i))
         {
             aux = rand() % (n-1);
             vet[i] = aux;
         }
+        */
 
         // posiciona o cursor no registro aux:
         arqBin.seekg(aux * sizeof(ProductReview));
@@ -187,25 +194,38 @@ ProductReview* import(int n)
         arqBin.read((char *)&reviews[i], sizeof(ProductReview));
     }
 
-
     // fecha o arquivo binário:
     arqBin.close();
 
     return reviews;
 }
-*/
 
 
-int main()
-{
+
+int main(int argc, char const *argv[])
+{   
+    if(argc < 2){
+        cout << "ERRO: Número de argumentos inválido!" << endl;
+        return 0;
+    }
+
+    string path = argv[1];
+
+    createBinary(path);
+
     cout << "Indique o número de registros que deseja importar: ";
     int n;
     cin >> n;
 
     // cria vetor de objetos ProductReview com n posições:
-    /*ProductReview *reviews = import(n);*/
+    ProductReview *reviews = import(n);
 
     cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
+
+    for (int i = 0; i < n; i++)
+    {
+        reviews[i].print();
+    }
 
     return 0;
 }
