@@ -68,16 +68,25 @@ void createBinary(string &path)
     }
 }
 
-void ampliaVetor(ProductReview *vetor, int *tamanho)
+void ampliaVetor(ProductReview *vet, int *tam)
 {
-    ProductReview *aux = new ProductReview[(*tamanho) * 2];
-    for (int i = 0; i < *tamanho; i++)
+    // cria um novo vetor auxiliar com o dobro do tamanho original:
+    ProductReview *aux = new ProductReview[(*tam) * 2];
+
+    // copia os dados do vetor original para o vetor auxiliar:
+    for (int i = 0; i < *tam; i++)
     {
-        aux[i] = vetor[i];
+        aux[i] = vet[i];
     }
-    delete[] vetor;
-    vetor = aux;
-    *tamanho = (*tamanho) * 2;
+
+    // libera o espaço de memória do vetor original:
+    delete[] vet;
+
+    // passa o endereço do vetor auxiliar para o vetor original:
+    vet = aux;
+
+    // atualiza o tamanho do vetor original:
+    *tam = (*tam) * 2;
 }
 
 void getReview(int i)
