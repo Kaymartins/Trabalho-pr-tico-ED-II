@@ -149,10 +149,22 @@ ProductReview* import(int n)
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = new ProductReview[n];
 
+    // cria vetor auxiliar com índices sorteados de 0 a n-1:
+    int *vet = new int[n];
+
     // lê o arquivo binário e armazena no vetor aleatório de objetos:
     for (int i = 0; i < n; i++)
     {
-        int aux = rand();
+        // sorteia um número aleatório entre 0 e n-1:
+        int aux = rand() % (n-1);
+        vet[i] = aux;
+
+        // verifica se o número sorteado já foi sorteado anteriormente:
+        while(verificaSorteado(vet, i))
+        {
+            aux = rand() % (n-1);
+            vet[i] = aux;
+        }
 
         // posiciona o cursor no registro aux:
         arqBin.seekg(aux * sizeof(ProductReview));
@@ -166,6 +178,17 @@ ProductReview* import(int n)
     arqBin.close();
 
     return reviews;
+}
+
+bool verificaSorteado(int *vet, int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        if (vet[i] == vet[j])
+            return true;
+    }
+
+    return false;
 }
 
 int main()
