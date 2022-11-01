@@ -193,7 +193,14 @@ bool verificaSorteado(int *vet, int i)
 
 int main()
 {
-    cout << "Hello World";
+    cout << "Indique o número de registros que deseja importar: ";
+    int n;
+    cin >> n;
+
+    // cria vetor de objetos ProductReview com n posições:
+    ProductReview *reviews = import(n);
+
+    cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
 
     return 0;
 }
