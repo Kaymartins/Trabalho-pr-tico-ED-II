@@ -1,7 +1,7 @@
 #ifndef PRODUCTREVIEW_H_INCLUDED
 #define PRODUCTREVIEW_H_INCLUDED
 
-#include <string>;
+#include <string>
 
 using namespace std;
 
@@ -22,7 +22,7 @@ class ProductReview{
         string getProductId(){return this->productId;};
         float getRating(){return this->rating;};
         string getTimestamp(){return this->timestamp;};
-        void ProductReview::print();
+        void print();
 };
 
 #endif

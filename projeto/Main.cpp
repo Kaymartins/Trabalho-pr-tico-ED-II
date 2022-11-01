@@ -5,6 +5,28 @@
 
 using namespace std;
 
+void ampliaVetor(ProductReview *vet, int *tam)
+{
+    // cria um novo vetor auxiliar com o dobro do tamanho original:
+    ProductReview *aux = new ProductReview[(*tam) * 2];
+
+    // copia os dados do vetor original para o vetor auxiliar:
+    for (int i = 0; i < *tam; i++)
+    {
+        aux[i] = vet[i];
+    }
+
+    // libera o espaço de memória do vetor original:
+    delete[] vet;
+
+    // passa o endereço do vetor auxiliar para o vetor original:
+    vet = aux;
+
+    // atualiza o tamanho do vetor original:
+    *tam = (*tam) * 2;
+}
+
+
 void createBinary(string &path)
 {
     // abre o arquivo de texto no diretório path:
@@ -69,26 +91,6 @@ void createBinary(string &path)
     }
 }
 
-void ampliaVetor(ProductReview *vet, int *tam)
-{
-    // cria um novo vetor auxiliar com o dobro do tamanho original:
-    ProductReview *aux = new ProductReview[(*tam) * 2];
-
-    // copia os dados do vetor original para o vetor auxiliar:
-    for (int i = 0; i < *tam; i++)
-    {
-        aux[i] = vet[i];
-    }
-
-    // libera o espaço de memória do vetor original:
-    delete[] vet;
-
-    // passa o endereço do vetor auxiliar para o vetor original:
-    vet = aux;
-
-    // atualiza o tamanho do vetor original:
-    *tam = (*tam) * 2;
-}
 
 void getReview(int i)
 {
@@ -135,6 +137,18 @@ void getReview(int i)
     review.print();
 }
 
+bool verificaSorteado(int *vet, int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        if (vet[i] == vet[j])
+            return true;
+    }
+
+    return false;
+}
+
+/*
 ProductReview* import(int n)
 {
     // abre o arquivo binário para leitura:
@@ -179,17 +193,8 @@ ProductReview* import(int n)
 
     return reviews;
 }
+*/
 
-bool verificaSorteado(int *vet, int i)
-{
-    for (int j = 0; j < i; j++)
-    {
-        if (vet[i] == vet[j])
-            return true;
-    }
-
-    return false;
-}
 
 int main()
 {
@@ -198,7 +203,7 @@ int main()
     cin >> n;
 
     // cria vetor de objetos ProductReview com n posições:
-    ProductReview *reviews = import(n);
+    /*ProductReview *reviews = import(n);*/
 
     cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
 
