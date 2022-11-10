@@ -21,7 +21,9 @@ bool TabelaHash::tabelaVazia()
 }
 
 int TabelaHash::funcaoHash(int key)
-{}
+{
+    return key % hashGroups;
+}
 
 void TabelaHash::inserirItem(int key, string value)
 {}
