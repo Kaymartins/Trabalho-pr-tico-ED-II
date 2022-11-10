@@ -2,6 +2,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include "../headers/ProductReview.h"
+#include "../headers/TabelaHash.h"
 
 using namespace std;
 
@@ -232,28 +233,28 @@ RegistroHash* createTable(int n)
 
 int main(int argc, char const *argv[])
 {   
-    if(argc < 2){
-        cout << "ERRO: Número de argumentos inválido!" << endl;
-        return 0;
-    }
+    // if(argc < 2){
+    //     cout << "ERRO: Número de argumentos inválido!" << endl;
+    //     return 0;
+    // }
 
-    string path = argv[1];
+    // string path = argv[1];
 
-    createBinary(path);
+    // createBinary(path);
 
-    cout << "Indique o número de registros que deseja importar: ";
-    int n;
-    cin >> n;
+    // cout << "Indique o número de registros que deseja importar: ";
+    // int n;
+    // cin >> n;
 
-    // cria vetor de objetos ProductReview com n posições:
-    ProductReview *reviews = import(n);
+    // // cria vetor de objetos ProductReview com n posições:
+    // ProductReview *reviews = import(n);
 
-    cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
+    // cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
 
-    for (int i = 0; i < n; i++)
-    {
-        reviews[i].print();
-    }
+    // for (int i = 0; i < n; i++)
+    // {
+    //     reviews[i].print();
+    // }
 
     return 0;
 }

@@ -14,9 +14,10 @@ private:
     //    string chave;
     static const int hashGroups = 10;
     list<pair<int, string>> table[hashGroups]; // balde;
-    int estado = -2; // -2 = vazio, -1 = ocupado, x = novo índice, 0 = removido;
 
 public:
+    TabelaHash();
+    ~TabelaHash();
     bool tabelaVazia();
     int funcaoHash(int key);
     void inserirItem(int key, string value);

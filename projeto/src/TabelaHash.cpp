@@ -1,5 +1,10 @@
 #include "../headers/TabelaHash.h"
 
+TabelaHash::TabelaHash()
+{}
+
+TabelaHash::~TabelaHash()
+{}
 
 bool TabelaHash::tabelaVazia()
 {
@@ -22,11 +27,15 @@ bool TabelaHash::tabelaVazia()
 
 int TabelaHash::funcaoHash(int key)
 {
+    //Método da divisão:
     return key % hashGroups;
 }
 
 void TabelaHash::inserirItem(int key, string value)
-{}
+{
+    //calcula índice da chave na tabela:
+    int i = funcaoHash(key);
+}
 
 void TabelaHash::removerItem(int key)
 {}
