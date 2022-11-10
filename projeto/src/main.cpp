@@ -26,7 +26,6 @@ void ampliaVetor(ProductReview *vet, int *tam)
     *tam = (*tam) * 2;
 }
 
-
 void createBinary(string &path)
 {
     // abre o arquivo de texto no diretório path:
@@ -90,7 +89,6 @@ void createBinary(string &path)
     }
 }
 
-
 void getReview(int i)
 {
     // abre o arquivo binário para leitura:
@@ -153,7 +151,6 @@ bool verificaSorteado(int *vet, int i)
    
 }
 
-
 ProductReview* import(int n)
 {
     // abre o arquivo binário para leitura:
@@ -200,13 +197,26 @@ ProductReview* import(int n)
     return reviews;
 }
 
+
 typedef struct RegistroHash {
     string productId;
     int qtdReviews;
 } RegistroHash;
 
-RegistroHash* createTable(int n){
 
+RegistroHash* createTable(int n)
+{
+    // cria vetor de objetos RegistroHash com n posições:
+    RegistroHash *table = new RegistroHash[n];
+
+    // inicializa o vetor de objetos RegistroHash:
+    for (int i = 0; i < n; i++)
+    {
+        table[i].productId = "";
+        table[i].qtdReviews = 0;
+    }
+
+    return table;
 }
 
 
