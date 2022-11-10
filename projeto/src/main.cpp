@@ -200,7 +200,7 @@ ProductReview* import(int n)
 
 typedef struct RegistroHash {
     string productId;
-    int qtdReviews;
+    int qtdReviews = 0;
 } RegistroHash;
 
 
@@ -209,11 +209,20 @@ RegistroHash* createTable(int n)
     // cria vetor de objetos RegistroHash com n posições:
     RegistroHash *table = new RegistroHash[n];
 
-    // inicializa o vetor de objetos RegistroHash:
+    // importa n registros aleatórios do arquivo binário:
+    ProductReview *reviews = import(n);
+    
+    // atribui valores iniciais para o vetor de objetos RegistroHash:
     for (int i = 0; i < n; i++)
     {
-        table[i].productId = "";
-        table[i].qtdReviews = 0;
+        table[i].productId = reviews[i].getProductId();
+        table[i].qtdReviews += 1;
+
+        // verifica se o produto já está na tabela:
+        if(table[i].qtdReviews > 1)
+        {
+            table[i] = rand() % (n-1);
+        }
     }
 
     return table;
