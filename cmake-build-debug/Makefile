@@ -55,7 +55,7 @@ RM = C:\Users\Kayan\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\212.5457.51\
 # Escaping for special characters.
 EQUALS = =
 
-# The top-level source directory on which CMake was run.
+# The top-level src directory on which CMake was run.
 CMAKE_SOURCE_DIR = "D:\Users\Kayan\Desktop\ESTUDOS\UFJF\ED II"
 
 # The top-level build directory on which CMake was run.
@@ -139,7 +139,7 @@ projeto/Main.cpp.obj:
 projeto/Main.i: projeto/Main.cpp.i
 .PHONY : projeto/Main.i
 
-# target to preprocess a source file
+# target to preprocess a src file
 projeto/Main.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ED_II.dir\build.make CMakeFiles/ED_II.dir/projeto/Main.cpp.i
 .PHONY : projeto/Main.cpp.i

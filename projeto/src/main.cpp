@@ -1,14 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
-#include "ProductReview.h"
+#include "../headers/ProductReview.h"
 
 using namespace std;
 
 void ampliaVetor(ProductReview *vet, int *tam)
 {
     // cria um novo vetor auxiliar com o dobro do tamanho original:
-    ProductReview *aux = new ProductReview[(*tam) * 2];
+    auto *aux = new ProductReview[(*tam) * 2];
 
     // copia os dados do vetor original para o vetor auxiliar:
     for (int i = 0; i < *tam; i++)
@@ -200,6 +200,14 @@ ProductReview* import(int n)
     return reviews;
 }
 
+typedef struct RegistroHash {
+    string productId;
+    int qtdReviews;
+} RegistroHash;
+
+RegistroHash* createTable(int n){
+
+}
 
 
 int main(int argc, char const *argv[])

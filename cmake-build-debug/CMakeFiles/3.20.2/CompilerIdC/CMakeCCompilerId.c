@@ -369,7 +369,7 @@
 # define COMPILER_ID ""
 #endif
 
-/* Construct the string literal in pieces to prevent the source from
+/* Construct the string literal in pieces to prevent the src from
    getting matched.  Store it in a pointer rather than an array
    because some compilers will just produce instructions to fill the
    array rather than assigning a pointer to a static array.  */
@@ -689,7 +689,7 @@ char const info_simulate_version[] = {
   ']','\0'};
 #endif
 
-/* Construct the string literal in pieces to prevent the source from
+/* Construct the string literal in pieces to prevent the src from
    getting matched.  Store it in a pointer rather than an array
    because some compilers will just produce instructions to fill the
    array rather than assigning a pointer to a static array.  */

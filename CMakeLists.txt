@@ -4,4 +4,4 @@ project(ED_II)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(ED_II
-        projeto/Main.cpp)
+        projeto/src/main.cpp)
