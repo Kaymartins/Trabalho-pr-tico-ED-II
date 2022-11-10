@@ -204,6 +204,7 @@ typedef struct RegistroHash {
 } RegistroHash;
 
 
+//falta tratar colisões e adicionar registros não repetidos:
 RegistroHash* createTable(int n)
 {
     // cria vetor de objetos RegistroHash com n posições:
@@ -219,10 +220,10 @@ RegistroHash* createTable(int n)
         table[i].qtdReviews += 1;
 
         // verifica se o produto já está na tabela:
-        if(table[i].qtdReviews > 1)
-        {
-            table[i] = rand() % (n-1);
-        }
+        // if(table[i].qtdReviews > 1)
+        // {
+        //     table[i] = rand() % (n-1);
+        // }
     }
 
     return table;
