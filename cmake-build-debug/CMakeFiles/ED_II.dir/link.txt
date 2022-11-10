@@ -1,3 +1,0 @@
-C:\Users\Kayan\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\212.5457.51\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\ED_II.dir/objects.a
-"D:\Arquivos de Programas\CodeBlocks\MinGW\bin\ar.exe" cr CMakeFiles\ED_II.dir/objects.a @CMakeFiles\ED_II.dir\objects1.rsp
-"D:\Arquivos de Programas\CodeBlocks\MinGW\bin\g++.exe" -g -Wl,--whole-archive CMakeFiles\ED_II.dir/objects.a -Wl,--no-whole-archive -o ED_II.exe -Wl,--out-implib,libED_II.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\ED_II.dir\linklibs.rsp

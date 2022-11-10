@@ -1,22 +1,25 @@
 //
 // Created by Kayan on 09/11/2022.
 //
+#ifndef ED_II_TABELAHASH_H
+#define ED_II_TABELAHASH_H
+
+
 #include<iostream>
 #include<list>
 #include<cstring>
 #include<string>
 
-#ifndef ED_II_TABELAHASH_H
-#define ED_II_TABELAHASH_H
 
+using namespace std;
 
 class TabelaHash {
 private:
     int cont;
-    int chave;
-    string chave;
-    int hasGroups = 10;
-    list<pair<int, string>> table[hasGroups]; //balde;
+//    int chave;
+//    string chave;
+    static const int hashGroups = 10;
+    list<pair<int, string>> table[hashGroups]; //balde;
 
 public:
     bool tabelaVazia();
@@ -26,19 +29,5 @@ public:
     string pesquisarItem(int key);
     void printTable();
 };
-
-bool HashTable::tabelaVazia(){
-    int sum = 0;
-    for(int i = 0; i < hashGroups; i++){
-        sum += table[i].size();
-    }
-
-    if(!sum){
-        return true;
-    }
-
-    return false;
-}
-
 
 #endif //ED_II_TABELAHASH_H
