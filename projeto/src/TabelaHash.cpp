@@ -17,5 +17,3 @@ for(int i = 0; i < hashGroups; i++){
 
     return false;
 }
-
-#include "../headers/TabelaHash.h"
