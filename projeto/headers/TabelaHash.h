@@ -14,6 +14,7 @@ private:
     //    string chave;
     static const int hashGroups = 10;
     list<pair<int, string>> table[hashGroups]; // balde;
+    int estado = -2; // -2 = vazio, -1 = ocupado, x = no índice, 0 = removido;
 
 public:
     bool tabelaVazia();
