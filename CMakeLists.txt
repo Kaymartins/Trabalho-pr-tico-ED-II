@@ -3,5 +3,9 @@ project(ED_II)
 
 set(CMAKE_CXX_STANDARD 14)
 
+include_directories(src)
+include_directories(headers)
+
+
 add_executable(ED_II
-        projeto/Main.cpp)
+        "projeto/src/Main.cpp")

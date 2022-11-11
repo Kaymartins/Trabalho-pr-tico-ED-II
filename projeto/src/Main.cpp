@@ -62,7 +62,6 @@ void carregaArquivoPorBlocos(string &path, int tamBloco)
             auxProductId[10] = '\0';
             auxTimestamp[10] = '\0';
             */
-            float rating;
             string userId, productId, timestamp, strRating;
 
             
@@ -80,9 +79,11 @@ void carregaArquivoPorBlocos(string &path, int tamBloco)
             
 
             // seta os dados do objeto para ProductReview:
+            float rating;
             
             reviews[i].setUserId(userId);
             reviews[i].setProductId(productId);
+            rating = stof(strRating);
             reviews[i].setRating(rating);
             reviews[i].setTimestamp(timestamp);
             
