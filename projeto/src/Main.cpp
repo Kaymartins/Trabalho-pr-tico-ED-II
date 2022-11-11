@@ -252,6 +252,9 @@ ProductReview* import(int n)
         return NULL;
     }
 
+    cout << "Importando " << n << " registros..." << endl;
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = new ProductReview[n];
 
@@ -276,8 +279,7 @@ ProductReview* import(int n)
             vet[i] = aux;
         }
         */
-        cout << "AAAAAAAAAAAAAAAAAA" << endl;
-        cout << aux << endl;
+
         // posiciona o cursor no registro aux:
         arqBin.seekg(aux * sizeof(ProductReview));
 
@@ -287,6 +289,9 @@ ProductReview* import(int n)
 
     // fecha o arquivo binário:
     arqBin.close();
+
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
 
     return reviews;
 }
@@ -304,21 +309,26 @@ int main(int argc, char const *argv[])
 
     carregaArquivoPorBlocos(path, MAX);
 
+    getReview(5737230);
+
     cout << "Indique o número de registros que deseja importar: ";
     int n;
     cin >> n;
 
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = import(n);
+    cout << "Importação realizada com sucesso!" << endl;
 
     cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
 
+    /*
     for (int i = 0; i < n; i++)
     {   
         cout << endl;
         reviews[i].print();
         cout << endl;
     }
+    */
 
     return 0;
 }
