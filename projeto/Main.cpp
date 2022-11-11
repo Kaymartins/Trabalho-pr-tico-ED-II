@@ -1,9 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+#include <ctime>
+#include <random>
+#include <sstream>
+#include <chrono>
+
+
 #include "ProductReview.h"
 
 using namespace std;
+using namespace std::chrono;
+
+default_random_engine gen;
+
+const int MAX = 7824482;
 
 void ampliaVetor(ProductReview *vet, int *tam)
 {
@@ -26,6 +37,80 @@ void ampliaVetor(ProductReview *vet, int *tam)
     *tam = (*tam) * 2;
 }
 
+
+void carregaArquivoPorBlocos(string &path, int tamBloco)
+{
+    char *dados = new char[tamBloco];
+    ifstream arq(path);
+    ProductReview* reviews = new ProductReview[tamBloco];
+
+    cout << "Criando arquivo binario ... " << endl;
+
+    if(arq.is_open())
+    {
+        high_resolution_clock::time_point inicio = high_resolution_clock::now();
+        int i = 0;
+        string str;
+
+        while(!arq.eof())
+        {   
+            /*
+            char *auxUserId = new char [21];
+            char *auxProductId = new char [10];
+            char *auxTimestamp = new char[10];
+            auxUserId[21] = '\0';
+            auxProductId[10] = '\0';
+            auxTimestamp[10] = '\0';
+            */
+            float rating;
+            string userId, productId, timestamp, strRating;
+
+            
+            getline(arq,userId,',');
+            getline(arq,productId,',');
+            getline(arq,strRating,',');
+            getline(arq,timestamp,'\n');
+
+            /*
+            arq.read(reinterpret_cast<char*>(auxUserId), 21);
+            arq.read(reinterpret_cast<char*>(auxProductId), 10);
+            arq.read(reinterpret_cast<char*>(&rating), sizeof(float));
+            arq.read(reinterpret_cast<char*>(auxTimestamp), 10);
+            */
+            
+
+            // seta os dados do objeto para ProductReview:
+
+            reviews[i].setUserId(userId);
+            reviews[i].setProductId(productId);
+            reviews[i].setRating(rating);
+            reviews[i].setTimestamp(timestamp);
+
+            i++;
+        }
+        
+        reviews[0].print();
+        
+        ofstream file;
+        file.open("../archive/reviews.bin", ios::binary);
+        if(file.is_open())
+        {
+            for(int i = 0; i < tamBloco; i++)
+            {
+                file.write(reinterpret_cast<char*>(&reviews[i]), sizeof(ProductReview));
+            }
+        }
+        
+
+        cout << "Arquivo binario criado com sucesso!" << endl;
+        high_resolution_clock::time_point fim = high_resolution_clock::now();
+        cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+        //file.close();
+    }    
+
+    arq.close();
+    delete [] dados;
+}
 
 void createBinary(string &path)
 {
@@ -175,7 +260,10 @@ ProductReview* import(int n)
     for (int i = 0; i < n; i++)
     {
         // sorteia um número aleatório entre 0 e n-1:
-        int aux = rand() % (n-1);
+        uniform_int_distribution<> dist(0, MAX);
+
+        int aux = dist(gen);
+
         vet[i] = aux;
 
         // verifica se o número sorteado já foi sorteado anteriormente:
@@ -211,7 +299,7 @@ int main(int argc, char const *argv[])
 
     string path = argv[1];
 
-    createBinary(path);
+    carregaArquivoPorBlocos(path, MAX);
 
     cout << "Indique o número de registros que deseja importar: ";
     int n;
@@ -223,8 +311,10 @@ int main(int argc, char const *argv[])
     cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
 
     for (int i = 0; i < n; i++)
-    {
+    {   
+        cout << endl;
         reviews[i].print();
+        cout << endl;
     }
 
     return 0;
