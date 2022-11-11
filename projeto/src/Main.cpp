@@ -76,14 +76,12 @@ void carregaArquivoPorBlocos(string &path, int tamBloco)
             arq.read(reinterpret_cast<char*>(&rating), sizeof(float));
             arq.read(reinterpret_cast<char*>(auxTimestamp), 10);
             */
-            
 
             // seta os dados do objeto para ProductReview:
             float rating;
-            
             reviews[i].setUserId(userId);
             reviews[i].setProductId(productId);
-            rating = stof(strRating);
+            rating = strtof(strRating.c_str(),nullptr);
             reviews[i].setRating(rating);
             reviews[i].setTimestamp(timestamp);
             
