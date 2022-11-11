@@ -233,6 +233,7 @@ RegistroHash* createTable(int n)
 
 int main(int argc, char const *argv[])
 {   
+    //Teste da Etapa 1:------------------------------------------
     // if(argc < 2){
     //     cout << "ERRO: Número de argumentos inválido!" << endl;
     //     return 0;
@@ -255,6 +256,7 @@ int main(int argc, char const *argv[])
     // {
     //     reviews[i].print();
     // }
+    //------------------------------------------------------------
 
     return 0;
 }

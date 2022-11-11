@@ -27,3 +27,11 @@ public:
 };
 
 #endif // ED_II_TABELAHASH_H
+
+/*
+- Vou ler N registros aleatórios e contar quantas vezes 
+um mesmo produto se repete;
+- Vou criar uma tabela com N registros NÃO repetidos;
+- Vou ordenar os registros mais avaliados;
+- Vou imprimir os P produtos mais avaliados;
+*/
