@@ -14,7 +14,7 @@ using namespace std::chrono;
 
 default_random_engine gen;
 
-const int MAX = 7824487;
+const int MAX = 7824483;
 
 void ampliaVetor(ProductReview *vet, int *tam)
 {
@@ -41,7 +41,7 @@ void ampliaVetor(ProductReview *vet, int *tam)
 void carregaArquivoPorBlocos(string &path, int tamBloco)
 {
     ifstream arq(path);
-    ProductReview* reviews = new ProductReview[100];
+    ProductReview* reviews = new ProductReview[tamBloco];
 
     
 
@@ -52,7 +52,7 @@ void carregaArquivoPorBlocos(string &path, int tamBloco)
         int i = 0;
         string str;
 
-        while(getline(arq,str))
+        while(!arq.eof())
         {   
             /*
             char *auxUserId = new char [21];
@@ -96,7 +96,7 @@ void carregaArquivoPorBlocos(string &path, int tamBloco)
         file.open("../../archive/reviews.bin", ios::binary);
         if(file.is_open())
         {
-            for(int i = 0; i < 100; i++)
+            for(int i = 0; i < tamBloco; i++)
             {
                 file.write(reinterpret_cast<char*>(&reviews[i]), sizeof(ProductReview));
             }
@@ -155,6 +155,8 @@ void createBinary(string &path)
         // atualiza o contador:
         i++;
     }
+
+
 
     // fecha o arquivo de texto:
     arq.close();
@@ -275,7 +277,8 @@ ProductReview* import(int n)
             vet[i] = aux;
         }
         */
-
+        cout << "AAAAAAAAAAAAAAAAAA" << endl;
+        cout << aux << endl;
         // posiciona o cursor no registro aux:
         arqBin.seekg(aux * sizeof(ProductReview));
 
