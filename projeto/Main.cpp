@@ -1,3 +1,11 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
 //
 // Created by Kayan on 23/10/2022.
 //
@@ -123,20 +131,62 @@ void quickSort(int array[], int low, int high) {
   }
 }
 
+
+
+
+void countSort(int array[], int size)
+{
+  int output[100];// nesses vetores temos que alocar o tamanho dele pro max de registros possiveis + 1
+  int count[100];
+  int max = array[0];
+
+  for (int i = 1; i < size; i++) {
+    if (array[i] > max)
+      max = array[i];
+  }
+
+
+  for (int i = 0; i <= max; ++i) {
+    count[i] = 0;
+  }
+
+  for (int i = 0; i < size; i++) {
+    count[array[i]]++;
+  }
+
+  for (int i = 1; i <= max; i++) {
+    count[i] += count[i - 1];
+  }
+  for (int i = size - 1; i >= 0; i--) {
+    output[count[array[i]] - 1] = array[i];
+    count[array[i]]--;
+  }
+
+
+  for (int i = 0; i < size; i++) {
+    array[i] = output[i];
+  }
+}
+
 int main()
 {
     int vet[] = {8, 7, 6, 1, 0, 9, 2};
     int vet2[] = {1, 15, 99, 56, 12, 5, 8};
+    int vet3[] = {1, 15, 99, 56, 12, 5, 8};
     int n = sizeof(vet) / sizeof(vet[0]);
-    int n2 = sizeof(vet) / sizeof(vet[0]);
+    int n2 = sizeof(vet2) / sizeof(vet2[0]);
+    int n3 = sizeof(vet3) / sizeof(vet3[0]);
 
     quickSort(vet, 0, n - 1);
     MergeSort(vet2, 0, n2 - 1);
+    countSort(vet3,n3);
 
     cout << "Vetor ordenado com quickSort: \n";
     printArray(vet, n);
     cout << "Vetor ordenado com mergeSort: \n";
     printArray(vet2, n2);
+     cout << "Vetor ordenado com countSort: \n";
+    printArray(vet3, n3);
     return 0;
 }
 
