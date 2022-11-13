@@ -9,7 +9,8 @@ using namespace std;
 void Merge(int *a, int inicio, int final, int meio)
 {
 
-	int i, j, k, temp[final-inicio+1]; // temp = vetor temporario. inicio = inicio do vetor, final final do vetor. meio = meio do vetor. a vet a ser ordenada
+	int i, j, k, *temp;
+  temp = new int[final - inicio + 1]; // temp = vetor temporario. inicio = inicio do vetor, final = final do vetor. meio = meio do vetor. a vet a ser ordenada
 	i = inicio;
 	k = 0;
 	j = meio + 1;
@@ -52,6 +53,8 @@ void Merge(int *a, int inicio, int final, int meio)
 	{
 		a[i] = temp[i-inicio];
 	}
+
+  delete [] temp;
 }
 
 void MergeSort(int *a, int inicio, int final)
