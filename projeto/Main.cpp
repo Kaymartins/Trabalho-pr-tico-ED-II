@@ -6,15 +6,15 @@
 #include <iostream>
 
 using namespace std;
-void Merge(int *a, int low, int high, int mid)
+void Merge(int *a, int inicio, int final, int meio)
 {
 
-	int i, j, k, temp[high-low+1]; // temp = vetor temporario. low = inicio do vetor, high final do vetor. mid = meio do vetor. a array a ser ordenada
-	i = low;
+	int i, j, k, temp[final-inicio+1]; // temp = vetor temporario. inicio = inicio do vetor, final final do vetor. meio = meio do vetor. a vet a ser ordenada
+	i = inicio;
 	k = 0;
-	j = mid + 1;
+	j = meio + 1;
 
-	while (i <= mid && j <= high)
+	while (i <= meio && j <= final)
 	{
 		if (a[i] < a[j])
 		{
@@ -31,7 +31,7 @@ void Merge(int *a, int low, int high, int mid)
 	}
 
 
-	while (i <= mid)
+	while (i <= meio)
 	{
 		temp[k] = a[i];
 		k++;
@@ -39,7 +39,7 @@ void Merge(int *a, int low, int high, int mid)
 	}
 
 
-	while (j <= high)
+	while (j <= final)
 	{
 		temp[k] = a[j];
 		k++;
@@ -48,22 +48,22 @@ void Merge(int *a, int low, int high, int mid)
 
 
 
-	for (i = low; i <= high; i++)
+	for (i = inicio; i <= final; i++)
 	{
-		a[i] = temp[i-low];
+		a[i] = temp[i-inicio];
 	}
 }
 
-void MergeSort(int *a, int low, int high)
+void MergeSort(int *a, int inicio, int final)
 {
-	int mid;
-	if (low < high)
+	int meio;
+	if (inicio < final)
 	{
-		mid=(low+high)/2;
-		MergeSort(a, low, mid);
-		MergeSort(a, mid+1, high);
+		meio=(inicio+final)/2;
+		MergeSort(a, inicio, meio);
+		MergeSort(a, meio+1, final);
 
-		Merge(a, low, high, mid);
+		Merge(a, inicio, final, meio);
 	}
 
 }
@@ -76,66 +76,66 @@ void swap(int *a, int *b) {
 }
 
 
-void printArray(int array[], int size) {
+void printVetor(int vet[], int size) {
   int i;
   for (i = 0; i < size; i++)
-    cout << array[i] << " ";
+    cout << vet[i] << " ";
   cout << endl;
 }
 
 
-int partition(int array[], int low, int high) {
+int particao(int vet[], int inicio, int final) {
 
 
-  int pivot = array[high];
+  int pivot = vet[final];
 
 
-  int i = (low - 1);
+  int i = (inicio - 1);
 
 
-  for (int j = low; j < high; j++) {
-    if (array[j] <= pivot) {
+  for (int j = inicio; j < final; j++) {
+    if (vet[j] <= pivot) {
 
 
       i++;
 
 
-      swap(&array[i], &array[j]);
+      swap(&vet[i], &vet[j]);
     }
   }
 
 
-  swap(&array[i + 1], &array[high]);
+  swap(&vet[i + 1], &vet[final]);
 
-  // return the partition point
+
   return (i + 1);
 }
 
-void quickSort(int array[], int low, int high) {
-  if (low < high) {
+void quickSort(int vet[], int inicio, int final) {
+  if (inicio < final) {
 
 
-    int pi = partition(array, low, high);
+    int pi = particao(vet, inicio, final);
 
 
-    quickSort(array, low, pi - 1);
+    quickSort(vet, inicio, pi - 1);
 
-    quickSort(array, pi + 1, high);
+    quickSort(vet, pi + 1, final);
   }
 }
 
 
 
 
-void countSort(int array[], int size)
+void countSort(int vet[], int size)
 {
   int output[100];// nesses vetores temos que alocar o tamanho dele pro max de registros possiveis + 1
   int count[100];
-  int max = array[0];
+  int max = vet[0];
 
   for (int i = 1; i < size; i++) {
-    if (array[i] > max)
-      max = array[i];
+    if (vet[i] > max)
+      max = vet[i];
   }
 
 
@@ -144,20 +144,20 @@ void countSort(int array[], int size)
   }
 
   for (int i = 0; i < size; i++) {
-    count[array[i]]++;
+    count[vet[i]]++;
   }
 
   for (int i = 1; i <= max; i++) {
     count[i] += count[i - 1];
   }
   for (int i = size - 1; i >= 0; i--) {
-    output[count[array[i]] - 1] = array[i];
-    count[array[i]]--;
+    output[count[vet[i]] - 1] = vet[i];
+    count[vet[i]]--;
   }
 
 
   for (int i = 0; i < size; i++) {
-    array[i] = output[i];
+    vet[i] = output[i];
   }
 }
 
@@ -175,11 +175,11 @@ int main()
     countSort(vet3,n3);
 
     cout << "Vetor ordenado com quickSort: \n";
-    printArray(vet, n);
+    printVetor(vet, n);
     cout << "Vetor ordenado com mergeSort: \n";
-    printArray(vet2, n2);
+    printVetor(vet2, n2);
      cout << "Vetor ordenado com countSort: \n";
-    printArray(vet3, n3);
+    printVetor(vet3, n3);
     return 0;
 }
 
