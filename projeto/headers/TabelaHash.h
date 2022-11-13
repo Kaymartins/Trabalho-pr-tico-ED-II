@@ -1,9 +1,8 @@
-#ifndef ED_II_TABELAHASH_H
-#define ED_II_TABELAHASH_H
-#include <iostream>
-#include <list>
-#include <cstring>
+#ifndef TABELAHASH_H_INCLUDED
+#define TABELAHASH_H_INCLUDED
+
 #include <string>
+#include <list>
 
 using namespace std;
 

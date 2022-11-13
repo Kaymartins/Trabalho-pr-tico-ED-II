@@ -1,6 +1,7 @@
+#include "../headers/TabelaHash.h"
 #include <iostream>
 #include <fstream>
-#include "../headers/TabelaHash.h"
+
 #include <list>
 
 using namespace std;
@@ -12,8 +13,8 @@ TabelaHash::TabelaHash(int n)
 
 }
 
-// TabelaHash::~TabelaHash()
-// {}
+TabelaHash::~TabelaHash()
+{}
 
 // bool TabelaHash::tabelaVazia()
 // {
