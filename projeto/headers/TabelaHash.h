@@ -13,17 +13,19 @@ private:
     //    int chave;
     //    string chave;
     static const int hashGroups = 10;
-    list<pair<int, string>> table[hashGroups]; // balde;
+    // list<pair<int, string>> table[hashGroups]; // balde;
+    list<int> *table;
 
 public:
-    TabelaHash();
+    TabelaHash(int n);
     ~TabelaHash();
     bool tabelaVazia();
     int funcaoHash(int key);
-    void inserirItem(int key, string value);
+    void inserirItem(int key);
     void removerItem(int key);
     string pesquisarItem(int key);
     void printTable();
+    
 };
 
 #endif // ED_II_TABELAHASH_H
