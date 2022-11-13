@@ -47,9 +47,7 @@ int main()
     else{
         cout << "Opcao invalida!" << endl;
         cout << "Saindo do Programa" << endl;
-    }
-
-    
+    }    
 }
 
 
