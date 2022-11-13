@@ -1,4 +1,9 @@
+#include <iostream>
+#include <fstream>
 #include "../headers/TabelaHash.h"
+#include <list>
+
+using namespace std;
 
 TabelaHash::TabelaHash(int n)
 {
@@ -7,27 +12,27 @@ TabelaHash::TabelaHash(int n)
 
 }
 
-TabelaHash::~TabelaHash()
-{}
+// TabelaHash::~TabelaHash()
+// {}
 
-bool TabelaHash::tabelaVazia()
-{
-    //Inicializa variável de soma:
-    int sum = 0;
+// bool TabelaHash::tabelaVazia()
+// {
+//     //Inicializa variável de soma:
+//     int sum = 0;
 
-    //Soma o tamanho de cada lista:
-    for (int i = 0; i < hashGroups; i++)
-    {
-        sum += table[i].size();
-    }
+//     //Soma o tamanho de cada lista:
+//     for (int i = 0; i < hashGroups; i++)
+//     {
+//         sum += table[i].size();
+//     }
 
-    if (!sum)
-    {
-        return true;
-    }
+//     if (!sum)
+//     {
+//         return true;
+//     }
 
-    return false;
-}
+//     return false;
+// }
 
 int TabelaHash::funcaoHash(int key)
 {
@@ -41,22 +46,26 @@ void TabelaHash::inserirItem(int key)
      table[funcaoHash(key)].push_back(key);
 }
 
-void TabelaHash::removerItem(int key)
-{}
+// void TabelaHash::removerItem(int key)
+// {}
 
-string TabelaHash::pesquisarItem(int key)
-{}
+ void TabelaHash::pesquisarItem(int val)
+ {
+      int key = funcaoHash(val);
+        
+        for (int j:table[key]){
+            if(j == val)
+                cout << "valor encontrado";
+            else
+                cout << "valor não encontrado";
+        }
+ }
 
 void TabelaHash::printTable(){
-    // Traverse each index:
     for(int i = 0; i < cont; i++){
       cout << "Index " << i << ": ";
-      // Traverse the list at current index:
       for(int j : table[i])
         cout << j << " => ";
-
       cout << endl;
     }
   }
-// // void TabelaHash::printTable()
-// {}

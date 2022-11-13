@@ -12,7 +12,7 @@ private:
     int cont;
     //    int chave;
     //    string chave;
-    static const int hashGroups = 10;
+    // static const int hashGroups = 10;
     // list<pair<int, string>> table[hashGroups]; // balde;
     list<int> *table;
 
@@ -23,7 +23,7 @@ public:
     int funcaoHash(int key);
     void inserirItem(int key);
     void removerItem(int key);
-    string pesquisarItem(int key);
+    void pesquisarItem(int val);
     void printTable();
     
 };

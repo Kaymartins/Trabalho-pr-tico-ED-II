@@ -269,7 +269,7 @@ int main(int argc, char const *argv[])
     }
     cout << "Tabela Hash" << endl;
     h.printTable();
-
+    h.pesquisarItem(10);
    
 
     return 0;
