@@ -6,8 +6,9 @@
 #include <chrono>
 
 
-
+#include "../headers/TabelaHash.h"
 #include "../headers/ProductReview.h"
+
 
 using namespace std;
 using namespace std::chrono;
@@ -16,7 +17,7 @@ default_random_engine gen;
 
 const int MAX = 7824483;
 
-
+/*
 void createBinary(string &path, int tamBloco)
 {
     ifstream arq(path);
@@ -188,7 +189,7 @@ ProductReview* import(int n)
             aux = rand() % (n-1);
             vet[i] = aux;
         }
-        */
+        
 
         // posiciona o cursor no registro aux:
         arqBin.seekg(aux * (21 + 10 + sizeof(float) + 10), ios::beg);
@@ -226,11 +227,12 @@ ProductReview* import(int n)
 
     return reviews;
 }
-
-
+*/
 
 int main(int argc, char const *argv[])
 {   
+
+/*
     if(argc < 2){
         cout << "ERRO: Número de argumentos inválido!" << endl;
         return 0;
@@ -259,7 +261,20 @@ int main(int argc, char const *argv[])
         reviews[i].print();
         cout << endl;
     }
-    
+*/
+    TabelaHash h(3);
+    int arr[] = {2, 4, 6, 8, 10};
+
+    for (int i = 0; i < 5; i++)
+    {
+        h.inserirItem(arr[i]);
+    }
+    cout << "Tabela Hash" << endl;
+    h.printTable();
+    h.pesquisarItem(10);
+
+
+   
 
     return 0;
 }
