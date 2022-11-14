@@ -27,12 +27,18 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 
 		if (stoi(a[i].getUserId()) < stoi(a[j].getUserId()))
 		{
+      //DEBUG:
+      cout << "[DEBUG] a[i].getUserId(): " << a[i].getUserId() << " a[j].getUserId(): " << a[j].getUserId() << endl;
+
 			temp[k] = a[i];
 			k++;
 			i++;
 		}
 		else
 		{
+      //DEBUG:
+      cout << "[DEBUG] a[i].getUserId(): " << a[i].getUserId() << " a[j].getUserId(): " << a[j].getUserId() << endl;
+
 			temp[k] = a[j];
 			k++;
 			j++;
