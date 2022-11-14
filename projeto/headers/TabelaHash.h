@@ -8,18 +8,26 @@ using namespace std;
 
 class TabelaHash{
 private:
+
+    typedef struct RegistroHash {
+    string productId;
+    int qtdReviews = 0;
+    } RegistroHash;
+
     //total linhas
     int cont;
     int total;
     //    int chave;
     //    string chave;
-    list<string> *table;
+    RegistroHash *table;
+    list<RegistroHash> *ListTable;
 
     int colisoes;
 
 public:
     TabelaHash(int n);
     ~TabelaHash();
+    RegistroHash* createTable(int n);
     bool tabelaVazia();
     int funcaoHash(int key);
     int hashPolinomial(string &s, int &n);

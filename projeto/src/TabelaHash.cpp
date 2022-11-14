@@ -12,13 +12,19 @@ TabelaHash::TabelaHash(int n)
     this->cont = 0;
     this->colisoes = 0;
 
-    this->table = new list<string>[total];
+    this->table = createTable(n);
 
 }
 
 TabelaHash::~TabelaHash()
 {
     delete[] this->table;
+}
+
+TabelaHash::RegistroHash* TabelaHash::createTable(int n)
+{
+    RegistroHash *table = new RegistroHash[n];
+    return table;
 }
 
 // bool TabelaHash::tabelaVazia()
