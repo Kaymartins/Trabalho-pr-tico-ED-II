@@ -6,14 +6,20 @@ using namespace std;
 
 void Merge(ProductReview *a, int inicio, int final, int meio)
 {
-
+  //declara variaveis auxiliares:
 	int i, j, k;
+  //declara um vetor temporário:
   ProductReview *temp;
-  temp = new ProductReview[final - inicio + 1]; // temp = vetor temporario. inicio = inicio do vetor, final = final do vetor. meio = meio do vetor. a vet a ser ordenada
+
+  //inicializa o vetor temporário levando em consideração o tamanho do vetor original:
+  temp = new ProductReview[final - inicio + 1];
+
+  //inicializa as variáveis auxiliares com os índices de inicio e meio do vetor:
 	i = inicio;
 	k = 0;
 	j = meio + 1;
 
+  //realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
 	while (i <= meio && j <= final)
 	{
 		if (stoi(a[i].getUserId()) < stoi(a[j].getUserId()))
@@ -30,7 +36,7 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 		}
 	}
 
-
+  //aloca os elementos restantes da primeira parte do vetor original no vetor temporário:
 	while (i <= meio)
 	{
 		temp[k] = a[i];
@@ -38,7 +44,7 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 		i++;
 	}
 
-
+  //aloca os elementos restantes da segunda parte do vetor original no vetor temporário:
 	while (j <= final)
 	{
 		temp[k] = a[j];
@@ -46,13 +52,13 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 		j++;
 	}
 
-
-
+  //aloca os elementos do vetor temporário no vetor original:
 	for (i = inicio; i <= final; i++)
 	{
 		a[i] = temp[i-inicio];
 	}
 
+  //libera a memória alocada para o vetor temporário:
   delete [] temp;
 }
 
