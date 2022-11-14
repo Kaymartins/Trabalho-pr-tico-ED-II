@@ -19,6 +19,9 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 	k = 0;
 	j = meio + 1;
 
+  //DEBUG
+  cout << "\nNOVO MERGE: " << endl;
+
   //realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
 	while (i <= meio && j <= final)
 	{
@@ -76,13 +79,17 @@ void MergeSort(ProductReview *a, int inicio, int final)
 	int meio;
 	if (inicio < final)
 	{
+    //calcula o meio do vetor:
 		meio=(inicio+final)/2;
+    //divide o vetor em duas partes:
 		MergeSort(a, inicio, meio);
 		MergeSort(a, meio+1, final);
 
+    //realiza a ordenação do vetor:
 		Merge(a, inicio, final, meio);
 	}
 
+  cout << "ERRO: MergeSort não implementado! Por favor, confira os índices do vetor." << endl;
 }
 
 template <typename T>
