@@ -1,4 +1,4 @@
-
+#include "ProductReview.h"
 
 void Merge(ProductReview *a, int inicio, int final, int meio);
 
