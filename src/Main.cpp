@@ -51,7 +51,7 @@ void createBinary(string &path, int tamBloco)
         
         
         ofstream file;
-        file.open("../../archive/reviews.bin", ios::binary);
+        file.open("../archive/reviews.bin", ios::binary);
         if(file.is_open())
         {
             for(int i = 0; i < tamBloco; i++)
@@ -88,7 +88,7 @@ void createBinary(string &path, int tamBloco)
 void getReview(int i)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../../archive/reviews.bin", ios::binary);
+    ifstream arqBin("../archive/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -170,7 +170,7 @@ int *criaIndices(){
 ProductReview* import(int n)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../../archive/reviews.bin", ios::binary);
+    ifstream arqBin("../archive/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
