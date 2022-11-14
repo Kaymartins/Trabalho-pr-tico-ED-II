@@ -8,13 +8,18 @@ using namespace std;
 
 TabelaHash::TabelaHash(int n)
 {
-    cont = n;
-    table = new list<int>[cont];
+    this->total = n;
+    this->cont = 0;
+    this->colisoes = 0;
+
+    this->table = new list<string>[total];
 
 }
 
 TabelaHash::~TabelaHash()
-{}
+{
+    delete[] this->table;
+}
 
 // bool TabelaHash::tabelaVazia()
 // {
@@ -35,46 +40,72 @@ TabelaHash::~TabelaHash()
 //     return false;
 // }
 
+int TabelaHash::hashPolinomial(string &s, int& n){
+    const int p = 31, m = 1e9 + 9;
+    int hash = 0;
+    long long p_pow = 1;
+
+    for (int i = 0; i < s.length(); i++){
+        hash = (hash + (s[i] - 'a' + 1) * p_pow) % m;
+        cout << "hash: " << hash << endl;
+        p_pow = (p_pow * p) % m;
+    }
+    cout << "hash: " << abs(hash % n)  << endl;
+    return abs(hash) % n;
+}
+
+/*
 int TabelaHash::funcaoHash(int key)
 {
     //Método da divisão:
     return key % cont;
 }
+*/
 
-void TabelaHash::inserirItem(int key)
+void TabelaHash::inserirItem(string value)
 {
+    int index = hashPolinomial(value,total);
+    cout << "index: " << index << endl;
     //calcula índice da chave na tabela:
-     table[funcaoHash(key)].push_back(key);
+    if(this->table[index].size() > 0){
+        colisoes++;
+    }
+     this->table[index].push_back(value);
+     this->cont++;
 }
 
-void TabelaHash::removerItem(int key)
+
+void TabelaHash::removerItem(string value)
 {
-    int index = funcaoHash(key);
-    list<int>::iterator i;
+    int index = hashPolinomial(value,total);
+    list<string>::iterator i;
     for (i = table[index].begin(); i != table[index].end(); i++)
     {
-    if (*i == key)
+    if (*i == value)
       break;
     }
     if (i != table[index].end())
       table[index].erase(i);
 }
 
- void TabelaHash::pesquisarItem(int val)
+
+ void TabelaHash::pesquisarItem(string val)
  {
-      int key = funcaoHash(val);
+      int key = hashPolinomial(val,total);
         
-        for (int j:table[key])
+        for (string j:table[key])
         {
             if(j == val)
-                cout << "valor encontrado" << endl;
+
+                cout << "valor " << val << "encontrado" << endl;
         }
  }
+
 
 void TabelaHash::printTable(){
     for(int i = 0; i < cont; i++){
       cout << "Index " << i << ": ";
-      for(int j : table[i])
+      for(string j : table[i])
         cout << j << " => ";
       cout << endl;
     }

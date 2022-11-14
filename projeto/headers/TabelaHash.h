@@ -8,21 +8,24 @@ using namespace std;
 
 class TabelaHash{
 private:
+    //total linhas
     int cont;
+    int total;
     //    int chave;
     //    string chave;
-    // static const int hashGroups = 10;
-    // list<pair<int, string>> table[hashGroups]; // balde;
-    list<int> *table;
+    list<string> *table;
+
+    int colisoes;
 
 public:
     TabelaHash(int n);
     ~TabelaHash();
     bool tabelaVazia();
     int funcaoHash(int key);
-    void inserirItem(int key);
-    void removerItem(int key);
-    void pesquisarItem(int val);
+    int hashPolinomial(string &s, int &n);
+    void inserirItem(string value);
+    void removerItem(string value);
+    void pesquisarItem(string val);
     void printTable();
     
 };

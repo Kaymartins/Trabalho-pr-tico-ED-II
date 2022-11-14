@@ -1,268 +1,324 @@
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include <ctime>
+#include <random>
+#include <cstring>
+#include <chrono>
+
 
 #include "../headers/TabelaHash.h"
 #include "../headers/ProductReview.h"
 
 using namespace std;
+using namespace std::chrono;
 
-// void ampliaVetor(ProductReview *vet, int *tam)
-// {
-//     // cria um novo vetor auxiliar com o dobro do tamanho original:
-//     auto *aux = new ProductReview[(*tam) * 2];
+default_random_engine gen;
 
-//     // copia os dados do vetor original para o vetor auxiliar:
-//     for (int i = 0; i < *tam; i++)
-//     {
-//         aux[i] = vet[i];
-//     }
+const int MAX = 7824483;
 
-//     // libera o espaço de memória do vetor original:
-//     delete[] vet;
 
-//     // passa o endereço do vetor auxiliar para o vetor original:
-//     vet = aux;
+void createBinary(string &path, int tamBloco)
+{
+    ifstream arq(path);
+    ProductReview* reviews = new ProductReview[tamBloco];
 
-//     // atualiza o tamanho do vetor original:
-//     *tam = (*tam) * 2;
-// }
+    
 
-// void createBinary(string &path)
-// {
-//     // abre o arquivo de texto no diretório path:
-//     ifstream arq(path);
+    if(arq.is_open())
+    {
+        cout << "Criando arquivo binario ... " << endl;
+        high_resolution_clock::time_point inicio = high_resolution_clock::now();
+        int i = 0;
+        string str;
 
-//     // cria vetor de objetos ProductReview:
-//     int tam = 100;
-//     ProductReview *reviews = new ProductReview[tam];
+        while(!arq.eof())
+        {   
+            
+            string userId, productId, timestamp, strRating;
 
-//     if (!arq.is_open())
-//     {
-//         cout << "ERRO: Erro ao abrir o arquivo!" << endl;
-//         return;
-//     }
+            getline(arq,userId,',');
+            getline(arq,productId,',');
+            getline(arq,strRating,',');
+            getline(arq,timestamp,'\n');
 
-//     // lê o arquivo de texto e armazena no vetor de objetos:
-//     int i = 0;
-//     while (!arq.eof())
-//     {
-//         if (i == tam)
-//         {
-//             ampliaVetor(reviews, &tam);
-//         }
+            // seta os dados do objeto para ProductReview:
+            float rating;
+            reviews[i].setUserId(userId);
+            reviews[i].setProductId(productId);
+            rating = strtof(strRating.c_str(),nullptr);
+            reviews[i].setRating(rating);
+            reviews[i].setTimestamp(timestamp);
+            
+            i++;
+        }
+        
+        
+        ofstream file;
+        file.open("../../archive/reviews.bin", ios::binary);
+        if(file.is_open())
+        {
+            for(int i = 0; i < tamBloco; i++)
+            {
+                
+                string userId = reviews[i].getUserId();
+                string productId = reviews[i].getProductId();
+                float rating = reviews[i].getRating();
+                string timestamp = reviews[i].getTimestamp();
 
-//         string userId, productId, strRating, timestamp;
-//         float rating;
+                file.write(reinterpret_cast<const char*>(userId.c_str()),21);
+                file.write(reinterpret_cast<const char*>(productId.c_str()),10);
+                file.write(reinterpret_cast<const char*>(&rating), sizeof(float));
+                file.write(reinterpret_cast<const char*>(timestamp.c_str()),10);
 
-//         // lê cada linha do arquivo de texto e armazena os dados em uma string:
-//         getline(arq, userId, ',');
-//         getline(arq, productId, ',');
-//         getline(arq, strRating, ',');
-//         getline(arq, timestamp, '\n');
+            }
+        }
 
-//         // seta os dados do objeto para ProductReview:
-//         reviews[i].setUserId(userId);
-//         reviews[i].setProductId(productId);
-//         rating = stof(strRating);
-//         reviews[i].setRating(rating);
-//         reviews[i].setTimestamp(timestamp);
-//         // atualiza o contador:
-//         i++;
-//     }
 
-//     // fecha o arquivo de texto:
-//     arq.close();
+        file.close();
+        
+        cout << "Arquivo binario criado com sucesso!" << endl;
+        high_resolution_clock::time_point fim = high_resolution_clock::now();
+        cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+    }    
 
-//     // abre o arquivo binário:
-//     ofstream file;
-//     file.open("../archive/reviews.bin", ios::binary);
+    arq.close();
+}
 
-//     if (!file.is_open())
-//     {
-//         cout << "ERRO: Erro ao abrir o arquivo!" << endl;
-//         return;
-//     }
+void getReview(int i)
+{
+    // abre o arquivo binário para leitura:
+    ifstream arqBin("../../archive/reviews.bin", ios::binary);
 
-//     // escreve o arquivo binário:
-//     for (i = 0; i < tam; i++)
-//     {
-//         file.write((char *)&reviews[i], sizeof(ProductReview));
-//     }
-// }
+    if (!arqBin.is_open())
+    {
+        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        return;
+    }
 
-// void getReview(int i)
-// {
-//     // abre o arquivo binário para leitura:
-//     ifstream arqBin("../archive/reviews.bin", ios::binary);
+    string userId, productId, timestamp;
+    float rating;
 
-//     if (!arqBin.is_open())
-//     {
-//         cout << "ERRO: Erro ao abrir o arquivo!" << endl;
-//         return;
-//     }
+    // posiciona o cursor no registro i:
+    arqBin.seekg(i * (21 + 10 + sizeof(float) + 10), ios::beg);
 
-//     // posiciona o cursor no registro i:
-//     arqBin.seekg(i * sizeof(ProductReview));
+    char *auxUserId = new char[21];
+    char *auxProductId = new char[10];
+    char *auxTimestamp = new char[10];
+    auxUserId[21] = '\0';
+    auxProductId[10] = '\0';
+    auxTimestamp[10] = '\0';
 
-//     // // lê o registro i:
-//     // ProductReview review;
-//     // arqBin.read((char *)&review, sizeof(ProductReview));
 
-//     // inicializa variável do tipo ProductReview:
-//     ProductReview *review = new ProductReview;
+    // inicializa variável do tipo ProductReview:
+    ProductReview *review = new ProductReview;
 
-//     // lê o registro i:
-//     arqBin.read((char *)review, sizeof(ProductReview));
-//     review->print();
+    arqBin.read(reinterpret_cast<char*>(auxUserId), 21);
+    arqBin.read(reinterpret_cast<char*>(auxProductId), 10);
+    arqBin.read(reinterpret_cast<char*>(&rating), sizeof(float));
+    arqBin.read(reinterpret_cast<char*>(auxTimestamp), 10);
 
-//     /*
-//     // inicializa variáveis de dados auxiliares:
-//     string userId, productId, strRating, timestamp;
-//     float rating;
+    
+    userId = auxUserId;
+    productId = auxProductId;
+    timestamp = auxTimestamp;
 
-//     // lê cada linha do arquivo de texto e armazena os dados em uma string:
-//     getline(arqBin, userId, ',');
-//     getline(arqBin, productId, ',');
-//     getline(arqBin, strRating, ',');
-//     getline(arqBin, timestamp, '\n');
+    review->setUserId(userId);
+    review->setProductId(productId);
+    review->setRating(rating);
+    review->setTimestamp(timestamp);
 
-//     // seta os dados do objeto para ProductReview:
-//     review.setUserId(userId);
-//     review.setProductId(productId);
-//     rating = stof(strRating);
-//     review.setRating(rating);
-//     review.setTimestamp(timestamp);
-//     */
+    review->print();
 
-//     // fecha o arquivo binário:
-//     arqBin.close();
+    arqBin.close();
 
-// }
+    delete [] auxUserId;
+    delete [] auxProductId;
+    delete [] auxTimestamp;
+    delete review;
+}
 
-// bool verificaSorteado(int *vet, int i)
-// {
-//     for (int j = 0; j < i; j++)
-//     {
-//         if (vet[i] == vet[j]){
-//             return true;
-//         }
-//     }
-//     return false;
+bool verificaSorteado(int *vet, int i)
+{
+    for (int j = 0; j < i; j++)
+    {
+        if (vet[i] == vet[j]){
+            return true;
+        }
+    }
+    return false;
 
    
-// }
+}
 
-// ProductReview* import(int n)
-// {
-//     // abre o arquivo binário para leitura:
-//     ifstream arqBin("../archive/reviews.bin", ios::binary);
+void shuffle(int *array) {
+    for (int i = MAX - 1; i > 0; i--) {
+        unsigned seed = system_clock::now().time_since_epoch().count();
+        srand(seed);
+        int j = rand() % (i + 1);
+        int tmp = array[j];
 
-//     if (!arqBin.is_open())
-//     {
-//         cout << "ERRO: Erro ao abrir o arquivo!" << endl;
-//         return NULL;
-//     }
+        array[j] = array[i];
+        array[i] = tmp;
+    }
+}
 
-//     // cria vetor de objetos ProductReview com n posições:
-//     ProductReview *reviews = new ProductReview[n];
+int *criaIndices(int n){
 
-//     // cria vetor auxiliar com índices sorteados de 0 a n-1:
-//     int *vet = new int[n];
+    cout << "Criando indices ... " << endl;
 
-//     // lê o arquivo binário e armazena no vetor aleatório de objetos:
-//     for (int i = 0; i < n; i++)
-//     {
-//         // sorteia um número aleatório entre 0 e n-1:
-//         int aux = rand() % (n-1);
-//         vet[i] = aux;
+    int * numeros = (int*) malloc((MAX - 1) * sizeof(int));
 
-//         // verifica se o número sorteado já foi sorteado anteriormente:
-//         /*
-//         while(verificaSorteado(vet, i))
-//         {
-//             aux = rand() % (n-1);
-//             vet[i] = aux;
-//         }
-//         */
+    for (int i = 0; i < MAX; i++)
+    {
+        numeros[i] = i + 1;
+    }
 
-//         // posiciona o cursor no registro aux:
-//         arqBin.seekg(aux * sizeof(ProductReview));
+    shuffle(numeros);
 
-//         // armaneza registro aux no vetor:
-//         arqBin.read((char *)&reviews[i], sizeof(ProductReview));
-//     }
+    return numeros;
 
-//     // fecha o arquivo binário:
-//     arqBin.close();
-
-//     return reviews;
-// }
+}
 
 
-// typedef struct RegistroHash {
-//     string productId;
-//     int qtdReviews = 0;
-// } RegistroHash;
+ProductReview* import(int n)
+{
+    // abre o arquivo binário para leitura:
+    ifstream arqBin("../../archive/reviews.bin", ios::binary);
+
+    if (!arqBin.is_open())
+    {
+        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        return NULL;
+    }
+
+    cout << "Importando " << n << " registros..." << endl;
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+
+    // cria vetor de objetos ProductReview com n posições:
+    ProductReview *reviews = new ProductReview[n];
+
+    // cria vetor auxiliar com índices sorteados de 0 a MAX:
+    int *aux = criaIndices(n);
+    bool *sorteado = new bool [MAX];
+    // lê o arquivo binário e armazena no vetor aleatório de objetos:
+    int cont = 0;
+    for (int i = 0; i < n; i++)
+    {
+
+        int random = aux[i];
+        if(sorteado[random] == false){
+            sorteado[random] = true;
+        }else{
+            cout << "ERRO: Numero ja sorteado" << endl;
+            cont ++;
+        }
+
+        // posiciona o cursor no registro aux:
+        arqBin.seekg(random * (21 + 10 + sizeof(float) + 10), ios::beg);
+
+        char *auxUserId = new char[21];
+        char *auxProductId = new char[10];
+        char *auxTimestamp = new char[10];
+        auxUserId[21] = '\0';
+        auxProductId[10] = '\0';
+        auxTimestamp[10] = '\0';
+        float rating;
 
 
-// //falta tratar colisões e adicionar registros não repetidos:
-// RegistroHash* createTable(int n)
-// {
-//     // cria vetor de objetos RegistroHash com n posições:
-//     RegistroHash *table = new RegistroHash[n];
+        arqBin.read(reinterpret_cast<char*>(auxUserId), 21);
+        arqBin.read(reinterpret_cast<char*>(auxProductId), 10);
+        arqBin.read(reinterpret_cast<char*>(&rating), sizeof(float));
+        arqBin.read(reinterpret_cast<char*>(auxTimestamp), 10);
 
-//     // importa n registros aleatórios do arquivo binário:
-//     ProductReview *reviews = import(n);
+        string userId = auxUserId;
+        string productId = auxProductId;
+        string timestamp = auxTimestamp;
+
+        reviews[i].setUserId(userId);
+        reviews[i].setProductId(productId);
+        reviews[i].setRating(rating);
+        reviews[i].setTimestamp(timestamp);
+
+    } 
+
+    // fecha o arquivo binário:
+    arqBin.close();
+
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+    cout << "O indice repetiu " << cont << " vezes" << endl;
+
+    return reviews;
+}
+
+typedef struct RegistroHash {
+    string productId;
+    int qtdReviews = 0;
+} RegistroHash;
+
+
+//falta tratar colisões e adicionar registros não repetidos:
+RegistroHash* createTable(int n)
+{
+
+    ProductReview *reviews = import(n);
+    for (int i = 0; i < n; i++)
+    {
+        reviews[i].print();
+    }
+
+    TabelaHash *hashTable = new TabelaHash(n);
+    // cria vetor de objetos RegistroHash com n posições:
+    RegistroHash *table = new RegistroHash[n];
     
-//     // atribui valores iniciais para o vetor de objetos RegistroHash:
-//     for (int i = 0; i < n; i++)
-//     {
-//         table[i].productId = reviews[i].getProductId();
-//         table[i].qtdReviews += 1;
+    // atribui valores iniciais para o vetor de objetos RegistroHash:
+    for (int i = 0; i < n; i++)
+    {
+        hashTable->inserirItem(reviews[i].getProductId());
+        table[i].productId = reviews[i].getProductId();
+        table[i].qtdReviews += 1;
 
-//         // verifica se o produto já está na tabela:
-//         // if(table[i].qtdReviews > 1)
-//         // {
-//         //     table[i] = rand() % (n-1);
-//         // }
-//     }
 
-//     return table;
-// }
+        // verifica se o produto já está na tabela:
+        // if(table[i].qtdReviews > 1)
+        // {
+        //     table[i] = rand() % (n-1);
+        // }
+    }
+        hashTable->printTable();
+        cout << "Produto a ser pesquisado : " << reviews[n-1].getProductId() << endl;
+        hashTable->pesquisarItem(reviews[n-1].getProductId());
+        cout << "Produto a ser excluir : " << reviews[0].getProductId() << endl;
+        hashTable->removerItem(reviews[0].getProductId());
+        hashTable->printTable();
+
+    return table;
+}
 
 int main(int argc, char const *argv[])
 {   
     //Teste da Etapa 1:------------------------------------------
-    // if(argc < 2){
-    //     cout << "ERRO: Número de argumentos inválido!" << endl;
-    //     return 0;
-    // }
+    if(argc < 2){
+        cout << "ERRO: Número de argumentos inválido!" << endl;
+        return 0;
+    }
 
-    // string path = argv[1];
+    string path = argv[1];
 
-    // createBinary(path);
+    createBinary(path,MAX);
 
-    // cout << "Indique o número de registros que deseja importar: ";
-    // int n;
-    // cin >> n;
+    cout << "Indique o número de registros que deseja importar: ";
+    int n;
+    cin >> n;
 
-    // // cria vetor de objetos ProductReview com n posições:
-    // ProductReview *reviews = import(n);
+    cout << "Importaremos " << n << " registros aleatórios." << endl;
 
-    // cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
-
-    // for (int i = 0; i < n; i++)
-    // {
-    //     reviews[i].print();
-    // }
     //------------------------------------------------------------
 
     // Teste da etapa 3--------------------------------
+    createTable(n);
 
-    TabelaHash h(3);
-    int arr[] = {2, 4, 6, 8, 10};
-
+    /*
     for (int i = 0; i < 5; i++)
     {
         h.inserirItem(arr[i]);
@@ -272,6 +328,7 @@ int main(int argc, char const *argv[])
     h.pesquisarItem(10);
     h.removerItem(10);
     h.printTable();
+    */
 
     return 0;
 }
