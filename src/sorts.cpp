@@ -1,20 +1,22 @@
 #include "../headers/sorts.h"
+#include <../headers/ProductReview.h>
 #include <iostream>
 
 using namespace std;
 
-void Merge(int *a, int inicio, int final, int meio)
+void Merge(ProductReview *a, int inicio, int final, int meio)
 {
 
-	int i, j, k, *temp;
-  temp = new int[final - inicio + 1]; // temp = vetor temporario. inicio = inicio do vetor, final = final do vetor. meio = meio do vetor. a vet a ser ordenada
+	int i, j, k;
+  ProductReview *temp;
+  temp = new ProductReview[final - inicio + 1]; // temp = vetor temporario. inicio = inicio do vetor, final = final do vetor. meio = meio do vetor. a vet a ser ordenada
 	i = inicio;
 	k = 0;
 	j = meio + 1;
 
 	while (i <= meio && j <= final)
 	{
-		if (a[i] < a[j])
+		if (a[i].getUserId() < a[j].getUserId())
 		{
 			temp[k] = a[i];
 			k++;
@@ -54,7 +56,7 @@ void Merge(int *a, int inicio, int final, int meio)
   delete [] temp;
 }
 
-void MergeSort(int *a, int inicio, int final)
+void MergeSort(ProductReview *a, int inicio, int final)
 {
 	int meio;
 	if (inicio < final)
@@ -68,8 +70,9 @@ void MergeSort(int *a, int inicio, int final)
 
 }
 
-void swap(int *a, int *b) {
-  int aux = *a;
+template <typename T>
+void swap(T *a, T *b) {
+  T aux = *a;
   *a = *b;
   *b = aux;
 }
