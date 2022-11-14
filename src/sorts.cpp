@@ -71,6 +71,7 @@ void MergeSort(ProductReview *a, int inicio, int final)
 }
 
 template <typename T>
+
 void swap(T *a, T *b) {
   T aux = *a;
   *a = *b;
