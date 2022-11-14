@@ -92,7 +92,7 @@ void getReview(int i)
 
     if (!arqBin.is_open())
     {
-        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        cout << "ERRO: Erro ao abrir o arquivo! Não foi possível buscar o registro." << endl;
         return;
     }
 
@@ -174,7 +174,7 @@ ProductReview* import(int n)
 
     if (!arqBin.is_open())
     {
-        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        cout << "ERRO: Erro ao abrir o arquivo! Não foi possível importar os registros." << endl;
         return NULL;
     }
 
