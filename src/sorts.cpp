@@ -88,8 +88,6 @@ void MergeSort(ProductReview *a, int inicio, int final)
     //realiza a ordenação do vetor:
 		Merge(a, inicio, final, meio);
 	}
-
-  cout << "ERRO: MergeSort não implementado! Por favor, confira os índices do vetor." << endl;
 }
 
 template <typename T>
@@ -101,10 +99,9 @@ void swap(T *a, T *b) {
 }
 
 void printVetor(ProductReview vet[], int size) {
-  int i;
-  for (i = 0; i < size; i++)
-    cout << vet[i].getUserId() << " ";
-  cout << endl;
+  //Imprime o vetor:
+  for (int i = 0; i < size; i++)
+    cout << vet[i].getUserId() << " \n";
 }
 
 int particao(ProductReview vet[], int inicio, int final) {
