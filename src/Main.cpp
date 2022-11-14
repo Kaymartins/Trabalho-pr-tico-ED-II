@@ -25,7 +25,7 @@ int main()
     printVetor(vet, 10);
 
     // quickSort(vet, 0, 10);
-    MergeSort(vet, 0, 10);
+    MergeSort(vet, 0, 10 - 1);
     // countSort(vet,10);
 
     // cout << "Vetor ordenado com quickSort: \n";

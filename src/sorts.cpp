@@ -1,6 +1,7 @@
 #include "../headers/sorts.h"
 #include "../headers/ProductReview.h"
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -105,16 +106,19 @@ void printVetor(ProductReview vet[], int size) {
   cout << endl;
 }
 
-int particao(ProductReview vet[], int inicio, int final) {
+int particao(ProductReview vet[], int inicio, int final) 
+{
+  //define o pivô como o elemento do índice médio do vetor:
+  int index = floor((final + inicio) / 2);
+  int pivo = stoi(vet[index].getUserId());
 
-
-  int pivot = stoi(vet[final].getUserId());
-
+  //inicializa variável auxiliar com "-1":
   int i = (inicio - 1);
   
-
-  for (int j = inicio; j < final; j++) {
-    if (stoi(vet[j].getUserId()) <= pivot) {
+  //percorre o vetor:
+  for (int j = inicio; j < final; j++) 
+  {
+    if (stoi(vet[j].getUserId()) <= pivo) {
 
       i++;
 
