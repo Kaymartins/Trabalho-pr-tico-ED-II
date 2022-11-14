@@ -6,7 +6,6 @@
 #include <chrono>
 
 
-
 #include "../headers/ProductReview.h"
 
 using namespace std;
@@ -21,8 +20,6 @@ void createBinary(string &path, int tamBloco)
 {
     ifstream arq(path);
     ProductReview* reviews = new ProductReview[tamBloco];
-
-    
 
     if(arq.is_open())
     {
@@ -137,19 +134,6 @@ void getReview(int i)
     delete review;
 }
 
-bool verificaSorteado(int *vet, int i)
-{
-    for (int j = 0; j < i; j++)
-    {
-        if (vet[i] == vet[j]){
-            return true;
-        }
-    }
-    return false;
-
-   
-}
-
 void shuffle(int *array) {
     for (int i = MAX - 1; i > 0; i--) {
         unsigned seed = system_clock::now().time_since_epoch().count();
@@ -162,7 +146,7 @@ void shuffle(int *array) {
     }
 }
 
-int *criaIndices(int n){
+int *criaIndices(){
 
     cout << "Criando indices ... " << endl;
 
@@ -178,7 +162,6 @@ int *criaIndices(int n){
     return numeros;
 
 }
-
 
 ProductReview* import(int n)
 {
@@ -198,7 +181,7 @@ ProductReview* import(int n)
     ProductReview *reviews = new ProductReview[n];
 
     // cria vetor auxiliar com índices sorteados de 0 a MAX:
-    int *aux = criaIndices(n);
+    int *aux = criaIndices();
     bool *sorteado = new bool [MAX];
     // lê o arquivo binário e armazena no vetor aleatório de objetos:
     int cont = 0;
@@ -250,8 +233,6 @@ ProductReview* import(int n)
 
     return reviews;
 }
-
-
 
 int main(int argc, char const *argv[])
 {   
