@@ -270,7 +270,8 @@ int main(int argc, char const *argv[])
     cout << "Tabela Hash" << endl;
     h.printTable();
     h.pesquisarItem(10);
-   
+    h.removerItem(10);
+    h.printTable();
 
     return 0;
 }

@@ -67,7 +67,7 @@ void TabelaHash::removerItem(int key)
         for (int j:table[key])
         {
             if(j == val)
-                cout << "valor encontrado";
+                cout << "valor encontrado" << endl;
         }
  }
 
