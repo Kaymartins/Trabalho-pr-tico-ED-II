@@ -108,6 +108,7 @@ int particao(ProductReview vet[], int inicio, int final)
   //percorre o vetor:
   for (int j = inicio; j < final; j++) 
   {
+    //se o valor do elemento do vetor for menor que o pivô, posiciona o elemento no começo do vetor:
     if (stoi(vet[j].getUserId()) <= pivo) {
 
       i++;
@@ -116,15 +117,10 @@ int particao(ProductReview vet[], int inicio, int final)
     }
   }
 
+  //troca os elementos do pivô com o elemento do índice "i+1":
   trocar(&vet[i + 1], &vet[final]);
 
-  //DEBUG
-  for(int k = inicio; k < final; k++)
-  {
-    cout << vet[k].getUserId() << " ";
-  }
-  cout << endl;
-
+  //retorna o índice inicial dessa partição do do vetor:
   return (i + 1);
 }
 
