@@ -82,7 +82,7 @@ void MergeSort(ProductReview *a, int inicio, int final)
 }
 
 template <typename T>
-void swap(T *a, T *b) {
+void trocar(T *a, T *b) {
   //Realiza a troca de valores entre A e B:
   T aux = *a;
   *a = *b;
@@ -99,7 +99,7 @@ void printVetor(ProductReview vet[], int size) {
 int particao(ProductReview vet[], int inicio, int final) 
 {
   //define o pivô como o elemento do índice médio do vetor:
-  int index = floor((final + inicio) / 2);
+  int index = final;
   int pivo = stoi(vet[index].getUserId());
 
   //inicializa variável auxiliar com "-1":
@@ -112,11 +112,18 @@ int particao(ProductReview vet[], int inicio, int final)
 
       i++;
 
-      swap(&vet[i], &vet[j]);
+      trocar(&vet[i], &vet[j]);
     }
   }
 
-  swap(&vet[i + 1], &vet[final]);
+  trocar(&vet[i + 1], &vet[final]);
+
+  //DEBUG
+  for(int k = inicio; k < final; k++)
+  {
+    cout << vet[k].getUserId() << " ";
+  }
+  cout << endl;
 
   return (i + 1);
 }
@@ -125,11 +132,11 @@ void quickSort(ProductReview vet[], int inicio, int final) {
 
   if (inicio < final) {
 
-    int pi = particao(vet, inicio, final);
+    int indicePart = particao(vet, inicio, final);
 
-    quickSort(vet, inicio, pi - 1);
+    quickSort(vet, inicio, indicePart - 1);
 
-    quickSort(vet, pi + 1, final);
+    quickSort(vet, indicePart + 1, final);
   }
 }
 

@@ -24,13 +24,13 @@ int main()
 
     printVetor(vet, 10);
 
-    // quickSort(vet, 0, 10);
-    MergeSort(vet, 0, 9);
+    quickSort(vet, 0, 9);
+    //MergeSort(vet, 0, 9);
     // countSort(vet,10);
 
-    // cout << "Vetor ordenado com quickSort: \n";
+    cout << "Vetor ordenado com quickSort: \n";
     // printVetor(vet, 10);
-    cout << "Vetor ordenado com mergeSort: \n";
+    //cout << "Vetor ordenado com mergeSort: \n";
     printVetor(vet, 10);
     // printVetor(vet2, n2);
     // cout << "Vetor ordenado com countSort: \n";
