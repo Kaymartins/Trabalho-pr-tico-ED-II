@@ -92,7 +92,7 @@ void getReview(int i)
 
     if (!arqBin.is_open())
     {
-        cout << "ERRO: Erro ao abrir o arquivo! Não foi possível buscar o registro." << endl;
+        cout << "ERRO: Erro ao abrir o arquivo! Nao foi possivel buscar o registro." << endl;
         return;
     }
 
@@ -174,7 +174,7 @@ ProductReview* import(int n)
 
     if (!arqBin.is_open())
     {
-        cout << "ERRO: Erro ao abrir o arquivo! Não foi possível importar os registros." << endl;
+        cout << "ERRO: Erro ao abrir o arquivo! Nao foi possivel importar os registros." << endl;
         return NULL;
     }
 
@@ -196,7 +196,7 @@ ProductReview* import(int n)
         if(sorteado[random] == false){
             sorteado[random] = true;
         }else{
-            cout << "ERRO: Numero ja sorteado" << endl;
+            cout << "ERRO: Numero ja sorteado!" << endl;
             cont ++;
         }
 
@@ -241,7 +241,7 @@ ProductReview* import(int n)
 int main(int argc, char const *argv[])
 {   
     if(argc < 2){
-        cout << "ERRO: Número de argumentos inválido!" << endl;
+        cout << "ERRO: Numero de argumentos invalido! Passe a path do arquivo na execucao." << endl;
         return 0;
     }
 
@@ -255,11 +255,11 @@ int main(int argc, char const *argv[])
     int n;
     cin >> n;
 
-    cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
+    cout << "Criaremos um arquivo binario com " << n << " registros aleatorios." << endl;
 
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = import(n);
-    cout << "Importação realizada com sucesso!" << endl;
+    cout << "Importacao realizada com sucesso!" << endl;
 
     
     for (int i = 0; i < 10; i++)
