@@ -85,39 +85,33 @@ void printVetor(int vet[], int size) {
   cout << endl;
 }
 
-int particao(int vet[], int inicio, int final) {
+int particao(ProductReview vet[], int inicio, int final) {
 
 
-  int pivot = vet[final];
-
+  int pivot = stoi(vet[final].getUserId());
 
   int i = (inicio - 1);
-
+  
 
   for (int j = inicio; j < final; j++) {
-    if (vet[j] <= pivot) {
-
+    if (stoi(vet[j].getUserId()) <= pivot) {
 
       i++;
-
 
       swap(&vet[i], &vet[j]);
     }
   }
 
-
   swap(&vet[i + 1], &vet[final]);
-
 
   return (i + 1);
 }
 
-void quickSort(int vet[], int inicio, int final) {
+void quickSort(ProductReview vet[], int inicio, int final) {
+
   if (inicio < final) {
 
-
     int pi = particao(vet, inicio, final);
-
 
     quickSort(vet, inicio, pi - 1);
 
