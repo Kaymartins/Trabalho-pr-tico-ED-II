@@ -125,10 +125,11 @@ void quickSort(ProductReview vet[], int inicio, int final) {
 
   if (inicio < final) {
 
+    //calcula o índice do pivô:
     int indicePart = particao(vet, inicio, final);
 
+    //realiza a ordenação do vetor em duas partes:
     quickSort(vet, inicio, indicePart - 1);
-
     quickSort(vet, indicePart + 1, final);
   }
 }
