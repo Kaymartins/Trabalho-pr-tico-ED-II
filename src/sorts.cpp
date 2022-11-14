@@ -101,7 +101,8 @@ void swap(T *a, T *b) {
 void printVetor(ProductReview vet[], int size) {
   //Imprime o vetor:
   for (int i = 0; i < size; i++)
-    cout << vet[i].getUserId() << " \n";
+    cout << vet[i].getUserId() << " ";
+  cout << endl;
 }
 
 int particao(ProductReview vet[], int inicio, int final) {
