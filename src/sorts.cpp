@@ -145,8 +145,8 @@ void quickSort(ProductReview vet[], int inicio, int final) {
 
 void countSort(int vet[], int size)
 {
-  int output[100];// nesses vetores temos que alocar o tamanho dele pro max de registros possiveis + 1
-  int count[100];
+  int *output = new int[size + 1];
+  int *count = new int[size + 1];
   int max = vet[0];
 
   for (int i = 1; i < size; i++) {
