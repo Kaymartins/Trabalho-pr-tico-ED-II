@@ -19,20 +19,12 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 	i = inicio;
 	k = 0;
 	j = meio + 1;
-
-  //DEBUG
-  cout << "\nNOVO MERGE: " << endl;
-
+  
   //realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
 	while (i <= meio && j <= final)
 	{
-    //DEBUG:
-    cout << "[DEBUG] i: " << i << " j: " << j << endl;
-
 		if (stoi(a[i].getUserId()) < stoi(a[j].getUserId()))
 		{
-      //DEBUG:
-      cout << "[DEBUG] a[i].getUserId(): " << a[i].getUserId() << " a[j].getUserId(): " << a[j].getUserId() << endl;
 
 			temp[k] = a[i];
 			k++;
@@ -40,8 +32,6 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 		}
 		else
 		{
-      //DEBUG:
-      cout << "[DEBUG] a[i].getUserId(): " << a[i].getUserId() << " a[j].getUserId(): " << a[j].getUserId() << endl;
 
 			temp[k] = a[j];
 			k++;
