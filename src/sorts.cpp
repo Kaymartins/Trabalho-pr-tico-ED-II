@@ -16,7 +16,7 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
 
 	while (i <= meio && j <= final)
 	{
-		if (a[i].getUserId() < a[j].getUserId())
+		if (stoi(a[i].getUserId()) < stoi(a[j].getUserId()))
 		{
 			temp[k] = a[i];
 			k++;
