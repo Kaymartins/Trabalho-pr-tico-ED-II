@@ -78,10 +78,10 @@ void swap(T *a, T *b) {
   *b = aux;
 }
 
-void printVetor(int vet[], int size) {
+void printVetor(ProductReview vet[], int size) {
   int i;
   for (i = 0; i < size; i++)
-    cout << vet[i] << " ";
+    cout << vet[i].getUserId() << " ";
   cout << endl;
 }
 
