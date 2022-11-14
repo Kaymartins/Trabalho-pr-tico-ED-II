@@ -15,12 +15,16 @@ int main()
 
     //chama a função createBinary para criar o arquivo binário
     
-    cout << "Digite 1 para analise de algoritmos de ordenacao ou 2 para etapa de tabelaHash de Produtos mais avaliados: ";
+    cout << "Escolha a etapa a ser acessado:" << endl;
+    cout << endl;
+    cout << "(1) Analise de algoritmos de ordenacao" << endl;
+    cout << "(2) TabelaHash de Produtos mais avaliados" << endl;
+
     cin >> sortOrHash;
 
     if(sortOrHash == 1){
         int M = 3; //quantidade de cojutos de dados para analise
-        int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
+        //int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
         double tempo[3]; //vetor para armazenar o tempo de execução de cada algoritmo
 
 
