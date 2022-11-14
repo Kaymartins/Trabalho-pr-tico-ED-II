@@ -150,6 +150,35 @@ bool verificaSorteado(int *vet, int i)
    
 }
 
+void shuffle(int *array) {
+    for (int i = MAX - 1; i > 0; i--) {
+        unsigned seed = system_clock::now().time_since_epoch().count();
+        srand(seed);
+        int j = rand() % (i + 1);
+        int tmp = array[j];
+
+        array[j] = array[i];
+        array[i] = tmp;
+    }
+}
+
+int *criaIndices(int n){
+
+    cout << "Criando indices ... " << endl;
+
+    int * numeros = (int*) malloc((MAX - 1) * sizeof(int));
+
+    for (int i = 0; i < MAX; i++)
+    {
+        numeros[i] = i + 1;
+    }
+
+    shuffle(numeros);
+
+    return numeros;
+
+}
+
 
 ProductReview* import(int n)
 {
@@ -168,30 +197,24 @@ ProductReview* import(int n)
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = new ProductReview[n];
 
-    // cria vetor auxiliar com índices sorteados de 0 a n-1:
-    int *vet = new int[n];
-
+    // cria vetor auxiliar com índices sorteados de 0 a MAX:
+    int *aux = criaIndices(n);
+    bool *sorteado = new bool [MAX];
     // lê o arquivo binário e armazena no vetor aleatório de objetos:
+    int cont = 0;
     for (int i = 0; i < n; i++)
     {
-        // sorteia um número aleatório entre 0 e n-1:
-        uniform_int_distribution<> dist(0, MAX);
 
-        int aux = dist(gen);
-
-        vet[i] = aux;
-
-        // verifica se o número sorteado já foi sorteado anteriormente:
-        /*
-        while(verificaSorteado(vet, i))
-        {
-            aux = rand() % (n-1);
-            vet[i] = aux;
+        int random = aux[i];
+        if(sorteado[random] == false){
+            sorteado[random] = true;
+        }else{
+            cout << "ERRO: Numero ja sorteado" << endl;
+            cont ++;
         }
-        */
 
         // posiciona o cursor no registro aux:
-        arqBin.seekg(aux * (21 + 10 + sizeof(float) + 10), ios::beg);
+        arqBin.seekg(random * (21 + 10 + sizeof(float) + 10), ios::beg);
 
         char *auxUserId = new char[21];
         char *auxProductId = new char[10];
@@ -223,6 +246,7 @@ ProductReview* import(int n)
 
     high_resolution_clock::time_point fim = high_resolution_clock::now();
     cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+    cout << "O indice repetiu " << cont << " vezes" << endl;
 
     return reviews;
 }
@@ -246,11 +270,11 @@ int main(int argc, char const *argv[])
     int n;
     cin >> n;
 
+    cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
+
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = import(n);
     cout << "Importação realizada com sucesso!" << endl;
-
-    cout << "Criaremos um arquivo binário com " << n << " registros aleatórios." << endl;
 
     
     for (int i = 0; i < 10; i++)
@@ -260,6 +284,8 @@ int main(int argc, char const *argv[])
         cout << endl;
     }
     
+    
+    cout << "FIM" << endl;
 
     return 0;
 }
