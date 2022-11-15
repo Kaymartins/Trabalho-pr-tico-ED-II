@@ -33,7 +33,6 @@ void createBinary(string &path, int tamBloco)
 
         while(!arq.eof())
         {   
-            
             string userId, productId, timestamp, strRating;
 
             getline(arq,userId,',');
@@ -179,11 +178,10 @@ int *criaIndices(int n){
 
 }
 
-
 ProductReview* import(int n)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../../archive/reviews.bin", ios::binary);
+    ifstream arqBin("../archive/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -206,12 +204,6 @@ ProductReview* import(int n)
     {
 
         int random = aux[i];
-        if(sorteado[random] == false){
-            sorteado[random] = true;
-        }else{
-            cout << "ERRO: Numero ja sorteado" << endl;
-            cont ++;
-        }
 
         // posiciona o cursor no registro aux:
         arqBin.seekg(random * (21 + 10 + sizeof(float) + 10), ios::beg);
@@ -239,55 +231,47 @@ ProductReview* import(int n)
         reviews[i].setRating(rating);
         reviews[i].setTimestamp(timestamp);
 
+        delete [] auxUserId;
+        delete [] auxProductId;
+        delete [] auxTimestamp;
     } 
+
+    delete[] aux;
 
     // fecha o arquivo binário:
     arqBin.close();
 
     high_resolution_clock::time_point fim = high_resolution_clock::now();
     cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-    cout << "O indice repetiu " << cont << " vezes" << endl;
 
     return reviews;
 }
 
 //falta tratar colisões e adicionar registros não repetidos:
-void createTable(int n)
+void createTable(int registros)
 {
-
-    ProductReview *reviews = import(n);
-    for (int i = 0; i < n; i++)
-    {
-        reviews[i].print();
-    }
-
-    TabelaHash *hashTable = new TabelaHash(n);
-    // cria vetor de objetos RegistroHash com n posições:
+    ProductReview *reviews = import(registros);
+    TabelaHash *hashTable = new TabelaHash(registros);
     
     // atribui valores iniciais para o vetor de objetos RegistroHash:
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < registros; i++)
     {
         hashTable->inserirItem(reviews[i].getProductId());
-        // verifica se o produto já está na tabela:
-        // if(table[i].qtdReviews > 1)
-        // {
-        //     table[i] = rand() % (n-1);
-        // }
     }
 
-    hashTable->printTable();
+    cout << "Tabela criada com sucesso!" << endl;
 
-    cout << "Digite a quantidade desejada de produtos com maior avaliação: ";
-    int qtd;
-    cin >> qtd;
+    int p;
+    cout << "Digite a quantidade de produtos mais avaliados que voce deseja visualizar: ";
+    cin >> p;
 
-    cout << "Importando " << qtd << " produtos mais avaliados" << endl;
-    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+    hashTable->ordenaTabela(p);
 
-    hashTable->imprimirMaisAvaliados(qtd);
+    cout << "Ordenacao concluida com sucesso!" << endl;
 
-    high_resolution_clock::time_point fim = high_resolution_clock::now();
-    cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+    delete[] reviews;
+    delete hashTable;
+
 }
 
 int main(int argc, char const *argv[])
@@ -308,22 +292,9 @@ int main(int argc, char const *argv[])
 
     cout << "Importaremos " << n << " registros aleatórios." << endl;
 
-    //------------------------------------------------------------
 
-    // Teste da etapa 3--------------------------------
     createTable(n);
 
-    /*
-    for (int i = 0; i < 5; i++)
-    {
-        h.inserirItem(arr[i]);
-    }
-    cout << "Tabela Hash" << endl;
-    h.printTable();
-    h.pesquisarItem(10);
-    h.removerItem(10);
-    h.printTable();
-    */
 
     return 0;
 }

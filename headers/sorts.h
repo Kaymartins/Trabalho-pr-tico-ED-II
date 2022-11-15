@@ -1,4 +1,5 @@
 #include "ProductReview.h"
+#include "RegistroHash.h"
 
 //<<----------------- MÉTODOS GERAIS ----------------->>
 
@@ -13,11 +14,17 @@ void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrden
 
 void mergeSort(ProductReview *a, int inicio, int final, int *metricasOrdenacao);
 
-//<<----------------- QUICK SORT ----------------->>
+//<<----------------- QUICK PRODUCTREVIEW SORT ----------------->>
 
 int particao(ProductReview vet[], int inicio, int final, int *metricasOrdenacao);
 
 void quickSort(ProductReview vet[], int inicio, int final, int *metricasOrdenacao);
+
+//<<----------------- QUICK REGISTROHASH SORT ----------------->>
+
+int particaoDecrescente(RegistroHash vet[], int inicio, int final);
+
+void quickSortDecrescente(RegistroHash vet[], int inicio, int final);
 
 //<<----------------- TIM SORT ----------------->>
 

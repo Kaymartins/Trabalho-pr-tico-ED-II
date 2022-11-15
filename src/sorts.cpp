@@ -3,7 +3,7 @@
 #include <iostream>
 #include <math.h>
 
-//Constante usada no timSort
+// Constante usada no timSort
 const int RUN = 32;
 
 using namespace std;
@@ -26,7 +26,6 @@ void printVetor(ProductReview vet[], int size)
 		cout << vet[i].getUserId() << endl;
 	cout << endl;
 }
-
 
 //<<----------------- MERGE SORT ----------------->>
 
@@ -107,8 +106,7 @@ void mergeSort(ProductReview *a, int inicio, int final, int *metricasOrdenacao)
 	}
 }
 
-
-//<<----------------- QUICK SORT ----------------->>
+//<<----------------- QUICK PRODUCTREVIEW SORT ----------------->>
 
 int particao(ProductReview vet[], int inicio, int final, int *metricasOrdenacao)
 {
@@ -152,6 +150,46 @@ void quickSort(ProductReview vet[], int inicio, int final, int *metricasOrdenaca
 	}
 }
 
+//<<----------------- QUICK REGISTROHASH SORT ----------------->>
+
+int particaoDecrescente(RegistroHash vet[], int inicio, int final)
+{
+	// define o pivô como o último elemento do vetor:
+	int pivo = vet[final].qtdReviews;
+
+	// inicializa variável auxiliar com "-1":
+	int i = (inicio - 1);
+
+	// percorre o vetor:
+	for (int j = inicio; j < final; j++)
+	{
+		// se o valor do elemento do vetor for menor que o pivô, posiciona o elemento no começo do vetor:
+		if (vet[j].qtdReviews >= pivo)
+		{
+			i++;
+			trocar(&vet[i], &vet[j]);
+		}
+	}
+
+	// troca os elementos do pivô com o elemento do índice "i+1":
+	trocar(&vet[i + 1], &vet[final]);
+
+	// retorna o índice inicial dessa partição do vetor:
+	return (i + 1);
+}
+
+void quickSortDecrescente(RegistroHash vet[], int inicio, int final)
+{
+	if (inicio < final)
+	{
+		// calcula o índice do pivô:
+		int indicePart = particaoDecrescente(vet, inicio, final);
+
+		// realiza a ordenação do vetor em duas partes:
+		quickSortDecrescente(vet, inicio, indicePart - 1);
+		quickSortDecrescente(vet, indicePart + 1, final);
+	}
+}
 
 //<<----------------- TIM SORT ----------------->>
 
