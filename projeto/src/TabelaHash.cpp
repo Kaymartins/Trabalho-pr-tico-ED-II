@@ -23,8 +23,10 @@ TabelaHash::TabelaHash(int n)
     this->table = createTable(primo);
 }
 
+//desaloca a memória da tabela:
 TabelaHash::~TabelaHash()
 {
+    //desaloca a memória da tabela:
     delete[] this->table;
 }
 
