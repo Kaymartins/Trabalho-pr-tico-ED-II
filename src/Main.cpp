@@ -302,22 +302,26 @@ int main(int argc, char const *argv[])
         int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
         double tempo[3] = {0, 0, 0}; //vetor para armazenar o tempo de execução de cada algoritmo
 
-        // for(int i = 0; i < M; i++){ //executa o algoritmo de mergeSort para cada conjunto de 
-        //     ProductReview *reviews = import(1000000);
-        //     high_resolution_clock::time_point inicio = high_resolution_clock::now();
-        //     MergeSort(reviews, 0, N[i] - 1);            
-        //     high_resolution_clock::time_point fim = high_resolution_clock::now();
-        //     cout << "Tempo de execucao do MergeSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-        //     tempo[0] += duration_cast<duration<double>>(fim - inicio).count();
-        //     delete[] reviews;
-        // }
+        for(int i = 0; i < M; i++){ //executa o algoritmo de mergeSort para cada conjunto de 
+            ProductReview *reviews = import(1000000);
+
+            high_resolution_clock::time_point inicio = high_resolution_clock::now();
+            MergeSort(reviews, 0, N[i] - 1);            
+            high_resolution_clock::time_point fim = high_resolution_clock::now();
+            
+            cout << "Tempo de execucao do MergeSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+            tempo[0] += duration_cast<duration<double>>(fim - inicio).count();
+            delete[] reviews;
+        }
         tempo[0] /= M; //calcula a média do tempo de execução do algoritmo de mergeSort
 
-        for(int i = 0; i < M; i++){ //executa o algoritmo de quickSort para cada conjunto de dados
+        for(int i = 0; i < 1; i++){ //executa o algoritmo de quickSort para cada conjunto de dados
             ProductReview *reviews = import(1000000);
+
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
-            quickSort(reviews, 0, N[4] - 1);
+            quickSort(reviews, 0, N[i] - 1);
             high_resolution_clock::time_point fim = high_resolution_clock::now();
+
             cout << "Tempo de execucao do QuickSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
             tempo[1] += duration_cast<duration<double>>(fim - inicio).count();
             delete[] reviews;
