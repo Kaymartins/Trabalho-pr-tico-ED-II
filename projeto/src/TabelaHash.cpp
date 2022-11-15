@@ -15,10 +15,12 @@ TabelaHash::TabelaHash(int n)
     this->cont = 0;
     this->colisoes = 0;
 
+    //define o tamanho da tabela:
     this->primo = criaPrimo(n);
     cout << "Primo: " << primo << endl;
-    this->table = createTable(primo);
 
+    //cria a tabela com tamanho primo:
+    this->table = createTable(primo);
 }
 
 TabelaHash::~TabelaHash()
@@ -64,6 +66,8 @@ int TabelaHash::criaPrimo(int n){
             }
         }
     }
+
+    //retorna o número primo:
     return n;
 }
 
