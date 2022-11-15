@@ -2,6 +2,7 @@
 #include "../headers/ProductReview.h"
 #include <iostream>
 #include <math.h>
+const int RUN = 32;
 
 using namespace std;
 
@@ -134,37 +135,89 @@ void quickSort(ProductReview vet[], int inicio, int final) {
   }
 }
 
-void countSort(int vet[], int size)
+// void countSort(int vet[], int size)
+// {
+//   int *output = new int[size + 1];
+//   int *count = new int[size + 1];
+//   int max = vet[0];
+
+//   for (int i = 1; i < size; i++) {
+//     if (vet[i] > max)
+//       max = vet[i];
+//   }
+
+
+//   for (int i = 0; i <= max; ++i) {
+//     count[i] = 0;
+//   }
+
+//   for (int i = 0; i < size; i++) {
+//     count[vet[i]]++;
+//   }
+
+//   for (int i = 1; i <= max; i++) {
+//     count[i] += count[i - 1];
+//   }
+//   for (int i = size - 1; i >= 0; i--) {
+//     output[count[vet[i]] - 1] = vet[i];
+//     count[vet[i]]--;
+//   }
+
+
+//   for (int i = 0; i < size; i++) {
+//     vet[i] = output[i];
+//   }
+// }
+
+void insertionSort(ProductReview *vet, int esq, int dir)
 {
-  int *output = new int[size + 1];
-  int *count = new int[size + 1];
-  int max = vet[0];
-
-  for (int i = 1; i < size; i++) {
-    if (vet[i] > max)
-      max = vet[i];
-  }
-
-
-  for (int i = 0; i <= max; ++i) {
-    count[i] = 0;
-  }
-
-  for (int i = 0; i < size; i++) {
-    count[vet[i]]++;
-  }
-
-  for (int i = 1; i <= max; i++) {
-    count[i] += count[i - 1];
-  }
-  for (int i = size - 1; i >= 0; i--) {
-    output[count[vet[i]] - 1] = vet[i];
-    count[vet[i]]--;
-  }
-
-
-  for (int i = 0; i < size; i++) {
-    vet[i] = output[i];
-  }
+	for (int i = esq + 1; i <= dir; i++)
+	{
+		ProductReview *temp;
+    temp = new ProductReview[i];
+		int j = i - 1;
+		while (j >= esq && vet[j] > temp)
+		{
+			vet[j+1] = vet[j];
+			j--;
+		}
+	  vet[j+1] = temp;
+	}
 }
+
+void timSort(ProductReview *vet, int n)
+{
+	// divide o vetor em varios subvetores(nesse caso de 32 posições(o valorde RUN))
+  // e ordena cada uma dessas posicoes individualmente
+	for (int i = 0; i < n; i+=RUN)
+		insertionSort(vet, i, min((i+RUN-1),(n-1)));
+
+	for (int size = RUN; size < n; size = 2*size)
+	{
+		
+		// pick starting point of
+		// esq sub array. We
+		// are going to merge
+		// vet[esq..esq+size-1]
+		// and vet[esq+size, esq+2*size-1]
+		// After every merge, we
+		// increase esq by 2*size
+		for (int esq = 0; esq < n;	esq += 2*size)
+		{
+			
+			// find ending point of
+			// esq sub array
+			// mid+1 is starting point
+			// of dir sub array
+			int mid = esq + size - 1;
+			int dir = min((esq + 2*size - 1),(n-1));
+
+			// merge sub array vet[esq.....mid] &
+			// vet[mid+1....dir]
+			if(mid < dir) 
+        Merge(vet, esq, dir, mid);
+		}
+	}
+}
+
 

@@ -10,5 +10,9 @@ void printVetor(ProductReview vet[], int size);
 
 void quickSort(ProductReview vet[], int inicio, int final);
 
-void countSort(int vet[], int size);
+// void countSort(int vet[], int size);
+
+void insertionSort(ProductReview *vet, int esq, int dir);
+
+void timSort(ProductReview *vet, int n);
 
