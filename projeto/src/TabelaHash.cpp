@@ -111,17 +111,18 @@ void TabelaHash::inserirItem(string value)
     this->table[index].push_back(novoRegistro);
 }
 
+//imprime a tabela hash:
 void TabelaHash::printTable(){
+
+    //percorre a tabela:
     for(int i = 0; i < primo; i++){
       cout << "Index " << i << ": ";
+      //impime os registros:
       for(RegistroHash j : table[i])
         cout << "productId: " << j.productId << " qtdReviews: " << j.qtdReviews << " => ";
       cout << endl;
     }
-
+  
+    //imprime o número de colisões:
     cout << "Total de colisões: " << this->colisoes << endl;
 }
-
-
-
-
