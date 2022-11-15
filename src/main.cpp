@@ -5,236 +5,263 @@
 #include <cstring>
 #include <chrono>
 
-
-#include "../headers/TabelaHash.h"
 #include "../headers/ProductReview.h"
+#include "../headers/TabelaHash.h"
+#include "../headers/sorts.h"
 
 using namespace std;
-using namespace std::chrono;
+using namespace chrono;
 
 default_random_engine gen;
 
+// número de registros do arquivo de entrada:
 const int MAX = 7824483;
 
-
-void createBinary(string &path, int tamBloco)
+// cria arquivo binário:
+void createBinary(string &path)
 {
-    ifstream arq(path);
-    ProductReview* reviews = new ProductReview[tamBloco];
+    // abre arquivo para leitura:
+    ifstream arq(path + "/ratings_Electronics.csv");
 
-    
+    // cria vetor de registros ProductReview:
+    ProductReview *reviews = new ProductReview[MAX];
 
-    if(arq.is_open())
+    if (arq.is_open())
     {
         cout << "Criando arquivo binario ... " << endl;
-        high_resolution_clock::time_point inicio = high_resolution_clock::now();
-        int i = 0;
-        string str;
 
-        while(!arq.eof())
-        {   
+        // inicia contagem de tempo:
+        high_resolution_clock::time_point inicio = high_resolution_clock::now();
+
+        // lê todos os registros do arquivo de entrada:
+        int i = 0;
+        while (!arq.eof())
+        {
+            // declara variáveis auxiliares:
             string userId, productId, timestamp, strRating;
 
-            getline(arq,userId,',');
-            getline(arq,productId,',');
-            getline(arq,strRating,',');
-            getline(arq,timestamp,'\n');
+            // captura os dados objeto ProductReview:
+            getline(arq, userId, ',');
+            getline(arq, productId, ',');
+            getline(arq, strRating, ',');
+            getline(arq, timestamp, '\n');
 
-            // seta os dados do objeto para ProductReview:
+            // seta os dados do objeto para o vetor de registros:
             float rating;
             reviews[i].setUserId(userId);
             reviews[i].setProductId(productId);
-            rating = strtof(strRating.c_str(),nullptr);
+            rating = strtof(strRating.c_str(), nullptr);
             reviews[i].setRating(rating);
             reviews[i].setTimestamp(timestamp);
-            
+
             i++;
         }
-        
-        
+
+        // abre arquivo binário para escrita:
         ofstream file;
-        file.open("../../archive/reviews.bin", ios::binary);
-        if(file.is_open())
+        file.open(path + "/reviews.bin", ios::binary);
+        if (file.is_open())
         {
-            for(int i = 0; i < tamBloco; i++)
+            // escreve o vetor de registros no arquivo binário:
+            for (int i = 0; i < MAX; i++)
             {
-                
+                // inicializa variáveis auxiliares:
                 string userId = reviews[i].getUserId();
                 string productId = reviews[i].getProductId();
                 float rating = reviews[i].getRating();
                 string timestamp = reviews[i].getTimestamp();
 
-                file.write(reinterpret_cast<const char*>(userId.c_str()),21);
-                file.write(reinterpret_cast<const char*>(productId.c_str()),10);
-                file.write(reinterpret_cast<const char*>(&rating), sizeof(float));
-                file.write(reinterpret_cast<const char*>(timestamp.c_str()),10);
-
+                // escreve os dados do objeto no arquivo binário:
+                file.write(reinterpret_cast<const char *>(userId.c_str()), 21);
+                file.write(reinterpret_cast<const char *>(productId.c_str()), 10);
+                file.write(reinterpret_cast<const char *>(&rating), sizeof(float));
+                file.write(reinterpret_cast<const char *>(timestamp.c_str()), 10);
             }
         }
 
-
+        // fecha arquivo binário:
         file.close();
-        
         cout << "Arquivo binario criado com sucesso!" << endl;
+
+        // finaliza contagem de tempo:
         high_resolution_clock::time_point fim = high_resolution_clock::now();
         cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-    }    
+    }
 
+    // fecha arquivo de entrada:
     arq.close();
 }
 
-void getReview(int i)
+// retorna um registro de índice i:
+void getReview(string &path, int i)
 {
+
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../../archive/reviews.bin", ios::binary);
+    ifstream arqBin(path + "/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
-        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        cout << "ERRO: Erro ao abrir o arquivo! Nao foi possivel buscar o registro." << endl;
         return;
     }
 
+    // declara variáveis auxiliares:
     string userId, productId, timestamp;
     float rating;
 
     // posiciona o cursor no registro i:
     arqBin.seekg(i * (21 + 10 + sizeof(float) + 10), ios::beg);
 
+    // declara vetores auxiliares de char para armazenar os dados do registro:
     char *auxUserId = new char[21];
     char *auxProductId = new char[10];
     char *auxTimestamp = new char[10];
+    // define final dos vetores de char:
     auxUserId[21] = '\0';
     auxProductId[10] = '\0';
     auxTimestamp[10] = '\0';
 
-
     // inicializa variável do tipo ProductReview:
     ProductReview *review = new ProductReview;
 
-    arqBin.read(reinterpret_cast<char*>(auxUserId), 21);
-    arqBin.read(reinterpret_cast<char*>(auxProductId), 10);
-    arqBin.read(reinterpret_cast<char*>(&rating), sizeof(float));
-    arqBin.read(reinterpret_cast<char*>(auxTimestamp), 10);
+    arqBin.read(reinterpret_cast<char *>(auxUserId), 21);
+    arqBin.read(reinterpret_cast<char *>(&rating), sizeof(float));
+    arqBin.read(reinterpret_cast<char *>(auxTimestamp), 10);
 
-    
+    // inicializa as variáveis auxiliares com os dados do registro i:
+
     userId = auxUserId;
     productId = auxProductId;
     timestamp = auxTimestamp;
+
+    // seta os dados para o registro ProductReview:
 
     review->setUserId(userId);
     review->setProductId(productId);
     review->setRating(rating);
     review->setTimestamp(timestamp);
 
+    // imprime os dados do registro:
     review->print();
 
+    // fecha arquivo binário:
     arqBin.close();
 
-    delete [] auxUserId;
-    delete [] auxProductId;
-    delete [] auxTimestamp;
+    // libera memória alocada:
+    delete[] auxUserId;
+    delete[] auxProductId;
+    delete[] auxTimestamp;
     delete review;
 }
 
-bool verificaSorteado(int *vet, int i)
+// cria vetor de índices aleatórios:
+void shuffle(int *array)
 {
-    for (int j = 0; j < i; j++)
+
+    // sortei um número aleatório entre 0 e MAX:
+    for (int i = MAX - 1; i > 0; i--)
     {
-        if (vet[i] == vet[j]){
-            return true;
-        }
-    }
-    return false;
-
-   
-}
-
-void shuffle(int *array) {
-    for (int i = MAX - 1; i > 0; i--) {
+        // cria uma semente para o gerador de Numeros aleatórios:
         unsigned seed = system_clock::now().time_since_epoch().count();
-        srand(seed);
-        int j = rand() % (i + 1);
-        int tmp = array[j];
 
+        // cria um gerador de Numeros aleatórios:
+        srand(seed);
+
+        // gera um número aleatório entre 0 e MAX-1:
+        int j = rand() % (i + 1);
+
+        // troca os valores do índice i com o índice j:
+        int aux = array[j];
         array[j] = array[i];
-        array[i] = tmp;
+        array[i] = aux;
     }
 }
 
-int *criaIndices(int n){
+// gera um vetor com Numeros aleatórios:
+int *criaIndices()
+{
 
-    cout << "Criando indices ... " << endl;
+    // declara vetor de posições:
+    // int *Numeros = (int*) malloc((MAX - 1) * sizeof(int));
+    int *Numeros = new int[(MAX - 1) * sizeof(int)];
 
-    int * numeros = (int*) malloc((MAX - 1) * sizeof(int));
-
+    // inicializa vetor de posições com as posições do arquivo:
     for (int i = 0; i < MAX; i++)
     {
-        numeros[i] = i + 1;
+        Numeros[i] = i + 1;
     }
 
-    shuffle(numeros);
+    // reinicializa o vetor com Numeros aleatórios:
+    shuffle(Numeros);
 
-    return numeros;
-
+    // retorna vetor com Numeros aleatórios:
+    return Numeros;
 }
 
-ProductReview* import(int n)
+// importa n registros aleatórios do arquivo binário:
+ProductReview *import(string &path, int n)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../archive/reviews.bin", ios::binary);
+    ifstream arqBin(path + "/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
-        cout << "ERRO: Erro ao abrir o arquivo!" << endl;
+        cout << "ERRO: Erro ao abrir o arquivo! Nao foi possivel importar os registros." << endl;
         return NULL;
     }
 
     cout << "Importando " << n << " registros..." << endl;
+    // inicializa contagem de tempo:
     high_resolution_clock::time_point inicio = high_resolution_clock::now();
 
     // cria vetor de objetos ProductReview com n posições:
     ProductReview *reviews = new ProductReview[n];
 
-    // cria vetor auxiliar com índices sorteados de 0 a MAX:
-    int *aux = criaIndices(n);
-    bool *sorteado = new bool [MAX];
-    // lê o arquivo binário e armazena no vetor aleatório de objetos:
-    int cont = 0;
+    // cria vetor auxiliar com índices sorteados de 0 a MAX-1:
+    int *aux = criaIndices();
+
+    // importa n registros aleatórios:
     for (int i = 0; i < n; i++)
     {
-
+        // captura índice aleatório contido no vetor auxiliar:
         int random = aux[i];
 
-        // posiciona o cursor no registro aux:
+        // posiciona o cursor no registro aleatório:
         arqBin.seekg(random * (21 + 10 + sizeof(float) + 10), ios::beg);
 
+        // declara vetores auxiliares de char para armazenar os dados do registro:
         char *auxUserId = new char[21];
         char *auxProductId = new char[10];
         char *auxTimestamp = new char[10];
+        // define final dos vetores de char:
         auxUserId[21] = '\0';
         auxProductId[10] = '\0';
         auxTimestamp[10] = '\0';
+        // declara variável auxiliar:
         float rating;
 
+        // lê os dados do registro:
+        arqBin.read(reinterpret_cast<char *>(auxUserId), 21);
+        arqBin.read(reinterpret_cast<char *>(auxProductId), 10);
+        arqBin.read(reinterpret_cast<char *>(&rating), sizeof(float));
+        arqBin.read(reinterpret_cast<char *>(auxTimestamp), 10);
 
-        arqBin.read(reinterpret_cast<char*>(auxUserId), 21);
-        arqBin.read(reinterpret_cast<char*>(auxProductId), 10);
-        arqBin.read(reinterpret_cast<char*>(&rating), sizeof(float));
-        arqBin.read(reinterpret_cast<char*>(auxTimestamp), 10);
-
+        // inicializa as variáveis auxiliares com os dados do registro:
         string userId = auxUserId;
         string productId = auxProductId;
         string timestamp = auxTimestamp;
 
+        // seta os dados para o registro ProductReview:
         reviews[i].setUserId(userId);
         reviews[i].setProductId(productId);
         reviews[i].setRating(rating);
         reviews[i].setTimestamp(timestamp);
 
-        delete [] auxUserId;
-        delete [] auxProductId;
-        delete [] auxTimestamp;
-    } 
+        // libera memória alocada:
+        delete[] auxUserId;
+        delete[] auxProductId;
+        delete[] auxTimestamp;
+    }
 
     delete[] aux;
 
@@ -247,12 +274,12 @@ ProductReview* import(int n)
     return reviews;
 }
 
-//falta tratar colisões e adicionar registros não repetidos:
-void createTable(int registros)
+// falta tratar colisões e adicionar registros não repetidos:
+void createTable(string &path, int registros)
 {
-    ProductReview *reviews = import(registros);
+    ProductReview *reviews = import(path, registros);
     TabelaHash *hashTable = new TabelaHash(registros);
-    
+
     // atribui valores iniciais para o vetor de objetos RegistroHash:
     for (int i = 0; i < registros; i++)
     {
@@ -271,30 +298,244 @@ void createTable(int registros)
 
     delete[] reviews;
     delete hashTable;
-
 }
 
 int main(int argc, char const *argv[])
-{   
-    //Teste da Etapa 1:------------------------------------------
-    if(argc < 2){
-        cout << "ERRO: Número de argumentos inválido!" << endl;
+{
+    if (argc < 2)
+    {
+        cout << "ERRO: Número de argumentos invalido! Passe a path do arquivo na execucao." << endl;
         return 0;
     }
 
+    int sortOrHash;
+
+    // atribui a path passada como argumento a variável path:
     string path = argv[1];
 
-    createBinary(path,MAX);
+    // chama a função createBinary para criar o arquivo binário
 
-    cout << "Indique o número de registros que deseja importar: ";
-    int n;
-    cin >> n;
+    ifstream verificaBin(path + "/reviews.bin");
 
-    cout << "Importaremos " << n << " registros aleatórios." << endl;
+    if (verificaBin.is_open())
+    {
+        int recriarBin;
+        cout << "Arquivo binario ja existe!" << endl;
+        cout << "Deseja recriar o arquivo binario? (1 - Sim / 0 - Nao)" << endl;
+        cin >> recriarBin;
 
+        if (recriarBin)
+        {
+            createBinary(path);
+        }
+    }
+    else
+    {
+        createBinary(path);
+    }
 
-    createTable(n);
+    cout << "Escolha a etapa a ser executada:" << endl;
 
+    cout << "(1) Ordenacao" << endl;
+    cout << "(2) Hashing" << endl;
+    cin >> sortOrHash;
+    cout << endl;
 
-    return 0;
+    // Se a opção for 1, chama a função de ordenação
+    if (sortOrHash == 1)
+    {
+        ofstream saida(path + "/saida.txt");
+        saida << "Resultados de eficiência dos métodos de ordenação:\n"
+              << endl;
+
+        int M = 3;                                          // quantidade de cojutos de dados para analise
+        int N[5] = {10000, 50000, 100000, 500000, 1000000}; // quantidade de dados para analise
+
+        double tempo;                           // variável para armazenar o tempo de execução de cada algoritmo
+        double tempoMedio = 0;                  // variável para armazenar o tempo médio de execução de cada algoritmo
+        int metricasOrdenacao[2];               // vetor para armazenar as métricas de comparação de cada algoritmo
+        int metricasOrdenacaoMedia[2] = {0, 0}; // vetor para armazenar as métricas de comparação média de cada algoritmo
+
+        for (int reg = 0; reg < 5; reg++)
+        {
+            tempoMedio = 0;
+            metricasOrdenacaoMedia[0] = 0;
+            metricasOrdenacaoMedia[1] = 0;
+
+            saida << "<<-------------------------- Ordenando " << N[reg] << " registros -------------------------->>" << endl;
+            saida << endl;
+
+            saida << "<<--------------- MergeSort --------------->>" << endl;
+            saida << endl;
+            for (int i = 0; i < M; i++)
+            { // executa o algoritmo de mergeSort para cada conjunto de
+
+                metricasOrdenacao[0] = 0; // zera o vetor de métricas de comparação
+                metricasOrdenacao[1] = 0; // zera o vetor de métricas de troca
+
+                ProductReview *reviews = import(path, N[reg]);
+
+                cout << "Executando MergeSort para " << N[reg] << " registros..." << endl;
+                cout << endl;
+
+                high_resolution_clock::time_point inicio = high_resolution_clock::now();
+                mergeSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
+                high_resolution_clock::time_point fim = high_resolution_clock::now();
+
+                tempo = duration_cast<duration<double>>(fim - inicio).count();
+
+                // Escreve no arquivo de saída os resultados de cada execução
+                saida << "Ordenação por MergeSort número " << i + 1 << ":" << endl;
+                saida << "Tempo de execução: " << tempo << " segundos" << endl;
+                saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
+                saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
+                saida << endl;
+
+                // Armazena as métricas de comparação e troca para calcular a média
+                tempoMedio += tempo;
+                metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; // soma as métricas de comparação
+                metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; // soma as métricas de troca
+
+                // Libera Memória
+                delete[] reviews;
+            }
+
+            // Calcula a média das métricas de comparação e troca
+            tempoMedio /= M;                // calcula a média do tempo de execução
+            metricasOrdenacaoMedia[0] /= M; // calcula a média das métricas de comparação
+            metricasOrdenacaoMedia[1] /= M; // calcula a média das métricas de troca
+
+            // Escreve o arquivo de saída com metricas calculadas
+            saida << "Desempenho médio do MergeSort:" << endl;
+            saida << "Tempo médio de execução do Merge Sort: " << tempoMedio << " segundos" << endl;
+            saida << "Número médio de comparações do Merge Sort: " << metricasOrdenacaoMedia[0] << endl;
+            saida << "Número médio de trocas do Merge Sort: " << metricasOrdenacaoMedia[1] << endl;
+            saida << endl;
+            saida << endl;
+
+            tempoMedio = 0;                // calcula a média do tempo de execução
+            metricasOrdenacaoMedia[0] = 0; // calcula a média das métricas de comparação
+            metricasOrdenacaoMedia[1] = 0; // calcula a média das métricas de troca
+
+            saida << "<<--------------- QuickSort --------------->>" << endl;
+            saida << endl;
+
+            for (int i = 0; i < M; i++)
+            { // executa o algoritmo de quickSort para cada conjunto de dados
+
+                metricasOrdenacao[0] = 0; // zera o vetor de métricas de comparação
+                metricasOrdenacao[1] = 0; // zera o vetor de métricas de troca
+
+                ProductReview *reviews = import(path, N[reg]);
+
+                cout << "Executando QuickSort para " << N[reg] << " registros..." << endl;
+                cout << endl;
+
+                high_resolution_clock::time_point inicio = high_resolution_clock::now();
+                quickSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
+                high_resolution_clock::time_point fim = high_resolution_clock::now();
+
+                tempo = duration_cast<duration<double>>(fim - inicio).count();
+
+                // Escreve no arquivo de saída os resultados de cada execução
+                saida << "Ordenação por QuickSort número " << i + 1 << ":" << endl;
+                saida << "Tempo de execução: " << tempo << " segundos" << endl;
+                saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
+                saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
+                saida << endl;
+
+                // Armazena as métricas de comparação e troca para calcular a média
+                tempoMedio += tempo;
+                metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; // soma as métricas de comparação
+                metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; // soma as métricas de troca
+
+                delete[] reviews;
+            }
+
+            // Calcula a média das métricas de comparação e troca
+            tempoMedio /= M;                // calcula a média do tempo de execução
+            metricasOrdenacaoMedia[0] /= M; // calcula a média das métricas de comparação
+            metricasOrdenacaoMedia[1] /= M; // calcula a média das métricas de troca
+
+            // Escreve o arquivo de saída com metricas calculadas
+            saida << "Desempenho médio do QuickSort:" << endl;
+            saida << "Tempo médio de execução do Quick Sort: " << tempoMedio << " segundos" << endl;
+            saida << "Número médio de comparações do Quick Sort: " << metricasOrdenacaoMedia[0] << endl;
+            saida << "Número médio de trocas do Quick Sort: " << metricasOrdenacaoMedia[1] << endl;
+            saida << endl;
+            saida << endl;
+
+            tempoMedio = 0;                // calcula a média do tempo de execução
+            metricasOrdenacaoMedia[0] = 0; // zera o vetor de métricas de comparação
+            metricasOrdenacaoMedia[1] = 0; // zera o vetor de métricas de troca
+
+            saida << "<<--------------- TimSort --------------->>" << endl;
+            saida << endl;
+
+            for (int i = 0; i < M; i++)
+            { // executa o algoritmo de countSort para cada conjunto de dados
+
+                metricasOrdenacao[0] = 0; // zera o vetor de métricas de comparação
+                metricasOrdenacao[1] = 0; // zera o vetor de métricas de troca
+
+                ProductReview *reviews = import(path, N[reg]);
+
+                cout << "Executando TimSort para " << N[reg] << " registros..." << endl;
+                cout << endl;
+
+                high_resolution_clock::time_point inicio = high_resolution_clock::now();
+                timSort(reviews, N[reg], metricasOrdenacao);
+                high_resolution_clock::time_point fim = high_resolution_clock::now();
+
+                tempo = duration_cast<duration<double>>(fim - inicio).count();
+
+                // Escreve no arquivo de saída os resultados de cada execução
+                saida << "Ordenação por TimSort número " << i + 1 << ":" << endl;
+                saida << "Tempo de execução: " << tempo << " segundos" << endl;
+                saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
+                saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
+                saida << endl;
+
+                // Armazena as métricas de comparação e troca para calcular a média
+                tempoMedio += tempo;
+                metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; // soma as métricas de comparação
+                metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; // soma as métricas de troca
+
+                delete[] reviews;
+            }
+
+            // Calcula a média das métricas de comparação e troca
+            tempoMedio /= M;                // calcula a média do tempo de execução
+            metricasOrdenacaoMedia[0] /= M; // calcula a média das métricas de comparação
+            metricasOrdenacaoMedia[1] /= M; // calcula a média das métricas de troca
+
+            // Escreve o arquivo de saída com metricas calculadas
+            saida << "Desempenho médio do TimSort:" << endl;
+            saida << "Tempo médio de execução do Tim Sort: " << tempoMedio << " segundos" << endl;
+            saida << "Número médio de comparações do Tim Sort: " << metricasOrdenacaoMedia[0] << endl;
+            saida << "Número médio de trocas do Tim Sort: " << metricasOrdenacaoMedia[1] << endl;
+            saida << endl;
+        }
+
+        saida.close();
+
+        cout << "Arquivo de saida com dados sobre os metodos de ordenacao gerado com sucesso!" << endl;
+    }
+    else if (sortOrHash == 2)
+    {
+        cout << "Indique o número de registros que deseja importar: ";
+        int n;
+        cin >> n;
+
+        cout << "Importaremos " << n << " registros aleatórios." << endl;
+
+        createTable(path, n);
+
+        return 0;
+    }
+    else
+    {
+        cout << "Opcao invalida!" << endl;
+        cout << "Fechando do Programa" << endl;
+    }
 }

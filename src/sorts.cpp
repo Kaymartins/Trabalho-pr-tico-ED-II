@@ -3,7 +3,11 @@
 #include <iostream>
 #include <math.h>
 
+<<<<<<< HEAD
 // Constante usada no timSort
+=======
+//Constante usada no timSort
+>>>>>>> main
 const int RUN = 32;
 
 using namespace std;
@@ -27,6 +31,10 @@ void printVetor(ProductReview vet[], int size)
 	cout << endl;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 //<<----------------- MERGE SORT ----------------->>
 
 void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrdenacao)
@@ -106,7 +114,12 @@ void mergeSort(ProductReview *a, int inicio, int final, int *metricasOrdenacao)
 	}
 }
 
+<<<<<<< HEAD
 //<<----------------- QUICK PRODUCTREVIEW SORT ----------------->>
+=======
+
+//<<----------------- QUICK SORT ----------------->>
+>>>>>>> main
 
 int particao(ProductReview vet[], int inicio, int final, int *metricasOrdenacao)
 {
@@ -150,6 +163,7 @@ void quickSort(ProductReview vet[], int inicio, int final, int *metricasOrdenaca
 	}
 }
 
+<<<<<<< HEAD
 //<<----------------- QUICK REGISTROHASH SORT ----------------->>
 
 int particaoDecrescente(RegistroHash vet[], int inicio, int final)
@@ -190,6 +204,8 @@ void quickSortDecrescente(RegistroHash vet[], int inicio, int final)
 		quickSortDecrescente(vet, indicePart + 1, final);
 	}
 }
+=======
+>>>>>>> main
 
 //<<----------------- TIM SORT ----------------->>
 
