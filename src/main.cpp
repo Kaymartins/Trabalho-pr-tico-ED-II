@@ -323,6 +323,8 @@ int main(int argc, char const *argv[])
             ProductReview *reviews = import(path, 1000000);
 
             cout << "Executando MergeSort para " << N[i] << " registros..." << endl;
+            cout << endl;
+            
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             mergeSort(reviews, 0, N[4] - 1, metricasOrdenacao);            
             high_resolution_clock::time_point fim = high_resolution_clock::now();
@@ -373,6 +375,8 @@ int main(int argc, char const *argv[])
             ProductReview *reviews = import(path, 1000000);
 
             cout << "Executando QuickSort para " << N[i] << " registros..." << endl;
+            cout << endl;
+            
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             quickSort(reviews, 0, N[4] - 1, metricasOrdenacao);
             high_resolution_clock::time_point fim = high_resolution_clock::now();
@@ -422,6 +426,8 @@ int main(int argc, char const *argv[])
             ProductReview *reviews = import(path, 1000000);
 
             cout << "Executando TimSort para " << N[i] << " registros..." << endl;
+            cout << endl;
+            
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             timSort(reviews, 1000000, metricasOrdenacao);           
             high_resolution_clock::time_point fim = high_resolution_clock::now();
