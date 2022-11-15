@@ -161,10 +161,10 @@ void shuffle(int *array)
     // sortei um número aleatório entre 0 e MAX:
     for (int i = MAX - 1; i > 0; i--)
     {
-        // cria uma semente para o gerador de números aleatórios:
+        // cria uma semente para o gerador de Numeros aleatórios:
         unsigned seed = system_clock::now().time_since_epoch().count();
 
-        // cria um gerador de números aleatórios:
+        // cria um gerador de Numeros aleatórios:
         srand(seed);
 
         // gera um número aleatório entre 0 e MAX-1:
@@ -177,25 +177,25 @@ void shuffle(int *array)
     }
 }
 
-// gera um vetor com números aleatórios:
+// gera um vetor com Numeros aleatórios:
 int *criaIndices()
 {
 
     // declara vetor de posições:
-    // int *numeros = (int*) malloc((MAX - 1) * sizeof(int));
-    int *numeros = new int[(MAX - 1) * sizeof(int)];
+    // int *Numeros = (int*) malloc((MAX - 1) * sizeof(int));
+    int *Numeros = new int[(MAX - 1) * sizeof(int)];
 
     // inicializa vetor de posições com as posições do arquivo:
     for (int i = 0; i < MAX; i++)
     {
-        numeros[i] = i + 1;
+        Numeros[i] = i + 1;
     }
 
-    // reinicializa o vetor com números aleatórios:
-    shuffle(numeros);
+    // reinicializa o vetor com Numeros aleatórios:
+    shuffle(Numeros);
 
-    // retorna vetor com números aleatórios:
-    return numeros;
+    // retorna vetor com Numeros aleatórios:
+    return Numeros;
 }
 
 // importa n registros aleatórios do arquivo binário:
@@ -279,7 +279,7 @@ int main(int argc, char const *argv[])
 {
     if (argc < 2)
     {
-        cout << "ERRO: Numero de argumentos invalido! Passe a path do arquivo na execucao." << endl;
+        cout << "ERRO: Número de argumentos invalido! Passe a path do arquivo na execucao." << endl;
         return 0;
     }
 
@@ -301,79 +301,158 @@ int main(int argc, char const *argv[])
     
     //Se a opção for 1, chama a função de ordenação
     if(sortOrHash == 1){
-        int M = 1; //quantidade de cojutos de dados para analise
+        ofstream saida(path + "/saida.txt");
+        saida << "Resultados de eficiência dos métodos de ordenação:\n" << endl;
+
+        int M = 3; //quantidade de cojutos de dados para analise
         int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
 
-        double tempo[3] = {0, 0, 0}; //vetor para armazenar o tempo de execução de cada algoritmo
-        int metricasOrdenacao[2] = {0, 0}; //vetor para armazenar as métricas de comparação de cada algoritmo
+        double tempo; //variável para armazenar o tempo de execução de cada algoritmo
+        double tempoMedio = 0; //variável para armazenar o tempo médio de execução de cada algoritmo
+        int metricasOrdenacao[2]; //vetor para armazenar as métricas de comparação de cada algoritmo
+        int metricasOrdenacaoMedia[2] = {0, 0}; //vetor para armazenar as métricas de comparação média de cada algoritmo
+
+        saida << "<<--------------- MergeSort --------------->>" << endl;
+        saida << endl;
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de mergeSort para cada conjunto de 
+
+            metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
+            metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+
             ProductReview *reviews = import(path, 1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             mergeSort(reviews, 0, N[4] - 1, metricasOrdenacao);            
             high_resolution_clock::time_point fim = high_resolution_clock::now();
             
-            cout << "Tempo de execucao do MergeSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-            tempo[0] += duration_cast<duration<double>>(fim - inicio).count();
+            tempo = duration_cast<duration<double>>(fim - inicio).count();
+            
+            //Escreve no arquivo de saída os resultados de cada execução
+            saida << "Ordenação por MergeSort número " << i + 1 << ":" << endl;
+            saida << "Tempo de execução: " << tempo << " segundos" << endl;
+            saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
+            saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
+            saida << endl;
 
-            cout << "Numero de comparacoes do MergeSort: " << metricasOrdenacao[0] << " comparacoes" << endl;
-            cout << "Numero de trocas do MergeSort: " << metricasOrdenacao[1] << " movimentacoes" << endl;
-            cout << endl;
+            //Armazena as métricas de comparação e troca para calcular a média
+            tempoMedio += tempo;
+            metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; //soma as métricas de comparação
+            metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; //soma as métricas de troca
 
-            //Escreve o arquivo de saída com metricas calculadas
-
+            //Libera Memória
             delete[] reviews;
         }
-        tempo[0] /= M; //calcula a média do tempo de execução do algoritmo de mergeSort
 
-        metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
-        metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+        //Calcula a média das métricas de comparação e troca
+        tempoMedio /= M; //calcula a média do tempo de execução
+        metricasOrdenacaoMedia[0] /= M; //calcula a média das métricas de comparação
+        metricasOrdenacaoMedia[1] /= M; //calcula a média das métricas de troca
+
+        //Escreve o arquivo de saída com metricas calculadas
+        saida << "Desempenho médio do MergeSort:" << endl;
+        saida << "Tempo médio de execução do Merge Sort: " << tempoMedio << " segundos" << endl;
+        saida << "Número médio de comparações do Merge Sort: " << metricasOrdenacaoMedia[0] << endl;
+        saida << "Número médio de trocas do Merge Sort: " << metricasOrdenacaoMedia[1] << endl;
+        saida << endl;
+        saida << endl;
+
+        tempoMedio = 0; //calcula a média do tempo de execução
+        metricasOrdenacaoMedia[0] = 0; //calcula a média das métricas de comparação
+        metricasOrdenacaoMedia[1] = 0; //calcula a média das métricas de troca
+
+        saida << "<<--------------- QuickSort --------------->>" << endl;
+        saida << endl;
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de quickSort para cada conjunto de dados
+
+            metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
+            metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+
             ProductReview *reviews = import(path, 1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             quickSort(reviews, 0, N[4] - 1, metricasOrdenacao);
             high_resolution_clock::time_point fim = high_resolution_clock::now();
 
-            cout << "Tempo de execucao do QuickSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-            tempo[1] += duration_cast<duration<double>>(fim - inicio).count();
+            tempo = duration_cast<duration<double>>(fim - inicio).count();
 
-            cout << "Numero de comparacoes do QuickSort: " << metricasOrdenacao[0] << " comparacoes" << endl;
-            cout << "Numero de trocas do QuickSort: " << metricasOrdenacao[1] << " movimentacoes" << endl;
-            cout << endl;
+            //Escreve no arquivo de saída os resultados de cada execução
+            saida << "Ordenação por QuickSort número " << i + 1 << ":" << endl;
+            saida << "Tempo de execução: " << tempo << " segundos" << endl;
+            saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
+            saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
+            saida << endl;
 
-            //Escreve o arquivo de saída com metricas calculadas
+            //Armazena as métricas de comparação e troca para calcular a média
+            tempoMedio += tempo;
+            metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; //soma as métricas de comparação
+            metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; //soma as métricas de troca
 
             delete[] reviews;
         }
-        tempo[1] /= M; //calcula a média do tempo de execução do algoritmo de quickSort
 
-        metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
-        metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+        //Calcula a média das métricas de comparação e troca
+        tempoMedio /= M; //calcula a média do tempo de execução
+        metricasOrdenacaoMedia[0] /= M; //calcula a média das métricas de comparação
+        metricasOrdenacaoMedia[1] /= M; //calcula a média das métricas de troca
+
+        //Escreve o arquivo de saída com metricas calculadas
+        saida << "Desempenho médio do QuickSort:" << endl;
+        saida << "Tempo médio de execução do Quick Sort: " << tempoMedio << " segundos" << endl;
+        saida << "Número médio de comparações do Quick Sort: " << metricasOrdenacaoMedia[0] << endl;
+        saida << "Número médio de trocas do Quick Sort: " << metricasOrdenacaoMedia[1] << endl;
+        saida << endl;
+        saida << endl;
+        
+        tempoMedio = 0; //calcula a média do tempo de execução
+        metricasOrdenacaoMedia[0] = 0; //zera o vetor de métricas de comparação
+        metricasOrdenacaoMedia[1] = 0; //zera o vetor de métricas de troca
+
+        saida << "<<--------------- TimSort --------------->>" << endl;
+        saida << endl;
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de countSort para cada conjunto de dados
+
+            metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
+            metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+
             ProductReview *reviews = import(path, 1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             timSort(reviews, 1000000, metricasOrdenacao);           
             high_resolution_clock::time_point fim = high_resolution_clock::now();
 
-            tempo[2] += duration_cast<duration<double>>(fim - inicio).count();
+            tempo = duration_cast<duration<double>>(fim - inicio).count();
 
-            cout << "Tempo de execucao do TimSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-            cout << "Numero de comparacoes do TimSort: " << metricasOrdenacao[0] << " comparacoes" << endl;
-            cout << "Numero de trocas do TimSort: " << metricasOrdenacao[1] << " movimentacoes" << endl;
+            //Escreve no arquivo de saída os resultados de cada execução
+            saida << "Ordenação por TimSort número " << i + 1 << ":" << endl;
+            saida << "Tempo de execução: " << tempo << " segundos" << endl;
+            saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
+            saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
+            saida << endl;
+
+            //Armazena as métricas de comparação e troca para calcular a média
+            tempoMedio += tempo;
+            metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; //soma as métricas de comparação
+            metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; //soma as métricas de troca
 
             delete[] reviews;
         }
-        tempo[2] /= M; //calcula a média do tempo de execução do algoritmo de countSort
 
-        //imprime os resultados
-        cout << "Tempo medio de execucao do algoritmo de mergeSort: " << tempo[0] << " segundos." << endl;
-        cout << "Tempo medio de execucao do algoritmo de quickSort: " << tempo[1] << " segundos." << endl;
-        cout << "Tempo medio de execucao do algoritmo de timSort: " << tempo[2] << " segundos." << endl;
+        //Calcula a média das métricas de comparação e troca
+        tempoMedio /= M; //calcula a média do tempo de execução
+        metricasOrdenacaoMedia[0] /= M; //calcula a média das métricas de comparação
+        metricasOrdenacaoMedia[1] /= M; //calcula a média das métricas de troca
+
+        //Escreve o arquivo de saída com metricas calculadas
+        saida << "Desempenho médio do TimSort:" << endl;
+        saida << "Tempo médio de execução do Tim Sort: " << tempoMedio << " segundos" << endl;
+        saida << "Número médio de comparações do Tim Sort: " << metricasOrdenacaoMedia[0] << endl;
+        saida << "Número médio de trocas do Tim Sort: " << metricasOrdenacaoMedia[1] << endl;
+        saida << endl;
+
+        saida.close();
     }
     else if(sortOrHash == 2){
         //Executa a etapa de tabelaHash de Produtos mais avaliados
