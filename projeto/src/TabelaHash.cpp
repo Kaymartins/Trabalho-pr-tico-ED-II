@@ -21,9 +21,9 @@ TabelaHash::~TabelaHash()
     delete[] this->table;
 }
 
-TabelaHash::RegistroHash* TabelaHash::createTable(int n)
+list<TabelaHash::RegistroHash> *TabelaHash::createTable(int n)
 {
-    RegistroHash *table = new RegistroHash[n];
+    list<RegistroHash> *table = new list<RegistroHash>[n];
     return table;
 }
 
@@ -74,13 +74,20 @@ void TabelaHash::inserirItem(string value)
     cout << "index: " << index << endl;
     //calcula índice da chave na tabela:
     if(this->table[index].size() > 0){
-        colisoes++;
+        for(auto it = this->table[index].begin(); it != this->table[index].end(); it++){
+            if(it->productId == value){
+                it->qtdReviews++;
+                return;
+            }
+        }
+        this->colisoes++;
     }
-     this->table[index].push_back(value);
-     this->cont++;
+    RegistroHash novoRegistro = {value, 1};
+    this->table[index].push_back(novoRegistro);
+    this->cont++;
 }
 
-
+/*
 void TabelaHash::removerItem(string value)
 {
     int index = hashPolinomial(value,total);
@@ -93,8 +100,9 @@ void TabelaHash::removerItem(string value)
     if (i != table[index].end())
       table[index].erase(i);
 }
+*/
 
-
+/*
  void TabelaHash::pesquisarItem(string val)
  {
       int key = hashPolinomial(val,total);
@@ -106,13 +114,16 @@ void TabelaHash::removerItem(string value)
                 cout << "valor " << val << "encontrado" << endl;
         }
  }
+ */
 
 
 void TabelaHash::printTable(){
     for(int i = 0; i < cont; i++){
       cout << "Index " << i << ": ";
-      for(string j : table[i])
-        cout << j << " => ";
+      for(RegistroHash j : table[i])
+        cout << "productId: " << j.productId << " qtdReviews: " << j.qtdReviews << " => ";
       cout << endl;
     }
+
+    cout << "Total de colisões: " << this->colisoes << endl;
   }

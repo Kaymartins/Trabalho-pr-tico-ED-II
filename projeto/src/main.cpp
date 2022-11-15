@@ -258,7 +258,7 @@ typedef struct RegistroHash {
 
 
 //falta tratar colisões e adicionar registros não repetidos:
-RegistroHash* createTable(int n)
+void createTable(int n)
 {
 
     ProductReview *reviews = import(n);
@@ -269,16 +269,11 @@ RegistroHash* createTable(int n)
 
     TabelaHash *hashTable = new TabelaHash(n);
     // cria vetor de objetos RegistroHash com n posições:
-    RegistroHash *table = new RegistroHash[n];
     
     // atribui valores iniciais para o vetor de objetos RegistroHash:
     for (int i = 0; i < n; i++)
     {
         hashTable->inserirItem(reviews[i].getProductId());
-        table[i].productId = reviews[i].getProductId();
-        table[i].qtdReviews += 1;
-
-
         // verifica se o produto já está na tabela:
         // if(table[i].qtdReviews > 1)
         // {
@@ -286,13 +281,6 @@ RegistroHash* createTable(int n)
         // }
     }
         hashTable->printTable();
-        cout << "Produto a ser pesquisado : " << reviews[n-1].getProductId() << endl;
-        hashTable->pesquisarItem(reviews[n-1].getProductId());
-        cout << "Produto a ser excluir : " << reviews[0].getProductId() << endl;
-        hashTable->removerItem(reviews[0].getProductId());
-        hashTable->printTable();
-
-    return table;
 }
 
 int main(int argc, char const *argv[])
