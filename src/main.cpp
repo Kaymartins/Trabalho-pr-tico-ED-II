@@ -287,6 +287,7 @@ void createTable(string &path, int registros)
     }
 
     cout << "Tabela criada com sucesso!" << endl;
+    cout << endl;
 
     int p;
     cout << "Digite a quantidade de produtos mais avaliados que voce deseja visualizar: ";
@@ -344,39 +345,61 @@ int main(int argc, char const *argv[])
     // Se a opção for 1, chama a função de ordenação
     if (sortOrHash == 1)
     {
-        ofstream saida(path + "/saida.txt");
-        saida << "Resultados de eficiência dos métodos de ordenação:\n"
-              << endl;
-
-        int M = 3;    
-        int N[5];  
-                                        // quantidade de cojutos de dados para analise
+        int M = 3;
+        int *N;
+        // quantidade de cojutos de dados para analise
         int linha = 0;
         ifstream input(path + "/input.dat");
-        if(!input.is_open())
+        if (!input.is_open())
         {
-            cout << "Erro ao ler o arquivo input.dat" << endl;
+            cout << "Erro ao ler o arquivo input.dat!" << endl;
+            cout << "Os valores serao escolhidos por padrão." << endl;
+
+            N = new int[5];
+            N[0] = 10000;
+            N[1] = 50000;
+            N[2] = 100000;
+            N[3] = 500000;
+            N[4] = 1000000;
         }
         else
         {
-            while(!input.eof())
+            while (!input.eof())
+            {
+                string lixo;
+                getline(input, lixo, '\n');
+                linha++;
+            }
+
+            input.seekg(0);
+
+            cout << linha << endl;
+
+            N = new int[linha];
+
+            linha = 0;
+
+            while (!input.eof())
             {
                 string strLinha;
-                getline(input, strLinha,'\n');
-                N[linha] = stoi(strLinha); 
+                getline(input, strLinha, '\n');
+                N[linha] = stoi(strLinha);
                 linha++;
-            }  
-          input.close();    
+            }
+            linha++;
+            input.close();
         }
 
-        // int N[5] = {10000, 50000, 100000, 500000, 1000000}; // quantidade de dados para analise
+        ofstream saida(path + "/saida.txt");
+        saida << "Resultados de eficiência dos métodos de ordenação:\n"
+              << endl;
 
         double tempo;                           // variável para armazenar o tempo de execução de cada algoritmo
         double tempoMedio = 0;                  // variável para armazenar o tempo médio de execução de cada algoritmo
         int metricasOrdenacao[2];               // vetor para armazenar as métricas de comparação de cada algoritmo
         int metricasOrdenacaoMedia[2] = {0, 0}; // vetor para armazenar as métricas de comparação média de cada algoritmo
 
-        for (int reg = 0; reg < 5; reg++)
+        for (int reg = 0; reg < linha; reg++)
         {
             tempoMedio = 0;
             metricasOrdenacaoMedia[0] = 0;
