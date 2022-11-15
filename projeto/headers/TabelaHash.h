@@ -19,15 +19,14 @@ private:
     int total;
     //    int chave;
     //    string chave;
-    RegistroHash *table;
-    list<RegistroHash> *ListTable;
+    list<RegistroHash> *table;
 
     int colisoes;
 
 public:
     TabelaHash(int n);
     ~TabelaHash();
-    RegistroHash* createTable(int n);
+    list<RegistroHash> *createTable(int n);
     bool tabelaVazia();
     int funcaoHash(int key);
     int hashPolinomial(string &s, int &n);
