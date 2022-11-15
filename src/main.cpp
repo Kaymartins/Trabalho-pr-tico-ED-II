@@ -303,7 +303,7 @@ int main(int argc, char const *argv[])
     
     //Se a opção for 1, chama a função de ordenação
     if(sortOrHash == 1){
-        int M = 3; //quantidade de cojutos de dados para analise
+        int M = 1; //quantidade de cojutos de dados para analise
         int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
 
         double tempo[3] = {0, 0, 0}; //vetor para armazenar o tempo de execução de cada algoritmo
@@ -352,20 +352,30 @@ int main(int argc, char const *argv[])
         }
         tempo[1] /= M; //calcula a média do tempo de execução do algoritmo de quickSort
 
-        // for(int i = 0; i < M; i++){ //executa o algoritmo de countSort para cada conjunto de dados
-        //     ProductReview *reviews = import(1000000);
-        //     high_resolution_clock::time_point inicio = high_resolution_clock::now();
-        //     //terceiroSort(reviews, N[i]);           
-        //     high_resolution_clock::time_point fim = high_resolution_clock::now();
-        //     tempo[2] += duration_cast<duration<double>>(fim - inicio).count();
-        //     delete[] reviews;
-        // }
-        // tempo[2] /= M; //calcula a média do tempo de execução do algoritmo de countSort
+        metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
+        metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+
+        for(int i = 0; i < M; i++){ //executa o algoritmo de countSort para cada conjunto de dados
+            ProductReview *reviews = import(1000000);
+
+            high_resolution_clock::time_point inicio = high_resolution_clock::now();
+            timSort(reviews, 1000000, metricasOrdenacao);           
+            high_resolution_clock::time_point fim = high_resolution_clock::now();
+
+            tempo[2] += duration_cast<duration<double>>(fim - inicio).count();
+
+            cout << "Tempo de execucao do TimSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+            cout << "Numero de comparacoes do TimSort: " << metricasOrdenacao[0] << " comparacoes" << endl;
+            cout << "Numero de trocas do TimSort: " << metricasOrdenacao[1] << " movimentacoes" << endl;
+
+            delete[] reviews;
+        }
+        tempo[2] /= M; //calcula a média do tempo de execução do algoritmo de countSort
 
         //imprime os resultados
         cout << "Tempo medio de execucao do algoritmo de mergeSort: " << tempo[0] << " segundos." << endl;
         cout << "Tempo medio de execucao do algoritmo de quickSort: " << tempo[1] << " segundos." << endl;
-        cout << "Tempo medio de execucao do algoritmo de countSort: " << tempo[2] << " segundos." << endl;
+        cout << "Tempo medio de execucao do algoritmo de timSort: " << tempo[2] << " segundos." << endl;
     }
     else if(sortOrHash == 2){
         //Executa a etapa de tabelaHash de Produtos mais avaliados

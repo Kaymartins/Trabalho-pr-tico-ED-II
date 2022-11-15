@@ -2,9 +2,32 @@
 #include "../headers/ProductReview.h"
 #include <iostream>
 #include <math.h>
+
+//Constante usada no timSort
 const int RUN = 32;
 
 using namespace std;
+
+//<<----------------- MÉTODOS GERAIS ----------------->>
+
+template <typename T>
+void trocar(T *a, T *b)
+{
+	// Realiza a troca de valores entre A e B:
+	T aux = *a;
+	*a = *b;
+	*b = aux;
+}
+
+void printVetor(ProductReview vet[], int size)
+{
+	// Imprime o vetor:
+	for (int i = 0; i < size; i++)
+		cout << vet[i].getUserId() << endl;
+	cout << endl;
+}
+
+//<<----------------- MERGE SORT ----------------->>
 
 void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrdenacao)
 {
@@ -83,22 +106,8 @@ void mergeSort(ProductReview *a, int inicio, int final, int *metricasOrdenacao)
 	}
 }
 
-template <typename T>
-void trocar(T *a, T *b)
-{
-	// Realiza a troca de valores entre A e B:
-	T aux = *a;
-	*a = *b;
-	*b = aux;
-}
 
-void printVetor(ProductReview vet[], int size)
-{
-	// Imprime o vetor:
-	for (int i = 0; i < size; i++)
-		cout << vet[i].getUserId() << " ";
-	cout << endl;
-}
+//<<----------------- QUICK SORT ----------------->>
 
 int particao(ProductReview vet[], int inicio, int final, int *metricasOrdenacao)
 {
@@ -142,39 +151,10 @@ void quickSort(ProductReview vet[], int inicio, int final, int *metricasOrdenaca
 	}
 }
 
-// void countSort(int vet[], int size)
-// {
-//   int *output = new int[size + 1];
-//   int *count = new int[size + 1];
-//   int max = vet[0];
 
-//   for (int i = 1; i < size; i++) {
-//     if (vet[i] > max)
-//       max = vet[i];
-//   }
+//<<----------------- TIM SORT ----------------->>
 
-//   for (int i = 0; i <= max; ++i) {
-//     count[i] = 0;
-//   }
-
-//   for (int i = 0; i < size; i++) {
-//     count[vet[i]]++;
-//   }
-
-//   for (int i = 1; i <= max; i++) {
-//     count[i] += count[i - 1];
-//   }
-//   for (int i = size - 1; i >= 0; i--) {
-//     output[count[vet[i]] - 1] = vet[i];
-//     count[vet[i]]--;
-//   }
-
-//   for (int i = 0; i < size; i++) {
-//     vet[i] = output[i];
-//   }
-// }
-
-void insertionSort(ProductReview *vet, int esq, int dir)
+void insertionSort(ProductReview *vet, int esq, int dir, int *metricasOrdenacao)
 {
 	for (int i = esq + 1; i <= dir; i++)
 	{
@@ -183,9 +163,11 @@ void insertionSort(ProductReview *vet, int esq, int dir)
 		while (j >= esq && vet[j].getUserId() > temp.getUserId())
 		{
 			vet[j + 1] = vet[j];
+			metricasOrdenacao[1]++;
 			j--;
 		}
 		vet[j + 1] = temp;
+		metricasOrdenacao[1]++;
 	}
 }
 
@@ -194,30 +176,16 @@ void timSort(ProductReview *vet, int n, int *metricasOrdenacao)
 	// divide o vetor em varios subvetores(nesse caso de 32 posições(o valorde RUN))
 	// e ordena cada uma dessas posicoes individualmente
 	for (int i = 0; i < n; i += RUN)
-		insertionSort(vet, i, min((i + RUN - 1), (n - 1)));
+		insertionSort(vet, i, min((i + RUN - 1), (n - 1)), metricasOrdenacao);
 
 	for (int size = RUN; size < n; size = 2 * size)
 	{
-
-		// pick starting point of
-		// esq sub array. We
-		// are going to merge
-		// vet[esq..esq+size-1]
-		// and vet[esq+size, esq+2*size-1]
-		// After every merge, we
-		// increase esq by 2*size
+		// faz a junção dos subvetores ordenados
 		for (int esq = 0; esq < n; esq += 2 * size)
 		{
-
-			// find ending point of
-			// esq sub array
-			// mid+1 is starting point
-			// of dir sub array
 			int mid = esq + size - 1;
 			int dir = min((esq + 2 * size - 1), (n - 1));
 
-			// merge sub array vet[esq.....mid] &
-			// vet[mid+1....dir]
 			if (mid < dir)
 				merge(vet, esq, dir, mid, metricasOrdenacao);
 		}
