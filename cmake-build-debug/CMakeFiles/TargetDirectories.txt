@@ -1,3 +1,0 @@
-D:/Users/Kayan/Desktop/ESTUDOS/UFJF/ED II/cmake-build-debug/CMakeFiles/ED_II.dir
-D:/Users/Kayan/Desktop/ESTUDOS/UFJF/ED II/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/Users/Kayan/Desktop/ESTUDOS/UFJF/ED II/cmake-build-debug/CMakeFiles/rebuild_cache.dir
