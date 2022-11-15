@@ -1,7 +1,7 @@
 #ifndef PRODUCTREVIEW_H_INCLUDED
 #define PRODUCTREVIEW_H_INCLUDED
 
-#include <cstring>
+#include <string>
 
 using namespace std;
 
