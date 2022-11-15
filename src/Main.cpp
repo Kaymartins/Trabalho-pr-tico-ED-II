@@ -189,19 +189,12 @@ ProductReview* import(int n)
 
     // cria vetor auxiliar com índices sorteados de 0 a MAX:
     int *aux = criaIndices();
-    bool *sorteado = new bool [MAX];
+
     // lê o arquivo binário e armazena no vetor aleatório de objetos:
-    int cont = 0;
+
     for (int i = 0; i < n; i++)
     {
-
         int random = aux[i];
-        if(sorteado[random] == false){
-            sorteado[random] = true;
-        }else{
-            cout << "ERRO: Numero ja sorteado!" << endl;
-            cont ++;
-        }
 
         // posiciona o cursor no registro aux:
         arqBin.seekg(random * (21 + 10 + sizeof(float) + 10), ios::beg);
@@ -236,7 +229,6 @@ ProductReview* import(int n)
 
     high_resolution_clock::time_point fim = high_resolution_clock::now();
     cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
-    cout << "O indice repetiu " << cont << " vezes" << endl;
 
     return reviews;
 }
