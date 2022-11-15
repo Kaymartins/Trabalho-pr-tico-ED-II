@@ -348,8 +348,28 @@ int main(int argc, char const *argv[])
         saida << "Resultados de eficiência dos métodos de ordenação:\n"
               << endl;
 
-        int M = 3;                                          // quantidade de cojutos de dados para analise
-        int N[5] = {10000, 50000, 100000, 500000, 1000000}; // quantidade de dados para analise
+        int M = 3;    
+        int N[5];  
+                                        // quantidade de cojutos de dados para analise
+        int linha = 0;
+        ifstream input(path + "/input.dat");
+        if(!input.is_open())
+        {
+            cout << "Erro ao ler o arquivo input.dat" << endl;
+        }
+        else
+        {
+            while(!input.eof())
+            {
+                string strLinha;
+                getline(input, strLinha,'\n');
+                N[linha] = stoi(strLinha); 
+                linha++;
+            }  
+          input.close();    
+        }
+
+        // int N[5] = {10000, 50000, 100000, 500000, 1000000}; // quantidade de dados para analise
 
         double tempo;                           // variável para armazenar o tempo de execução de cada algoritmo
         double tempoMedio = 0;                  // variável para armazenar o tempo médio de execução de cada algoritmo
