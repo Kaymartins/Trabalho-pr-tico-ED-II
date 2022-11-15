@@ -2,5 +2,4 @@
 archive/
 .vscode/
 src/build/*
-/images
 *.exe
