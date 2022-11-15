@@ -269,7 +269,7 @@ ProductReview *import(string &path, int n)
     arqBin.close();
 
     high_resolution_clock::time_point fim = high_resolution_clock::now();
-    cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
+    cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos para importacao." << endl;
 
     return reviews;
 }
@@ -523,11 +523,11 @@ int main(int argc, char const *argv[])
     }
     else if (sortOrHash == 2)
     {
-        cout << "Indique o número de registros que deseja importar: ";
+        cout << "Indique o numero de registros que deseja importar: ";
         int n;
         cin >> n;
 
-        cout << "Importaremos " << n << " registros aleatórios." << endl;
+        cout << "Importaremos " << n << " registros aleatorios." << endl;
 
         createTable(path, n);
 

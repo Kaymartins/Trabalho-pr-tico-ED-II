@@ -18,7 +18,6 @@ TabelaHash::TabelaHash(int n)
 
     // define o tamanho da tabela:
     this->primo = criaPrimo(n);
-    cout << "Primo: " << primo << endl;
 
     // cria a tabela com tamanho primo:
     this->table = createTable(primo);
