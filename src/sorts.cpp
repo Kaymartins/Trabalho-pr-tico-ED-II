@@ -178,6 +178,7 @@ void timSort(ProductReview *vet, int n, int *metricasOrdenacao)
 	for (int i = 0; i < n; i += RUN)
 		insertionSort(vet, i, min((i + RUN - 1), (n - 1)), metricasOrdenacao);
 
+	// percorre o vetor criado no insertionSort e faz a ordenação
 	for (int size = RUN; size < n; size = 2 * size)
 	{
 		// faz a junção dos subvetores ordenados
@@ -186,6 +187,7 @@ void timSort(ProductReview *vet, int n, int *metricasOrdenacao)
 			int mid = esq + size - 1;
 			int dir = min((esq + 2 * size - 1), (n - 1));
 
+			// faz a junção dos subvetores ordenados utilizando o método merge
 			if (mid < dir)
 				merge(vet, esq, dir, mid, metricasOrdenacao);
 		}
