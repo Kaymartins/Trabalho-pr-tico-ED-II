@@ -31,9 +31,13 @@ TabelaHash::~TabelaHash()
 }
 
 
+//cria a tabela com tamanho primo:
 list<RegistroHash> *TabelaHash::createTable(int n)
 {
+    //declara lista de registros hash para a tabela:
     list<RegistroHash> *table = new list<RegistroHash>[n];
+
+    //retorna a tabela criada:
     return table;
 }
 
@@ -48,6 +52,7 @@ int TabelaHash::hashPolinomial(string &s, int& n){
     }
     return abs(hash) % n;
 }
+
 
 //define o tamanho da tabela hash como o número primo mais próximo:
 int TabelaHash::criaPrimo(int n){
