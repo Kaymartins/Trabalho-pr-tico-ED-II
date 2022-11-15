@@ -55,11 +55,17 @@ int main()
         cout << "Tempo medio de execucao do algoritmo de countSort: " << tempo[2] << " segundos." << endl;
     }
     else if(sortOrHash == 2){
-        //Eecuta a etapa de tabelaHash de Produtos mais avaliados
+        //Executa a etapa de tabelaHash de Produtos mais avaliados
+
+        //Cria tabelaHash
+
+        //Insere produtos na tabelaHash
+
+        //Imprime produtos mais avaliados
     }
     else{
         cout << "Opcao invalida!" << endl;
-        cout << "Saindo do Programa" << endl;
+        cout << "Fechando do Programa" << endl;
     }    
 }
 
