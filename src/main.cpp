@@ -293,50 +293,74 @@ int main(int argc, char const *argv[])
     //chama a função createBinary para criar o arquivo binário
     createBinary(path, MAX);
     
-    cout << "Digite 1 para analise de algoritmos de ordenacao ou 2 para etapa de tabelaHash de Produtos mais avaliados: ";
+    cout << "Escolha a etapa a ser executada:" << endl;
+
+    cout << "(1) Ordenacao" << endl;
+    cout << "(2) Hashing" << endl;
     cin >> sortOrHash;
+    cout << endl;
+
     
     //Se a opção for 1, chama a função de ordenação
     if(sortOrHash == 1){
         int M = 3; //quantidade de cojutos de dados para analise
         int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
+
         double tempo[3] = {0, 0, 0}; //vetor para armazenar o tempo de execução de cada algoritmo
+        int metricasOrdenacao[2] = {0, 0}; //vetor para armazenar as métricas de comparação de cada algoritmo
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de mergeSort para cada conjunto de 
             ProductReview *reviews = import(1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
-            mergeSort(reviews, 0, N[i] - 1);            
+            mergeSort(reviews, 0, N[4] - 1, metricasOrdenacao);            
             high_resolution_clock::time_point fim = high_resolution_clock::now();
             
             cout << "Tempo de execucao do MergeSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
             tempo[0] += duration_cast<duration<double>>(fim - inicio).count();
+
+            cout << "Numero de comparacoes do MergeSort: " << metricasOrdenacao[0] << " comparacoes" << endl;
+            cout << "Numero de trocas do MergeSort: " << metricasOrdenacao[1] << " movimentacoes" << endl;
+            cout << endl;
+
+            //Escreve o arquivo de saída com metricas calculadas
+
             delete[] reviews;
         }
         tempo[0] /= M; //calcula a média do tempo de execução do algoritmo de mergeSort
 
-        for(int i = 0; i < 1; i++){ //executa o algoritmo de quickSort para cada conjunto de dados
+        metricasOrdenacao[0] = 0; //zera o vetor de métricas de comparação
+        metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
+
+        for(int i = 0; i < M; i++){ //executa o algoritmo de quickSort para cada conjunto de dados
             ProductReview *reviews = import(1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
-            quickSort(reviews, 0, N[i] - 1);
+            quickSort(reviews, 0, N[4] - 1, metricasOrdenacao);
             high_resolution_clock::time_point fim = high_resolution_clock::now();
 
             cout << "Tempo de execucao do QuickSort: " << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
             tempo[1] += duration_cast<duration<double>>(fim - inicio).count();
+
+            cout << "Numero de comparacoes do QuickSort: " << metricasOrdenacao[0] << " comparacoes" << endl;
+            cout << "Numero de trocas do QuickSort: " << metricasOrdenacao[1] << " movimentacoes" << endl;
+            cout << endl;
+
+            //Escreve o arquivo de saída com metricas calculadas
+
             delete[] reviews;
         }
         tempo[1] /= M; //calcula a média do tempo de execução do algoritmo de quickSort
 
-        for(int i = 0; i < M; i++){ //executa o algoritmo de countSort para cada conjunto de dados
-            ProductReview *reviews = import(1000000);
-            high_resolution_clock::time_point inicio = high_resolution_clock::now();
-            //terceiroSort(reviews, N[i]);           
-            high_resolution_clock::time_point fim = high_resolution_clock::now();
-            tempo[2] += duration_cast<duration<double>>(fim - inicio).count();
-            delete[] reviews;
-        }
-        tempo[2] /= M; //calcula a média do tempo de execução do algoritmo de countSort
+        // for(int i = 0; i < M; i++){ //executa o algoritmo de countSort para cada conjunto de dados
+        //     ProductReview *reviews = import(1000000);
+        //     high_resolution_clock::time_point inicio = high_resolution_clock::now();
+        //     //terceiroSort(reviews, N[i]);           
+        //     high_resolution_clock::time_point fim = high_resolution_clock::now();
+        //     tempo[2] += duration_cast<duration<double>>(fim - inicio).count();
+        //     delete[] reviews;
+        // }
+        // tempo[2] /= M; //calcula a média do tempo de execução do algoritmo de countSort
 
         //imprime os resultados
         cout << "Tempo medio de execucao do algoritmo de mergeSort: " << tempo[0] << " segundos." << endl;

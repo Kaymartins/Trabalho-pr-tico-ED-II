@@ -6,41 +6,41 @@ const int RUN = 32;
 
 using namespace std;
 
-void merge(ProductReview *a, int inicio, int final, int meio)
+void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrdenacao)
 {
-  //declara variaveis auxiliares:
+	// declara variaveis auxiliares:
 	int i, j, k;
-  //declara um vetor temporário:
-  ProductReview *temp;
+	// declara um vetor temporário:
+	ProductReview *temp;
 
-  //inicializa o vetor temporário levando em consideração o tamanho do vetor original:
-  temp = new ProductReview[final - inicio + 1];
+	// inicializa o vetor temporário levando em consideração o tamanho do vetor original:
+	temp = new ProductReview[final - inicio + 1];
 
-  //inicializa as variáveis auxiliares com os índices de inicio e meio do vetor:
+	// inicializa as variáveis auxiliares com os índices de inicio e meio do vetor:
 	i = inicio;
 	k = 0;
 	j = meio + 1;
-  
-  //realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
+
+	// realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
 	while (i <= meio && j <= final)
 	{
 		if (a[i].getUserId() < a[j].getUserId())
 		{
-
+			metricasOrdenacao[0]++;
 			temp[k] = a[i];
 			k++;
 			i++;
 		}
 		else
 		{
-
+			metricasOrdenacao[0]++;
 			temp[k] = a[j];
 			k++;
 			j++;
 		}
 	}
 
-  //aloca os elementos restantes da primeira parte do vetor original no vetor temporário:
+	// aloca os elementos restantes da primeira parte do vetor original no vetor temporário:
 	while (i <= meio)
 	{
 		temp[k] = a[i];
@@ -48,7 +48,7 @@ void merge(ProductReview *a, int inicio, int final, int meio)
 		i++;
 	}
 
-  //aloca os elementos restantes da segunda parte do vetor original no vetor temporário:
+	// aloca os elementos restantes da segunda parte do vetor original no vetor temporário:
 	while (j <= final)
 	{
 		temp[k] = a[j];
@@ -56,83 +56,90 @@ void merge(ProductReview *a, int inicio, int final, int meio)
 		j++;
 	}
 
-  //aloca os elementos do vetor temporário no vetor original:
+	// aloca os elementos do vetor temporário no vetor original:
 	for (i = inicio; i <= final; i++)
 	{
-		a[i] = temp[i-inicio];
+		metricasOrdenacao[1]++;
+		a[i] = temp[i - inicio];
 	}
 
-  //libera a memória alocada para o vetor temporário:
-  delete [] temp;
+	// libera a memória alocada para o vetor temporário:
+	delete[] temp;
 }
 
-void mergeSort(ProductReview *a, int inicio, int final)
+void mergeSort(ProductReview *a, int inicio, int final, int *metricasOrdenacao)
 {
 	int meio;
 	if (inicio < final)
 	{
-    //calcula o meio do vetor:
-		meio=(inicio+final)/2;
-    //divide o vetor em duas partes:
-		mergeSort(a, inicio, meio);
-		mergeSort(a, meio+1, final);
+		// calcula o meio do vetor:
+		meio = (inicio + final) / 2;
+		// divide o vetor em duas partes:
+		mergeSort(a, inicio, meio, metricasOrdenacao);
+		mergeSort(a, meio + 1, final, metricasOrdenacao);
 
-    //realiza a ordenação do vetor:
-		merge(a, inicio, final, meio);
+		// realiza a ordenação do vetor:
+		merge(a, inicio, final, meio, metricasOrdenacao);
 	}
 }
 
 template <typename T>
-void trocar(T *a, T *b) {
-  //Realiza a troca de valores entre A e B:
-  T aux = *a;
-  *a = *b;
-  *b = aux;
-}
-
-void printVetor(ProductReview vet[], int size) {
-  //Imprime o vetor:
-  for (int i = 0; i < size; i++)
-    cout << vet[i].getUserId() << " ";
-  cout << endl;
-}
-
-int particao(ProductReview vet[], int inicio, int final) 
+void trocar(T *a, T *b)
 {
-  //define o pivô como o último elemento do vetor:
-  string pivo = vet[final].getUserId();
-
-  //inicializa variável auxiliar com "-1":
-  int i = (inicio - 1);
-  
-  //percorre o vetor:
-  for (int j = inicio; j < final; j++) 
-  {
-    //se o valor do elemento do vetor for menor que o pivô, posiciona o elemento no começo do vetor:
-    if (vet[j].getUserId() <= pivo) {
-      i++;
-      trocar(&vet[i], &vet[j]);
-    }
-  }
-
-  //troca os elementos do pivô com o elemento do índice "i+1":
-  trocar(&vet[i + 1], &vet[final]);
-
-  //retorna o índice inicial dessa partição do vetor:
-  return (i + 1);
+	// Realiza a troca de valores entre A e B:
+	T aux = *a;
+	*a = *b;
+	*b = aux;
 }
 
-void quickSort(ProductReview vet[], int inicio, int final) {
+void printVetor(ProductReview vet[], int size)
+{
+	// Imprime o vetor:
+	for (int i = 0; i < size; i++)
+		cout << vet[i].getUserId() << " ";
+	cout << endl;
+}
 
-  if (inicio < final) {
+int particao(ProductReview vet[], int inicio, int final, int *metricasOrdenacao)
+{
+	// define o pivô como o último elemento do vetor:
+	string pivo = vet[final].getUserId();
 
-    //calcula o índice do pivô:
-    int indicePart = particao(vet, inicio, final);
+	// inicializa variável auxiliar com "-1":
+	int i = (inicio - 1);
 
-    //realiza a ordenação do vetor em duas partes:
-    quickSort(vet, inicio, indicePart - 1);
-    quickSort(vet, indicePart + 1, final);
-  }
+	// percorre o vetor:
+	for (int j = inicio; j < final; j++)
+	{
+		// se o valor do elemento do vetor for menor que o pivô, posiciona o elemento no começo do vetor:
+		if (vet[j].getUserId() <= pivo)
+		{
+			metricasOrdenacao[0]++;
+			i++;
+			trocar(&vet[i], &vet[j]);
+			metricasOrdenacao[1]++;
+		}
+	}
+
+	// troca os elementos do pivô com o elemento do índice "i+1":
+	trocar(&vet[i + 1], &vet[final]);
+	metricasOrdenacao[1]++;
+
+	// retorna o índice inicial dessa partição do vetor:
+	return (i + 1);
+}
+
+void quickSort(ProductReview vet[], int inicio, int final, int *metricasOrdenacao)
+{
+	if (inicio < final)
+	{
+		// calcula o índice do pivô:
+		int indicePart = particao(vet, inicio, final, metricasOrdenacao);
+
+		// realiza a ordenação do vetor em duas partes:
+		quickSort(vet, inicio, indicePart - 1, metricasOrdenacao);
+		quickSort(vet, indicePart + 1, final, metricasOrdenacao);
+	}
 }
 
 // void countSort(int vet[], int size)
@@ -145,7 +152,6 @@ void quickSort(ProductReview vet[], int inicio, int final) {
 //     if (vet[i] > max)
 //       max = vet[i];
 //   }
-
 
 //   for (int i = 0; i <= max; ++i) {
 //     count[i] = 0;
@@ -163,7 +169,6 @@ void quickSort(ProductReview vet[], int inicio, int final) {
 //     count[vet[i]]--;
 //   }
 
-
 //   for (int i = 0; i < size; i++) {
 //     vet[i] = output[i];
 //   }
@@ -177,23 +182,23 @@ void insertionSort(ProductReview *vet, int esq, int dir)
 		int j = i - 1;
 		while (j >= esq && vet[j].getUserId() > temp.getUserId())
 		{
-			vet[j+1] = vet[j];
+			vet[j + 1] = vet[j];
 			j--;
 		}
-	  vet[j+1] = temp;
+		vet[j + 1] = temp;
 	}
 }
 
-void timSort(ProductReview *vet, int n)
+void timSort(ProductReview *vet, int n, int *metricasOrdenacao)
 {
 	// divide o vetor em varios subvetores(nesse caso de 32 posições(o valorde RUN))
-  // e ordena cada uma dessas posicoes individualmente
-	for (int i = 0; i < n; i+=RUN)
-		insertionSort(vet, i, min((i+RUN-1),(n-1)));
+	// e ordena cada uma dessas posicoes individualmente
+	for (int i = 0; i < n; i += RUN)
+		insertionSort(vet, i, min((i + RUN - 1), (n - 1)));
 
-	for (int size = RUN; size < n; size = 2*size)
+	for (int size = RUN; size < n; size = 2 * size)
 	{
-		
+
 		// pick starting point of
 		// esq sub array. We
 		// are going to merge
@@ -201,22 +206,20 @@ void timSort(ProductReview *vet, int n)
 		// and vet[esq+size, esq+2*size-1]
 		// After every merge, we
 		// increase esq by 2*size
-		for (int esq = 0; esq < n;	esq += 2*size)
+		for (int esq = 0; esq < n; esq += 2 * size)
 		{
-			
+
 			// find ending point of
 			// esq sub array
 			// mid+1 is starting point
 			// of dir sub array
 			int mid = esq + size - 1;
-			int dir = min((esq + 2*size - 1),(n-1));
+			int dir = min((esq + 2 * size - 1), (n - 1));
 
 			// merge sub array vet[esq.....mid] &
 			// vet[mid+1....dir]
-			if(mid < dir) 
-        merge(vet, esq, dir, mid);
+			if (mid < dir)
+				merge(vet, esq, dir, mid, metricasOrdenacao);
 		}
 	}
 }
-
-
