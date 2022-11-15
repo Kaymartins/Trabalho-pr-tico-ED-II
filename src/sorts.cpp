@@ -27,6 +27,7 @@ void printVetor(ProductReview vet[], int size)
 	cout << endl;
 }
 
+
 //<<----------------- MERGE SORT ----------------->>
 
 void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrdenacao)

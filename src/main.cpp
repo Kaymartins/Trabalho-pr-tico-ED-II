@@ -20,9 +20,8 @@ const int MAX = 7824483;
 // cria arquivo binário:
 void createBinary(string &path, int tamBloco)
 {
-
     // abre arquivo para leitura:
-    ifstream arq(path);
+    ifstream arq(path + "/ratings_Electronics.csv");
 
     // cria vetor de registros ProductReview:
     ProductReview *reviews = new ProductReview[tamBloco];
@@ -60,7 +59,7 @@ void createBinary(string &path, int tamBloco)
 
         // abre arquivo binário para escrita:
         ofstream file;
-        file.open("../archive/reviews.bin", ios::binary);
+        file.open(path + "/reviews.bin", ios::binary);
         if (file.is_open())
         {
             // escreve o vetor de registros no arquivo binário:
@@ -94,11 +93,11 @@ void createBinary(string &path, int tamBloco)
 }
 
 // retorna um registro de índice i:
-void getReview(int i)
+void getReview(string &path, int i)
 {
 
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../archive/reviews.bin", ios::binary);
+    ifstream arqBin(path + "/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -200,11 +199,10 @@ int *criaIndices()
 }
 
 // importa n registros aleatórios do arquivo binário:
-ProductReview *import(int n)
+ProductReview *import(string &path, int n)
 {
-
     // abre o arquivo binário para leitura:
-    ifstream arqBin("../archive/reviews.bin", ios::binary);
+    ifstream arqBin(path + "/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -310,7 +308,7 @@ int main(int argc, char const *argv[])
         int metricasOrdenacao[2] = {0, 0}; //vetor para armazenar as métricas de comparação de cada algoritmo
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de mergeSort para cada conjunto de 
-            ProductReview *reviews = import(1000000);
+            ProductReview *reviews = import(path, 1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             mergeSort(reviews, 0, N[4] - 1, metricasOrdenacao);            
@@ -333,7 +331,7 @@ int main(int argc, char const *argv[])
         metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de quickSort para cada conjunto de dados
-            ProductReview *reviews = import(1000000);
+            ProductReview *reviews = import(path, 1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             quickSort(reviews, 0, N[4] - 1, metricasOrdenacao);
@@ -356,7 +354,7 @@ int main(int argc, char const *argv[])
         metricasOrdenacao[1] = 0; //zera o vetor de métricas de troca
 
         for(int i = 0; i < M; i++){ //executa o algoritmo de countSort para cada conjunto de dados
-            ProductReview *reviews = import(1000000);
+            ProductReview *reviews = import(path, 1000000);
 
             high_resolution_clock::time_point inicio = high_resolution_clock::now();
             timSort(reviews, 1000000, metricasOrdenacao);           
