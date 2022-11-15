@@ -1,6 +1,7 @@
 #ifndef TABELAHASH_H_INCLUDED
 #define TABELAHASH_H_INCLUDED
 
+#include "RegistroHash.h"
 #include <string>
 #include <list>
 
@@ -8,14 +9,9 @@ using namespace std;
 
 class TabelaHash{
 private:
-
-    typedef struct RegistroHash {
-    string productId;
-    int qtdReviews = 0;
-    } RegistroHash;
-
     //total linhas
     int cont;
+    int primo;
     int total;
     //    int chave;
     //    string chave;
@@ -27,6 +23,12 @@ public:
     TabelaHash(int n);
     ~TabelaHash();
     list<RegistroHash> *createTable(int n);
+    RegistroHash *createVetor();
+    RegistroHash* ordenaProdutos();
+    void imprimirMaisAvaliados(int n);
+    int particao(RegistroHash* vet[], int inicio, int fim);
+    void quickSort(RegistroHash* vet[], int inicio, int fim);
+    int criaPrimo(int n);
     bool tabelaVazia();
     int funcaoHash(int key);
     int hashPolinomial(string &s, int &n);

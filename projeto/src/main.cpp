@@ -251,12 +251,6 @@ ProductReview* import(int n)
     return reviews;
 }
 
-typedef struct RegistroHash {
-    string productId;
-    int qtdReviews = 0;
-} RegistroHash;
-
-
 //falta tratar colisões e adicionar registros não repetidos:
 void createTable(int n)
 {
@@ -280,7 +274,20 @@ void createTable(int n)
         //     table[i] = rand() % (n-1);
         // }
     }
-        hashTable->printTable();
+
+    hashTable->printTable();
+
+    cout << "Digite a quantidade desejada de produtos com maior avaliação: ";
+    int qtd;
+    cin >> qtd;
+
+    cout << "Importando " << qtd << " produtos mais avaliados" << endl;
+    high_resolution_clock::time_point inicio = high_resolution_clock::now();
+
+    hashTable->imprimirMaisAvaliados(qtd);
+
+    high_resolution_clock::time_point fim = high_resolution_clock::now();
+    cout << duration_cast<duration<double>>(fim - inicio).count() << " segundos" << endl;
 }
 
 int main(int argc, char const *argv[])
