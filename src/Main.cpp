@@ -18,6 +18,7 @@ int main()
     cout << "Digite 1 para analise de algoritmos de ordenacao ou 2 para etapa de tabelaHash de Produtos mais avaliados: ";
     cin >> sortOrHash;
 
+    //Se a opção for 1, chama a função de ordenação
     if(sortOrHash == 1){
         int M = 3; //quantidade de cojutos de dados para analise
         int N[5] = {10000, 50000, 100000, 500000, 1000000}; //quantidade de dados para analise
