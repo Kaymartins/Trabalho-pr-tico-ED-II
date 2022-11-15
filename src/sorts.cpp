@@ -24,7 +24,7 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
   //realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
 	while (i <= meio && j <= final)
 	{
-		if (stoi(a[i].getUserId()) < stoi(a[j].getUserId()))
+		if (a[i].getUserId() < a[j].getUserId())
 		{
 
 			temp[k] = a[i];
@@ -175,7 +175,7 @@ void insertionSort(ProductReview *vet, int esq, int dir)
 	{
 		ProductReview temp = vet[i];
 		int j = i - 1;
-		while (j >= esq && stoi(vet[j].getUserId()) > stoi(temp.getUserId()))
+		while (j >= esq && vet[j].getUserId() > temp.getUserId())
 		{
 			vet[j+1] = vet[j];
 			j--;
