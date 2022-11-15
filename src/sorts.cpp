@@ -100,7 +100,7 @@ void printVetor(ProductReview vet[], int size) {
 int particao(ProductReview vet[], int inicio, int final) 
 {
   //define o pivô como o último elemento do vetor:
-  int pivo = stoi(vet[final].getUserId());
+  string pivo = vet[final].getUserId();
 
   //inicializa variável auxiliar com "-1":
   int i = (inicio - 1);
@@ -109,7 +109,7 @@ int particao(ProductReview vet[], int inicio, int final)
   for (int j = inicio; j < final; j++) 
   {
     //se o valor do elemento do vetor for menor que o pivô, posiciona o elemento no começo do vetor:
-    if (stoi(vet[j].getUserId()) <= pivo) {
+    if (vet[j].getUserId() <= pivo) {
       i++;
       trocar(&vet[i], &vet[j]);
     }
