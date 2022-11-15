@@ -85,20 +85,28 @@ int TabelaHash::criaPrimo(int n){
     return n;
 }
 
+//insere um item na tabela hash:
 void TabelaHash::inserirItem(string value)
 {
+    //calcula o índice de inserção: 
     int index = hashPolinomial(value,total);
-    this->cont++;
+    // //atualiza o contador de registros na posição:
+    // this->cont++;
+
     //calcula índice da chave na tabela:
     if(this->table[index].size() > 0){
         for(auto it = this->table[index].begin(); it != this->table[index].end(); it++){
             if(it->productId == value){
+                //atualiza o contador de registro:
                 it->qtdReviews++;
                 return;
             }
         }
+        //atuazliza o contador de colisões:
         this->colisoes++;
     }
+
+    //insere registro hash na tabela:
     RegistroHash novoRegistro = {value, 1};
     this->table[index].push_back(novoRegistro);
 }
