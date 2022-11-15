@@ -1,8 +1,6 @@
 .idea/
 archive/
 .vscode/
-<<<<<<< HEAD
-=======
 src/build/*
->>>>>>> main
+/images
 *.exe
