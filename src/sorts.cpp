@@ -173,10 +173,9 @@ void insertionSort(ProductReview *vet, int esq, int dir)
 {
 	for (int i = esq + 1; i <= dir; i++)
 	{
-		ProductReview *temp;
-    temp = new ProductReview[i];
+		ProductReview temp = vet[i];
 		int j = i - 1;
-		while (j >= esq && vet[j] > temp)
+		while (j >= esq && stoi(vet[j].getUserId()) > stoi(temp.getUserId()))
 		{
 			vet[j+1] = vet[j];
 			j--;
