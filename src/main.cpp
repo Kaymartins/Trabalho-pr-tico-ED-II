@@ -493,6 +493,8 @@ int main(int argc, char const *argv[])
         }
 
         saida.close();
+
+        cout << "Arquivo de saida com dados sobre os metodos de ordenacao gerado com sucesso!" << endl;
     }
     else if (sortOrHash == 2)
     {
