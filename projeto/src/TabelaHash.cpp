@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//cria tabela hash:
 TabelaHash::TabelaHash(int n)
 {
     this->total = n;
@@ -44,11 +45,14 @@ int TabelaHash::hashPolinomial(string &s, int& n){
     return abs(hash) % n;
 }
 
+//define o tamanho da tabela hash como o número primo mais próximo:
 int TabelaHash::criaPrimo(int n){
+
+    //define variáveis auxiliares:
     int i, j;
     bool flag = false;
     
-
+    //atualiza n para o próximo número primo:
     while(!flag){
         for(i=2; i<n/2; i++){
             if(n%i == 0){
