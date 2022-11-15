@@ -9,7 +9,7 @@
 #include "../headers/ProductReview.h"
 
 using namespace std;
-using namespace std::chrono;
+using namespace chrono;
 
 default_random_engine gen;
 
@@ -19,6 +19,9 @@ const int MAX = 7824483;
 void createBinary(string &path, int tamBloco)
 {
     ifstream arq(path);
+
+    cout << path << endl;
+    
     ProductReview* reviews = new ProductReview[tamBloco];
 
     if(arq.is_open())
