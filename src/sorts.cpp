@@ -6,7 +6,7 @@ const int RUN = 32;
 
 using namespace std;
 
-void Merge(ProductReview *a, int inicio, int final, int meio)
+void merge(ProductReview *a, int inicio, int final, int meio)
 {
   //declara variaveis auxiliares:
 	int i, j, k;
@@ -66,7 +66,7 @@ void Merge(ProductReview *a, int inicio, int final, int meio)
   delete [] temp;
 }
 
-void MergeSort(ProductReview *a, int inicio, int final)
+void mergeSort(ProductReview *a, int inicio, int final)
 {
 	int meio;
 	if (inicio < final)
@@ -74,11 +74,11 @@ void MergeSort(ProductReview *a, int inicio, int final)
     //calcula o meio do vetor:
 		meio=(inicio+final)/2;
     //divide o vetor em duas partes:
-		MergeSort(a, inicio, meio);
-		MergeSort(a, meio+1, final);
+		mergeSort(a, inicio, meio);
+		mergeSort(a, meio+1, final);
 
     //realiza a ordenação do vetor:
-		Merge(a, inicio, final, meio);
+		merge(a, inicio, final, meio);
 	}
 }
 
@@ -214,7 +214,7 @@ void timSort(ProductReview *vet, int n)
 			// merge sub array vet[esq.....mid] &
 			// vet[mid+1....dir]
 			if(mid < dir) 
-        Merge(vet, esq, dir, mid);
+        merge(vet, esq, dir, mid);
 		}
 	}
 }

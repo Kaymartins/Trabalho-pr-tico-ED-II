@@ -1,8 +1,8 @@
 #include "ProductReview.h"
 
-void Merge(ProductReview *a, int inicio, int final, int meio);
+void merge(ProductReview *a, int inicio, int final, int meio);
 
-void MergeSort(ProductReview *a, int inicio, int final);
+void mergeSort(ProductReview *a, int inicio, int final);
 
 int particao(ProductReview vet[], int inicio, int final);
 
