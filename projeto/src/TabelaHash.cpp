@@ -41,15 +41,22 @@ list<RegistroHash> *TabelaHash::createTable(int n)
     return table;
 }
 
-int TabelaHash::hashPolinomial(string &s, int& n){
+//cria função hash:
+int TabelaHash::hashPolinomial(string &s, int &n){
+
+    //inicializa variáveis constantes para a função hash:
     const int p = 53, m = 1e9 + 9;
+    //inicializa variáveis auxiliares para a função hash:
     int hash = 0;
     long long p_pow = 1;
 
+    //percorre a string e atualiza variáveis auxiliares:
     for (int i = 0; i < s.length(); i++){
         hash = (hash + (s[i] - 'a' + 1) * p_pow) % m;
         p_pow = (p_pow * p) % m;
     }
+
+    //retorna o valor da função hash:
     return abs(hash) % n;
 }
 
