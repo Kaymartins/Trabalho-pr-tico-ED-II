@@ -154,6 +154,24 @@ void getReview(string &path, int i)
     delete review;
 }
 
+void sort(ProductReview *vet, int n, int methodId, int *metricasOrdenacao)
+{
+    switch (methodId)
+    {
+    case 0:
+        mergeSort(vet, 0, n - 1, metricasOrdenacao);
+        break;
+    case 1:
+        quickSort(vet, 0, n - 1, metricasOrdenacao);
+        break;
+    case 2:
+        timSort(vet, n, metricasOrdenacao);
+        break;
+    default:
+        cout << "ERRO: Metodo de ordenacao invalido!" << endl;
+    }
+}
+
 // cria vetor de índices aleatórios:
 void shuffle(int *array)
 {
@@ -373,8 +391,6 @@ int main(int argc, char const *argv[])
 
             input.seekg(0);
 
-            cout << linha << endl;
-
             N = new int[linha];
 
             linha = 0;
@@ -386,7 +402,6 @@ int main(int argc, char const *argv[])
                 N[linha] = stoi(strLinha);
                 linha++;
             }
-            linha++;
             input.close();
         }
 
@@ -422,7 +437,12 @@ int main(int argc, char const *argv[])
                 cout << endl;
 
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
-                mergeSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
+
+                sort(reviews, N[reg], 0, metricasOrdenacao);
+                //mergeSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
+
+                
+
                 high_resolution_clock::time_point fim = high_resolution_clock::now();
 
                 tempo = duration_cast<duration<double>>(fim - inicio).count();
@@ -475,7 +495,10 @@ int main(int argc, char const *argv[])
                 cout << endl;
 
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
-                quickSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
+
+                sort(reviews, N[reg], 1, metricasOrdenacao);
+                //quickSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
+
                 high_resolution_clock::time_point fim = high_resolution_clock::now();
 
                 tempo = duration_cast<duration<double>>(fim - inicio).count();
@@ -527,7 +550,10 @@ int main(int argc, char const *argv[])
                 cout << endl;
 
                 high_resolution_clock::time_point inicio = high_resolution_clock::now();
-                timSort(reviews, N[reg], metricasOrdenacao);
+
+                sort(reviews, N[reg], 2, metricasOrdenacao);
+                //timSort(reviews, N[reg], metricasOrdenacao);
+
                 high_resolution_clock::time_point fim = high_resolution_clock::now();
 
                 tempo = duration_cast<duration<double>>(fim - inicio).count();
@@ -559,6 +585,8 @@ int main(int argc, char const *argv[])
             saida << "Número médio de trocas do Tim Sort: " << metricasOrdenacaoMedia[1] << endl;
             saida << endl;
         }
+
+
 
         saida.close();
 
