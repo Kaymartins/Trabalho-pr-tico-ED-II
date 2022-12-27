@@ -3,19 +3,22 @@
 
 #include <iostream>
 #include <cstdlib>
+#include "ProductReview.h"
 
 using namespace std;
 
 enum Cor {VERMELHO, PRETO};
 
 struct No{
-    int data;
+    ProductReview review;
+    string id;
     Cor cor;
     No *esq, *dir, *pai;
 
-    No(int data) : data(data){
+    No(ProductReview review) : review(review){
         esq = dir = pai = NULL;
         cor = VERMELHO;
+        id = review.getUserId() + review.getProductId();
     }
 };
 
