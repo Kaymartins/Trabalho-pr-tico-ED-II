@@ -31,6 +31,7 @@ class ArvoreVP{
         ArvoreVP() : raiz(NULL){}
         void inserir(int data);
         void imprimir();
+        No* buscar(int data);
 };
 
 
