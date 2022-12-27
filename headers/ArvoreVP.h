@@ -10,15 +10,15 @@ using namespace std;
 enum Cor {VERMELHO, PRETO};
 
 struct No{
-    ProductReview review;
+    ProductReview* review;
     string id;
     Cor cor;
     No *esq, *dir, *pai;
 
-    No(ProductReview review) : review(review){
+    No(ProductReview* review) : review(review){
         esq = dir = pai = NULL;
         cor = VERMELHO;
-        id = review.getUserId() + review.getProductId();
+        id = review->getUserId() + review->getProductId();
     }
 };
 
@@ -32,10 +32,10 @@ class ArvoreVP{
         void balancearInsercao(No *&, No *&);
     public:
         ArvoreVP() : raiz(NULL){}
-        void inserir(int data);
+        void insere(ProductReview *pr);
+        ProductReview* busca(string userId, string productId);
         void imprimir();
-        No* buscar(int data);
-};
 
+};
 
 #endif

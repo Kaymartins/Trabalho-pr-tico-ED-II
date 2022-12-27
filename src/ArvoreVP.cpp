@@ -110,12 +110,12 @@ No* ABBInsert(No* raiz, No* no){
         return no;
 
     /*senão, percorre a arvore*/
-    if(no->data < raiz->data){
+    if(no->id < raiz->id){
         raiz->esq = ABBInsert(raiz->esq, no);
         raiz->esq->pai = raiz;
     }
 
-    else if(no->data > raiz->data){
+    else if(no->id > raiz->id){
         raiz->dir = ABBInsert(raiz->dir, no);
         raiz->dir->pai = raiz;
     }
@@ -124,8 +124,8 @@ No* ABBInsert(No* raiz, No* no){
     return raiz;
 }
 
-void ArvoreVP::inserir(int data){
-    No *novo = new No(data);
+void ArvoreVP::insere(ProductReview* pr){
+    No *novo = new No(pr);
     
     raiz = ABBInsert(raiz, novo);
 
@@ -141,7 +141,7 @@ void imprimirAux(No *raiz)
         return;
 
     imprimirAux(raiz->esq);
-    cout << raiz->data << "  ";
+    cout << raiz->id << "  ";
     imprimirAux(raiz->dir);
 }
 
@@ -150,18 +150,19 @@ void ArvoreVP::imprimir(){
     cout << endl;
 }
 
-No* ArvoreVP::buscar(int data){
+ProductReview* ArvoreVP::busca(string userId, string productId){
+    string idBuscado = userId + productId;
     No *aux = raiz;
     
     while(aux != NULL){
-        if(data < aux->data)
+        if(idBuscado < aux->id)
             aux = aux->esq;
 
-        else if(data > aux->data)
+        else if(idBuscado > aux->id)
             aux = aux->dir;
 
         else
-            return aux;
+            return aux->review;
     }
 
     return NULL;
