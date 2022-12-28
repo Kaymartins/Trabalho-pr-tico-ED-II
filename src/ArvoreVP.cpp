@@ -141,13 +141,12 @@ void imprimirAux(No *raiz)
         return;
 
     imprimirAux(raiz->esq);
-    cout << raiz->id << "  ";
+    cout << raiz->id << "  " << endl;
     imprimirAux(raiz->dir);
 }
 
 void ArvoreVP::imprimir(){
     imprimirAux(raiz);
-    cout << endl;
 }
 
 ProductReview* ArvoreVP::busca(string userId, string productId){

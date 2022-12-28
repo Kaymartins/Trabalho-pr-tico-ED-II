@@ -8,6 +8,7 @@
 #include "../headers/ProductReview.h"
 #include "../headers/TabelaHash.h"
 #include "../headers/sorts.h"
+#include "../headers/ArvoreVP.h"
 
 using namespace std;
 using namespace chrono;
@@ -357,6 +358,7 @@ int main(int argc, char const *argv[])
 
     cout << "(1) Ordenacao" << endl;
     cout << "(2) Hashing" << endl;
+    cout << "(3) Teste Arvore AB (em construcao)" << endl;
     cin >> sortOrHash;
     cout << endl;
 
@@ -603,6 +605,70 @@ int main(int argc, char const *argv[])
         createTable(path, n);
 
         return 0;
+    }
+    else if (sortOrHash == 3)
+    {
+        cout << "Indique o numero de registros que deseja importar: ";
+        int n;
+        cin >> n;
+
+        cout << "Importaremos " << n << " registros aleatorios." << endl;
+        ProductReview *reviews = import(path, n);
+        ArvoreVP *arvoreVP = new ArvoreVP();
+
+        for(int i=0; i<n; i++)
+        {
+            arvoreVP->insere(&reviews[i]);
+        }
+
+        delete[] reviews;
+
+        cout << "Arvore criada com sucesso!" << endl;
+        //arvoreVP->imprimir();
+
+
+        cout << "Indique o numero de registros que deseja pesquisar na Arvore :" << endl;
+        cin >> n;
+        ProductReview *reviewsPesquisa = import(path, n);
+        ProductReview *resultados = new ProductReview[n];
+
+        for(int i=0; i<n; i++)
+        {
+            ProductReview *aux;
+            aux = arvoreVP->busca(reviewsPesquisa->getUserId(), reviewsPesquisa->getProductId());
+            
+            if(aux != NULL)
+            {
+                resultados[i] = *aux;
+                cout << "Registro encontrado!" << endl;
+                
+            }else{
+                resultados[i] = ProductReview();
+                resultados[i].setProductId("");
+                resultados[i].setUserId("");
+                resultados[i].setRating(0);
+                resultados[i].setTimestamp("");
+            }
+
+            delete aux;
+        }
+
+    /*
+        for(int i=0; i<n; i++)
+        {
+            cout << "Registro encontrado!" << endl;
+            cout << "UserId: " << resultados[i].getUserId() << endl;
+            cout << "ProductId: " << resultados[i].getProductId() << endl;
+            cout << "Rating: " << resultados[i].getRating() << endl;
+            cout << "Timestamp: " << resultados[i].getTimestamp() << endl;
+            cout << endl;
+        }
+    */
+
+        delete[] reviewsPesquisa;
+        delete[] resultados;
+        delete arvoreVP;
+
     }
     else
     {
