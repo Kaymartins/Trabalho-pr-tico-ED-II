@@ -9,6 +9,7 @@
 #include "../headers/TabelaHash.h"
 #include "../headers/sorts.h"
 #include "../headers/ArvoreVP.h"
+#include "../headers/ArvoreB.h"
 
 using namespace std;
 using namespace chrono;
@@ -358,7 +359,7 @@ int main(int argc, char const *argv[])
 
     cout << "(1) Ordenacao" << endl;
     cout << "(2) Hashing" << endl;
-    cout << "(3) Teste Arvore AB (em construcao)" << endl;
+    cout << "(3) Teste Arvore AB e Arvore B(em construcao)" << endl;
     cin >> sortOrHash;
     cout << endl;
 
@@ -615,18 +616,31 @@ int main(int argc, char const *argv[])
         cout << "Importaremos " << n << " registros aleatorios." << endl;
         ProductReview *reviews = import(path, n);
         ArvoreVP *arvoreVP = new ArvoreVP();
+        ArvoreB *arvoreB = new ArvoreB();
 
         for(int i=0; i<n; i++)
         {
             arvoreVP->insere(&reviews[i]);
         }
 
-        delete[] reviews;
+        
 
-        cout << "Arvore criada com sucesso!" << endl;
-        //arvoreVP->imprimir();
+        cout << "Arvore VP criada com sucesso!" << endl;
+        arvoreVP->imprimir();
 
+        cout << "n : " << n << endl;
 
+        for(int i=0; i<n; i++)
+        {
+            arvoreB->insere(&reviews[i]);
+        }
+
+        cout << "Arvore B criada com sucesso!" << endl;
+       
+        arvoreB->print();
+        
+
+        /*
         cout << "Indique o numero de registros que deseja pesquisar na Arvore :" << endl;
         cin >> n;
         ProductReview *reviewsPesquisa = import(path, n);
@@ -663,10 +677,12 @@ int main(int argc, char const *argv[])
             cout << "Timestamp: " << resultados[i].getTimestamp() << endl;
             cout << endl;
         }
-    */
+    
 
         delete[] reviewsPesquisa;
         delete[] resultados;
+    */
+        delete arvoreB;
         delete arvoreVP;
 
     }
