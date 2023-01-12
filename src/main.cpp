@@ -18,6 +18,7 @@ default_random_engine gen;
 
 // número de registros do arquivo de entrada:
 const int MAX = 7824483;
+const int NO_MAX_KEYS = 4;
 
 // cria arquivo binário:
 void createBinary(string &path)
@@ -616,7 +617,7 @@ int main(int argc, char const *argv[])
         cout << "Importaremos " << n << " registros aleatorios." << endl;
         ProductReview *reviews = import(path, n);
         ArvoreVP *arvoreVP = new ArvoreVP();
-        ArvoreB *arvoreB = new ArvoreB();
+        ArvoreB *arvoreB = new ArvoreB(NO_MAX_KEYS);
 
         for(int i=0; i<n; i++)
         {
