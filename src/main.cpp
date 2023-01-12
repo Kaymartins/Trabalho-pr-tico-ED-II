@@ -17,7 +17,7 @@ using namespace chrono;
 default_random_engine gen;
 
 // número de registros do arquivo de entrada:
-const int MAX = 10;
+const int MAX = 7824483;
 const int NO_MAX_KEYS = 4;
 
 // cria arquivo binário:
@@ -619,6 +619,8 @@ int main(int argc, char const *argv[])
         ArvoreVP *arvoreVP = new ArvoreVP();
         ArvoreB *arvoreB = new ArvoreB(NO_MAX_KEYS);
 
+        cout << "Importacao concluida, vamos criar a arvore VP" << endl;
+
         for(int i=0; i<n; i++)
         {
             arvoreVP->insere(&reviews[i]);
@@ -627,7 +629,12 @@ int main(int argc, char const *argv[])
         
 
         cout << "Arvore VP criada com sucesso!" << endl;
-        arvoreVP->imprimir();
+
+        //arvoreVP->imprimir();
+
+
+        cout << "Vamos criar a arvore B" << endl;
+        
 
         cout << "n : " << n << endl;
 
@@ -638,7 +645,7 @@ int main(int argc, char const *argv[])
 
         cout << "Arvore B criada com sucesso!" << endl;
        
-        arvoreB->print();
+        //arvoreB->print();
         
 
 
@@ -647,11 +654,13 @@ int main(int argc, char const *argv[])
         ProductReview *reviewsPesquisa = import(path, n);
 
         ProductReview *aux;
+
         for(int i=0; i<n; i++)
         {
-            
-            aux = arvoreVP->busca(reviewsPesquisa->getUserId(), reviewsPesquisa->getProductId());
-            
+            ProductReview review = reviewsPesquisa[i];
+
+            aux = arvoreVP->busca(review.getUserId(), review.getProductId());
+
             if(aux != NULL)
             {
                 cout << "Registro encontrado na arvore AB!" << endl;
@@ -661,7 +670,7 @@ int main(int argc, char const *argv[])
                 cout << "Registro nao encontrado na arvore AB!" << endl;
             }
 
-            aux = arvoreB->busca(reviewsPesquisa->getUserId(), reviewsPesquisa->getProductId());
+            aux = arvoreB->busca(review.getUserId(), review.getProductId());
 
             if(aux != NULL)
             {
@@ -673,25 +682,10 @@ int main(int argc, char const *argv[])
 
         }
         delete aux;
-
-    /*
-        for(int i=0; i<n; i++)
-        {
-            cout << "Registro encontrado!" << endl;
-            cout << "UserId: " << resultados[i].getUserId() << endl;
-            cout << "ProductId: " << resultados[i].getProductId() << endl;
-            cout << "Rating: " << resultados[i].getRating() << endl;
-            cout << "Timestamp: " << resultados[i].getTimestamp() << endl;
-            cout << endl;
-        }
-    
-
-        delete[] reviewsPesquisa;
-        delete[] resultados;
-    */
+        delete []reviewsPesquisa;
+        delete []reviews;
         delete arvoreB;
         delete arvoreVP;
-
     }
     else
     {

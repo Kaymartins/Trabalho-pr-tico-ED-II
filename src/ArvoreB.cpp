@@ -12,6 +12,14 @@ NoArvoreB::NoArvoreB(int t, bool folha)
     n = 0;
 }
 
+NoArvoreB::~NoArvoreB()
+{
+    delete [] keys;
+    for(int i=0; i <= n; i++)
+        delete filho[i];
+    delete [] filho;
+}
+
 void NoArvoreB::imprime()
 {
     int i;
@@ -25,30 +33,31 @@ void NoArvoreB::imprime()
         filho[i]->imprime();
 }
 
-NoArvoreB* NoArvoreB::noBusca(string userId, string productId)
+NoArvoreB* ArvoreB::auxBusca(string userId, string productId)
 {
-    //procura o indice da chave maior ou igual a k
-    int i = 0;
-    while(i < n && userId + productId > keys[i].getUserId() + keys[i].getProductId())
-        i++;
+    NoArvoreB* atual = raiz;
+    while(atual != nullptr)
+    {
+        int i = 0;
+        while(i < atual->n && userId + productId > atual->keys[i].getUserId() + atual->keys[i].getProductId())
+            i++;
 
-    //se a chave for encontrada retorna o proprio no
-    if(keys[i].getUserId() + keys[i].getProductId() == userId + productId)
-        return this;
+        if(i < atual->n && atual->keys[i].getUserId() + atual->keys[i].getProductId() == userId + productId)
+            return atual;
 
-    //se chegou na folha e nao encontrou retorna null
-    if(folha == true)
-        return NULL;
+        if(atual->folha == true)
+            return nullptr;
 
-    //continua a função recursiva com outro filho
-    return filho[i]->noBusca(userId, productId);
+        atual = atual->filho[i];
+    }
+    return nullptr;
 }
 
 ProductReview* ArvoreB::busca(string userId, string productId)
 {
     NoArvoreB* aux = auxBusca(userId, productId);
-    if(aux == NULL)
-        return NULL;
+    if(aux == nullptr)
+        return nullptr;
     else
         return aux->keys;
 
