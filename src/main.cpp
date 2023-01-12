@@ -17,7 +17,7 @@ using namespace chrono;
 default_random_engine gen;
 
 // número de registros do arquivo de entrada:
-const int MAX = 7824483;
+const int MAX = 10;
 const int NO_MAX_KEYS = 4;
 
 // cria arquivo binário:
@@ -641,32 +641,38 @@ int main(int argc, char const *argv[])
         arvoreB->print();
         
 
-        /*
+
         cout << "Indique o numero de registros que deseja pesquisar na Arvore :" << endl;
         cin >> n;
         ProductReview *reviewsPesquisa = import(path, n);
-        ProductReview *resultados = new ProductReview[n];
 
+        ProductReview *aux;
         for(int i=0; i<n; i++)
         {
-            ProductReview *aux;
+            
             aux = arvoreVP->busca(reviewsPesquisa->getUserId(), reviewsPesquisa->getProductId());
             
             if(aux != NULL)
             {
-                resultados[i] = *aux;
-                cout << "Registro encontrado!" << endl;
+                cout << "Registro encontrado na arvore AB!" << endl;
+                aux->print();
                 
             }else{
-                resultados[i] = ProductReview();
-                resultados[i].setProductId("");
-                resultados[i].setUserId("");
-                resultados[i].setRating(0);
-                resultados[i].setTimestamp("");
+                cout << "Registro nao encontrado na arvore AB!" << endl;
             }
 
-            delete aux;
+            aux = arvoreB->busca(reviewsPesquisa->getUserId(), reviewsPesquisa->getProductId());
+
+            if(aux != NULL)
+            {
+                cout << "Registro encontrado na arvore B!" << endl;
+                aux->print();
+            }else{
+                cout << "Registro nao encontrado na arvore B!" << endl;
+            }
+
         }
+        delete aux;
 
     /*
         for(int i=0; i<n; i++)

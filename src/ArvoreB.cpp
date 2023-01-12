@@ -25,15 +25,15 @@ void NoArvoreB::imprime()
         filho[i]->imprime();
 }
 
-NoArvoreB* NoArvoreB::busca(ProductReview* k)
+NoArvoreB* NoArvoreB::noBusca(string userId, string productId)
 {
     //procura o indice da chave maior ou igual a k
     int i = 0;
-    while(i < n && k->getUserId() + k->getProductId() > keys[i].getUserId() + keys[i].getProductId())
+    while(i < n && userId + productId > keys[i].getUserId() + keys[i].getProductId())
         i++;
 
     //se a chave for encontrada retorna o proprio no
-    if(keys[i].getUserId() + keys[i].getProductId() == k->getUserId() + k->getProductId())
+    if(keys[i].getUserId() + keys[i].getProductId() == userId + productId)
         return this;
 
     //se chegou na folha e nao encontrou retorna null
@@ -41,7 +41,17 @@ NoArvoreB* NoArvoreB::busca(ProductReview* k)
         return NULL;
 
     //continua a função recursiva com outro filho
-    return filho[i]->busca(k);
+    return filho[i]->noBusca(userId, productId);
+}
+
+ProductReview* ArvoreB::busca(string userId, string productId)
+{
+    NoArvoreB* aux = auxBusca(userId, productId);
+    if(aux == NULL)
+        return NULL;
+    else
+        return aux->keys;
+
 }
 
 void ArvoreB::insere(ProductReview* k)
