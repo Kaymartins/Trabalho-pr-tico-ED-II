@@ -10,6 +10,7 @@
 #include "../headers/sorts.h"
 #include "../headers/ArvoreVP.h"
 #include "../headers/ArvoreB.h"
+#include "../headers/Huffman.h"
 
 using namespace std;
 using namespace chrono;
@@ -397,30 +398,47 @@ void treeTest(T arv, ProductReview *vet, int n)
     }
 }
 
-// void compressTest(int method)
-// {
-//     switch(method)
-//     {
-//         case 0: cout << "=== Teste Huffman ===" << endl << endl; break;
-//         case 1: cout << "=== Teste LZ77 ===" << endl << endl; break;
-//         case 2: cout << "=== Teste LZW ===" << endl << endl; break;
-//         default: cout << "Metodo de compressao nao suportado" << endl << endl; break;
-//     }
+string comprime(string s, int i)
+{
+    if(i == 0)
+    {
+        Huffman* h = new Huffman();
+        string comprimido = h->comprime(s);
+        delete h;
+        return comprimido;
+    }else{
+        return "";
+    }
+}
+
+void compressTest(int method)
+{
+    switch(method)
+    {
+        case 0: cout << "=== Teste Huffman ===" << endl << endl; break;
+        case 1: cout << "=== Teste LZ77 ===" << endl << endl; break;
+        case 2: cout << "=== Teste LZW ===" << endl << endl; break;
+        default: cout << "Metodo de compressao nao suportado" << endl << endl; break;
+    }
     
-//     cout << "Testando strings..." << endl;
+    cout << "Testando strings..." << endl;
 
-//     string str = "string qualquer";
-//     string comp = comprime(str, method);
-//     string orig = descomprime(comp, method);
+    string str = "abracadabra";
+    string comp = comprime(str, method);
+    //string orig = descomprime(comp, method);
 
-//     cout << "String comprimida: " << comp << endl;
-//     cout << "String descomprimida: " << orig << endl << endl;
+    cout << "String comprimida: " << comp << endl;
+    //cout << "String descomprimida: " << orig << endl << endl;
 
-//     cout << "Testando arquivos..." << endl;
+    cout << "Testando arquivos..." << endl;
 
-//     comprime(method); // essa função deve comprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsOrig.txt'
-//     descomprime(method); // essa função deve descomprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsComp.bin'
-// }
+    // comprime(method); // essa função deve comprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsOrig.txt'
+    // descomprime(method); // essa função deve descomprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsComp.bin'
+}
+
+
+
+
 
 
 
@@ -430,7 +448,6 @@ int main(int argc, char *argv[])
     {
         // OBS.: TODOS OS ARQUIVOS USADOS NO PROGRAMA (TANTO DE ENTRADA QUANTO DE SAÍDA) DEVEM ESTAR LOCALIZADOS NO DIRETÓRIO FORNECIDO
         // PELO USUÁRIO COMO ARGUMENTO DA LINHA DE COMANDO
-
         std::string path(argv[1]);
         createBinary(path);
 
@@ -486,7 +503,9 @@ int main(int argc, char *argv[])
                     arv_b = new ArvoreB();
                     treeTest(arv_b, vet, n);
                     break;
-
+                case 5:
+                    compressTest(0);
+                    break;
                 default:
                     break;
             }
