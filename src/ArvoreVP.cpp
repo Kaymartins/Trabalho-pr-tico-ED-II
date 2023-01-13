@@ -145,7 +145,7 @@ void imprimirAux(No *raiz)
     imprimirAux(raiz->dir);
 }
 
-void ArvoreVP::imprimir(){
+void ArvoreVP::print(){
     imprimirAux(raiz);
 }
 

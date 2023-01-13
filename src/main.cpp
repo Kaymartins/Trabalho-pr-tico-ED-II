@@ -18,11 +18,14 @@ default_random_engine gen;
 
 // número de registros do arquivo de entrada:
 const int MAX = 7824483;
-const int NO_MAX_KEYS = 4;
+
+string globalPath;
+
 
 // cria arquivo binário:
 void createBinary(string &path)
 {
+    globalPath = path;
     // abre arquivo para leitura:
     ifstream arq(path + "/ratings_Electronics.csv");
 
@@ -96,11 +99,11 @@ void createBinary(string &path)
 }
 
 // retorna um registro de índice i:
-void getReview(string &path, int i)
+void getReview(int i)
 {
 
     // abre o arquivo binário para leitura:
-    ifstream arqBin(path + "/reviews.bin", ios::binary);
+    ifstream arqBin(globalPath + "/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -108,53 +111,48 @@ void getReview(string &path, int i)
         return;
     }
 
-    // declara variáveis auxiliares:
-    string userId, productId, timestamp;
-    float rating;
-
-    // posiciona o cursor no registro i:
-    arqBin.seekg(i * (21 + 10 + sizeof(float) + 10), ios::beg);
-
-    // declara vetores auxiliares de char para armazenar os dados do registro:
-    char *auxUserId = new char[21];
-    char *auxProductId = new char[10];
-    char *auxTimestamp = new char[10];
-    // define final dos vetores de char:
-    auxUserId[21] = '\0';
-    auxProductId[10] = '\0';
-    auxTimestamp[10] = '\0';
-
     // inicializa variável do tipo ProductReview:
     ProductReview *review = new ProductReview;
 
-    arqBin.read(reinterpret_cast<char *>(auxUserId), 21);
-    arqBin.read(reinterpret_cast<char *>(&rating), sizeof(float));
-    arqBin.read(reinterpret_cast<char *>(auxTimestamp), 10);
+    // posiciona o cursor no registro i:
+    arqBin.seekg(i * (21 + 10 + sizeof(float) + 10), ios::beg);
+    
+        // declara vetores auxiliares de char para armazenar os dados do registro:
+        char *auxUserId = new char[21];
+        char *auxProductId = new char[10];
+        char *auxTimestamp = new char[10];
+        // define final dos vetores de char:
+        auxUserId[21] = '\0';
+        auxProductId[10] = '\0';
+        auxTimestamp[10] = '\0';
+        // declara variável auxiliar:
+        float rating;
 
-    // inicializa as variáveis auxiliares com os dados do registro i:
+        // lê os dados do registro:
+        arqBin.read(reinterpret_cast<char *>(auxUserId), 21);
+        arqBin.read(reinterpret_cast<char *>(auxProductId), 10);
+        arqBin.read(reinterpret_cast<char *>(&rating), sizeof(float));
+        arqBin.read(reinterpret_cast<char *>(auxTimestamp), 10);
 
-    userId = auxUserId;
-    productId = auxProductId;
-    timestamp = auxTimestamp;
+        // inicializa as variáveis auxiliares com os dados do registro:
+        string userId = auxUserId;
+        string productId = auxProductId;
+        string timestamp = auxTimestamp;
 
-    // seta os dados para o registro ProductReview:
+        // seta os dados para o registro ProductReview:
+        review->setUserId(userId);
+        review->setProductId(productId);
+        review->setRating(rating);
+        review->setTimestamp(timestamp);
 
-    review->setUserId(userId);
-    review->setProductId(productId);
-    review->setRating(rating);
-    review->setTimestamp(timestamp);
+        // imprime os dados do registro:
+        review->print();
 
-    // imprime os dados do registro:
-    review->print();
-
-    // fecha arquivo binário:
-    arqBin.close();
-
-    // libera memória alocada:
-    delete[] auxUserId;
-    delete[] auxProductId;
-    delete[] auxTimestamp;
-    delete review;
+        // libera memória alocada:
+        delete[] auxUserId;
+        delete[] auxProductId;
+        delete[] auxTimestamp;
+        delete review;
 }
 
 void sort(ProductReview *vet, int n, int methodId, int *metricasOrdenacao)
@@ -220,10 +218,10 @@ int *criaIndices()
 }
 
 // importa n registros aleatórios do arquivo binário:
-ProductReview *import(string &path, int n)
+ProductReview *import(int n)
 {
     // abre o arquivo binário para leitura:
-    ifstream arqBin(path + "/reviews.bin", ios::binary);
+    ifstream arqBin(globalPath + "/reviews.bin", ios::binary);
 
     if (!arqBin.is_open())
     {
@@ -298,7 +296,7 @@ ProductReview *import(string &path, int n)
 // falta tratar colisões e adicionar registros não repetidos:
 void createTable(string &path, int registros)
 {
-    ProductReview *reviews = import(path, registros);
+    ProductReview *reviews = import(registros);
     TabelaHash *hashTable = new TabelaHash(registros);
 
     // atribui valores iniciais para o vetor de objetos RegistroHash:
@@ -322,374 +320,182 @@ void createTable(string &path, int registros)
     delete hashTable;
 }
 
-int main(int argc, char const *argv[])
+void printPrompt(ProductReview *vet, int n)
 {
-    if (argc < 2)
+    char imp;
+    cout << "Imprimir (s/n): ";
+    cin >> imp;
+
+    if(vet == NULL)
+        cout << "ALERTA: ponteiro nulo, nada a imprimir!" << endl;
+    else if(imp == 's')
     {
-        cout << "ERRO: Número de argumentos invalido! Passe a path do arquivo na execucao." << endl;
-        return 0;
+        for(int i = 0; i < n; i++)
+            vet[i].print();
+    }
+}
+
+void printPrompt(ArvoreVP *arv, int n)
+{
+    char imp;
+    cout << "Imprimir (s/n): ";
+    cin >> imp;
+
+    if(arv == NULL)
+        cout << "ALERTA: ponteiro nulo, nada a imprimir!" << endl;
+    else if(imp == 's')
+        arv->print();
+}
+
+void printPrompt(ArvoreB *arv, int n)
+{
+    char imp;
+    cout << "Imprimir (s/n): ";
+    cin >> imp;
+
+    if(arv == NULL)
+        cout << "ALERTA: ponteiro nulo, nada a imprimir!" << endl;
+    else if(imp == 's')
+        arv->print();
+}
+
+ProductReview* randomTest(int n)
+{
+    ProductReview *vet = new ProductReview[n];
+
+    for(int i = 0; i < n; i++)
+    {
+        string u("STR");
+        u += 'a'+rand()%('z'-'a');
+        //vet[i].userId = u; // ou essa linha ou a de baixo pode ser usada, dependendo de como foi implementado (a de baixo é preferencial)
+        vet[i].setUserId(u);
     }
 
-    int sortOrHash;
+    return vet;
+}
 
-    // atribui a path passada como argumento a variável path:
-    string path = argv[1];
+template<typename T>
+void treeTest(T arv, ProductReview *vet, int n)
+{
+    for(int i = 0; i < n; i++)
+        arv->insere(&vet[i]);
+    printPrompt(vet, n);
 
-    // chama a função createBinary para criar o arquivo binário
-
-    ifstream verificaBin(path + "/reviews.bin");
-
-    if (verificaBin.is_open())
+    string userId, productId;
+    cout << "Digite um par (userId, productId) para busca: ";
+    cin >> userId >> productId;
+    while(userId != "quit")
     {
-        int recriarBin;
-        cout << "Arquivo binario ja existe!" << endl;
-        cout << "Deseja recriar o arquivo binario? (1 - Sim / 0 - Nao)" << endl;
-        cin >> recriarBin;
-
-        if (recriarBin)
-        {
-            createBinary(path);
-        }
-    }
-    else
-    {
-        createBinary(path);
-    }
-
-    cout << "Escolha a etapa a ser executada:" << endl;
-
-    cout << "(1) Ordenacao" << endl;
-    cout << "(2) Hashing" << endl;
-    cout << "(3) Teste Arvore AB e Arvore B(em construcao)" << endl;
-    cin >> sortOrHash;
-    cout << endl;
-
-    // Se a opção for 1, chama a função de ordenação
-    if (sortOrHash == 1)
-    {
-        int M = 3;
-        int *N;
-        // quantidade de cojutos de dados para analise
-        int linha = 0;
-        ifstream input(path + "/input.dat");
-        if (!input.is_open())
-        {
-            cout << "Erro ao ler o arquivo input.dat!" << endl;
-            cout << "Os valores serao escolhidos por padrão." << endl;
-
-            N = new int[5];
-            N[0] = 10000;
-            N[1] = 50000;
-            N[2] = 100000;
-            N[3] = 500000;
-            N[4] = 1000000;
-        }
+        ProductReview *p = arv->busca(userId, productId);
+        if(p != NULL)
+            p->print();
         else
-        {
-            while (!input.eof())
-            {
-                string lixo;
-                getline(input, lixo, '\n');
-                linha++;
-            }
-
-            input.seekg(0);
-
-            N = new int[linha];
-
-            linha = 0;
-
-            while (!input.eof())
-            {
-                string strLinha;
-                getline(input, strLinha, '\n');
-                N[linha] = stoi(strLinha);
-                linha++;
-            }
-            input.close();
-        }
-
-        ofstream saida(path + "/saida.txt");
-        saida << "Resultados de eficiência dos métodos de ordenação:\n"
-              << endl;
-
-        double tempo;                           // variável para armazenar o tempo de execução de cada algoritmo
-        double tempoMedio = 0;                  // variável para armazenar o tempo médio de execução de cada algoritmo
-        int metricasOrdenacao[2];               // vetor para armazenar as métricas de comparação de cada algoritmo
-        int metricasOrdenacaoMedia[2] = {0, 0}; // vetor para armazenar as métricas de comparação média de cada algoritmo
-
-        for (int reg = 0; reg < linha; reg++)
-        {
-            tempoMedio = 0;
-            metricasOrdenacaoMedia[0] = 0;
-            metricasOrdenacaoMedia[1] = 0;
-
-            saida << "<<-------------------------- Ordenando " << N[reg] << " registros -------------------------->>" << endl;
-            saida << endl;
-
-            saida << "<<--------------- MergeSort --------------->>" << endl;
-            saida << endl;
-            for (int i = 0; i < M; i++)
-            { // executa o algoritmo de mergeSort para cada conjunto de
-
-                metricasOrdenacao[0] = 0; // zera o vetor de métricas de comparação
-                metricasOrdenacao[1] = 0; // zera o vetor de métricas de troca
-
-                ProductReview *reviews = import(path, N[reg]);
-
-                cout << "Executando MergeSort para " << N[reg] << " registros..." << endl;
-                cout << endl;
-
-                high_resolution_clock::time_point inicio = high_resolution_clock::now();
-
-                sort(reviews, N[reg], 0, metricasOrdenacao);
-                //mergeSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
-
-                
-
-                high_resolution_clock::time_point fim = high_resolution_clock::now();
-
-                tempo = duration_cast<duration<double>>(fim - inicio).count();
-
-                // Escreve no arquivo de saída os resultados de cada execução
-                saida << "Ordenação por MergeSort número " << i + 1 << ":" << endl;
-                saida << "Tempo de execução: " << tempo << " segundos" << endl;
-                saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
-                saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
-                saida << endl;
-
-                // Armazena as métricas de comparação e troca para calcular a média
-                tempoMedio += tempo;
-                metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; // soma as métricas de comparação
-                metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; // soma as métricas de troca
-
-                // Libera Memória
-                delete[] reviews;
-            }
-
-            // Calcula a média das métricas de comparação e troca
-            tempoMedio /= M;                // calcula a média do tempo de execução
-            metricasOrdenacaoMedia[0] /= M; // calcula a média das métricas de comparação
-            metricasOrdenacaoMedia[1] /= M; // calcula a média das métricas de troca
-
-            // Escreve o arquivo de saída com metricas calculadas
-            saida << "Desempenho médio do MergeSort:" << endl;
-            saida << "Tempo médio de execução do Merge Sort: " << tempoMedio << " segundos" << endl;
-            saida << "Número médio de comparações do Merge Sort: " << metricasOrdenacaoMedia[0] << endl;
-            saida << "Número médio de trocas do Merge Sort: " << metricasOrdenacaoMedia[1] << endl;
-            saida << endl;
-            saida << endl;
-
-            tempoMedio = 0;                // calcula a média do tempo de execução
-            metricasOrdenacaoMedia[0] = 0; // calcula a média das métricas de comparação
-            metricasOrdenacaoMedia[1] = 0; // calcula a média das métricas de troca
-
-            saida << "<<--------------- QuickSort --------------->>" << endl;
-            saida << endl;
-
-            for (int i = 0; i < M; i++)
-            { // executa o algoritmo de quickSort para cada conjunto de dados
-
-                metricasOrdenacao[0] = 0; // zera o vetor de métricas de comparação
-                metricasOrdenacao[1] = 0; // zera o vetor de métricas de troca
-
-                ProductReview *reviews = import(path, N[reg]);
-
-                cout << "Executando QuickSort para " << N[reg] << " registros..." << endl;
-                cout << endl;
-
-                high_resolution_clock::time_point inicio = high_resolution_clock::now();
-
-                sort(reviews, N[reg], 1, metricasOrdenacao);
-                //quickSort(reviews, 0, N[reg] - 1, metricasOrdenacao);
-
-                high_resolution_clock::time_point fim = high_resolution_clock::now();
-
-                tempo = duration_cast<duration<double>>(fim - inicio).count();
-
-                // Escreve no arquivo de saída os resultados de cada execução
-                saida << "Ordenação por QuickSort número " << i + 1 << ":" << endl;
-                saida << "Tempo de execução: " << tempo << " segundos" << endl;
-                saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
-                saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
-                saida << endl;
-
-                // Armazena as métricas de comparação e troca para calcular a média
-                tempoMedio += tempo;
-                metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; // soma as métricas de comparação
-                metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; // soma as métricas de troca
-
-                delete[] reviews;
-            }
-
-            // Calcula a média das métricas de comparação e troca
-            tempoMedio /= M;                // calcula a média do tempo de execução
-            metricasOrdenacaoMedia[0] /= M; // calcula a média das métricas de comparação
-            metricasOrdenacaoMedia[1] /= M; // calcula a média das métricas de troca
-
-            // Escreve o arquivo de saída com metricas calculadas
-            saida << "Desempenho médio do QuickSort:" << endl;
-            saida << "Tempo médio de execução do Quick Sort: " << tempoMedio << " segundos" << endl;
-            saida << "Número médio de comparações do Quick Sort: " << metricasOrdenacaoMedia[0] << endl;
-            saida << "Número médio de trocas do Quick Sort: " << metricasOrdenacaoMedia[1] << endl;
-            saida << endl;
-            saida << endl;
-
-            tempoMedio = 0;                // calcula a média do tempo de execução
-            metricasOrdenacaoMedia[0] = 0; // zera o vetor de métricas de comparação
-            metricasOrdenacaoMedia[1] = 0; // zera o vetor de métricas de troca
-
-            saida << "<<--------------- TimSort --------------->>" << endl;
-            saida << endl;
-
-            for (int i = 0; i < M; i++)
-            { // executa o algoritmo de countSort para cada conjunto de dados
-
-                metricasOrdenacao[0] = 0; // zera o vetor de métricas de comparação
-                metricasOrdenacao[1] = 0; // zera o vetor de métricas de troca
-
-                ProductReview *reviews = import(path, N[reg]);
-
-                cout << "Executando TimSort para " << N[reg] << " registros..." << endl;
-                cout << endl;
-
-                high_resolution_clock::time_point inicio = high_resolution_clock::now();
-
-                sort(reviews, N[reg], 2, metricasOrdenacao);
-                //timSort(reviews, N[reg], metricasOrdenacao);
-
-                high_resolution_clock::time_point fim = high_resolution_clock::now();
-
-                tempo = duration_cast<duration<double>>(fim - inicio).count();
-
-                // Escreve no arquivo de saída os resultados de cada execução
-                saida << "Ordenação por TimSort número " << i + 1 << ":" << endl;
-                saida << "Tempo de execução: " << tempo << " segundos" << endl;
-                saida << "Número de comparacões: " << metricasOrdenacao[0] << endl;
-                saida << "Número de trocas: " << metricasOrdenacao[1] << endl;
-                saida << endl;
-
-                // Armazena as métricas de comparação e troca para calcular a média
-                tempoMedio += tempo;
-                metricasOrdenacaoMedia[0] += metricasOrdenacao[0]; // soma as métricas de comparação
-                metricasOrdenacaoMedia[1] += metricasOrdenacao[1]; // soma as métricas de troca
-
-                delete[] reviews;
-            }
-
-            // Calcula a média das métricas de comparação e troca
-            tempoMedio /= M;                // calcula a média do tempo de execução
-            metricasOrdenacaoMedia[0] /= M; // calcula a média das métricas de comparação
-            metricasOrdenacaoMedia[1] /= M; // calcula a média das métricas de troca
-
-            // Escreve o arquivo de saída com metricas calculadas
-            saida << "Desempenho médio do TimSort:" << endl;
-            saida << "Tempo médio de execução do Tim Sort: " << tempoMedio << " segundos" << endl;
-            saida << "Número médio de comparações do Tim Sort: " << metricasOrdenacaoMedia[0] << endl;
-            saida << "Número médio de trocas do Tim Sort: " << metricasOrdenacaoMedia[1] << endl;
-            saida << endl;
-        }
-
-
-
-        saida.close();
-
-        cout << "Arquivo de saida com dados sobre os metodos de ordenacao gerado com sucesso!" << endl;
-    }
-    else if (sortOrHash == 2)
-    {
-        cout << "Indique o numero de registros que deseja importar: ";
-        int n;
-        cin >> n;
-
-        cout << "Importaremos " << n << " registros aleatorios." << endl;
-
-        createTable(path, n);
-
-        return 0;
-    }
-    else if (sortOrHash == 3)
-    {
-        cout << "Indique o numero de registros que deseja importar: ";
-        int n;
-        cin >> n;
-
-        cout << "Importaremos " << n << " registros aleatorios." << endl;
-        ProductReview *reviews = import(path, n);
-        ArvoreVP *arvoreVP = new ArvoreVP();
-        ArvoreB *arvoreB = new ArvoreB(NO_MAX_KEYS);
-
-        cout << "Importacao concluida, vamos criar a arvore VP" << endl;
-
-        for(int i=0; i<n; i++)
-        {
-            arvoreVP->insere(&reviews[i]);
-        }
-
+            cout << "Produto nao encontrado!" << endl;
         
-
-        cout << "Arvore VP criada com sucesso!" << endl;
-
-        //arvoreVP->imprimir();
-
-
-        cout << "Vamos criar a arvore B" << endl;
-        
-
-        cout << "n : " << n << endl;
-
-        for(int i=0; i<n; i++)
-        {
-            arvoreB->insere(&reviews[i]);
-        }
-
-        cout << "Arvore B criada com sucesso!" << endl;
-       
-        //arvoreB->print();
-        
-
-
-        cout << "Indique o numero de registros que deseja pesquisar na Arvore :" << endl;
-        cin >> n;
-        ProductReview *reviewsPesquisa = import(path, n);
-
-        ProductReview *aux;
-
-        for(int i=0; i<n; i++)
-        {
-            ProductReview review = reviewsPesquisa[i];
-
-            aux = arvoreVP->busca(review.getUserId(), review.getProductId());
-
-            if(aux != NULL)
-            {
-                cout << "Registro encontrado na arvore AB!" << endl;
-                aux->print();
-                
-            }else{
-                cout << "Registro nao encontrado na arvore AB!" << endl;
-            }
-
-            aux = arvoreB->busca(review.getUserId(), review.getProductId());
-
-            if(aux != NULL)
-            {
-                cout << "Registro encontrado na arvore B!" << endl;
-                aux->print();
-            }else{
-                cout << "Registro nao encontrado na arvore B!" << endl;
-            }
-
-        }
-        delete aux;
-        delete []reviewsPesquisa;
-        delete []reviews;
-        delete arvoreB;
-        delete arvoreVP;
+        cout << "Digite outro par (userId, productId) para busca: ";
+        cin >> userId >> productId;
     }
-    else
+}
+
+// void compressTest(int method)
+// {
+//     switch(method)
+//     {
+//         case 0: cout << "=== Teste Huffman ===" << endl << endl; break;
+//         case 1: cout << "=== Teste LZ77 ===" << endl << endl; break;
+//         case 2: cout << "=== Teste LZW ===" << endl << endl; break;
+//         default: cout << "Metodo de compressao nao suportado" << endl << endl; break;
+//     }
+    
+//     cout << "Testando strings..." << endl;
+
+//     string str = "string qualquer";
+//     string comp = comprime(str, method);
+//     string orig = descomprime(comp, method);
+
+//     cout << "String comprimida: " << comp << endl;
+//     cout << "String descomprimida: " << orig << endl << endl;
+
+//     cout << "Testando arquivos..." << endl;
+
+//     comprime(method); // essa função deve comprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsOrig.txt'
+//     descomprime(method); // essa função deve descomprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsComp.bin'
+// }
+
+
+
+int main(int argc, char *argv[])
+{
+    if(argc > 1)
     {
-        cout << "Opcao invalida!" << endl;
-        cout << "Fechando do Programa" << endl;
+        // OBS.: TODOS OS ARQUIVOS USADOS NO PROGRAMA (TANTO DE ENTRADA QUANTO DE SAÍDA) DEVEM ESTAR LOCALIZADOS NO DIRETÓRIO FORNECIDO
+        // PELO USUÁRIO COMO ARGUMENTO DA LINHA DE COMANDO
+
+        std::string path(argv[1]);
+        createBinary(path);
+
+        int registerIdx;
+        cout << "Digite um indice de registro (-1 para sair): ";
+        cin >> registerIdx;
+        while (registerIdx != -1)
+        {
+            getReview(registerIdx);
+            cout << "Digite outro indice de registro (-1 para sair): ";
+            cin >> registerIdx;
+        }
+
+        ProductReview *vet = 0;
+        ArvoreVP *arv_vp = 0;
+        ArvoreB *arv_b = 0;
+        int option, n;
+        do
+        {
+            cout << "[1] Vetor de teste" << endl 
+                << "[2] Importar registros" << endl
+                << "[3] Arvore vermelho-preto" << endl
+                << "[4] Arvore B" << endl
+                << "[5] Huffman" << endl
+                << "[6] LZ77" << endl
+                << "[7] LZW" << endl
+                << "[0] Sair" << endl;
+
+            cout << "Digite uma opcao de menu: ";
+            cin >> option;
+            switch (option)
+            {
+                case 1:
+                    n = 10;
+                    delete [] vet;
+                    vet = randomTest(n);
+                    printPrompt(vet, n);
+                    break;
+                case 2:
+                    cout << "Quantos registros deseja importar? ";
+                    cin >> n;
+                    delete [] vet;
+                    vet = import(n);
+                    printPrompt(vet, n);
+                    break;
+                case 3:
+                    delete arv_vp;
+                    arv_vp = new ArvoreVP();
+                    treeTest(arv_vp, vet, n);
+                    break;
+                case 4:
+                    delete arv_b;
+                    arv_b = new ArvoreB();
+                    treeTest(arv_b, vet, n);
+                    break;
+
+                default:
+                    break;
+            }
+        } while(option != 0);
+
+        delete [] vet;
+        delete arv_vp;
+        delete arv_b;
     }
+
+    return 0;
 }
