@@ -34,7 +34,7 @@ class ArvoreVP{
         ArvoreVP() : raiz(NULL){}
         void insere(ProductReview *pr);
         ProductReview* busca(string userId, string productId);
-        void imprimir();
+        void print();
 
 };
 

@@ -5,6 +5,8 @@
 #include <algorithm>
 #include "ProductReview.h"
 
+const int NO_MAX_KEYS = 4;
+
 class NoArvoreB
 {
     ProductReview* keys;
@@ -32,7 +34,7 @@ class ArvoreB
     int t; // grau minimo
 
     public:
-        ArvoreB(int t){ raiz = NULL; this->t = t;}
+        ArvoreB(){ raiz = NULL; this->t = NO_MAX_KEYS;}
         
 
         void print()
