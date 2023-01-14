@@ -426,7 +426,9 @@ void compressTest(int method)
     cout << "Testando strings..." << endl;
 
     string str = "abracadabra";
+    cout << "antes do comprime" << endl;
     string comp = comprime(str, method);
+    cout << "dps" << endl;
     //string orig = descomprime(comp, method);
 
     cout << "String comprimida: " << comp << endl;
@@ -451,7 +453,7 @@ int main(int argc, char *argv[])
         // OBS.: TODOS OS ARQUIVOS USADOS NO PROGRAMA (TANTO DE ENTRADA QUANTO DE SAÍDA) DEVEM ESTAR LOCALIZADOS NO DIRETÓRIO FORNECIDO
         // PELO USUÁRIO COMO ARGUMENTO DA LINHA DE COMANDO
         std::string path(argv[1]);
-        createBinary(path);
+        //createBinary(path);
 
         int registerIdx;
         cout << "Digite um indice de registro (-1 para sair): ";

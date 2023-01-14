@@ -1,81 +1,67 @@
 #ifndef FILA_H_INCLUDED
 #define FILA_H_INCLUDED
 
-#include "Huffman.h"
 #include <iostream>
+#include <string>
+#include "Huffman.h"
+
 using namespace std;
 
-//estrutura de fila adaptada para o Nó do Algoritmo de Huffman
-class Fila
-{
-private:
-    HuffmanNo *queue;
-    int size;
-    HuffmanNo top;
-    void minHeapify(int index);
+class Queue {
+  private:
+    int front, size;
+    int capacity = 96;
+    HuffmanNo* queue;
+    void minHeapify(int i);
 
-public:
-    Fila();
-    ~Fila();
-
-    void push(HuffmanNo value);
-    void pop();
-    int getSize();
-    HuffmanNo getTop();
-
+  public:
+    Queue();
+    ~Queue();
+    bool isFull();
     bool isEmpty();
-    void print();
+    void enqueue(HuffmanNo item);
+    void dequeue();
+    int getSize();
+    HuffmanNo getFront();
 };
 
-Fila::Fila(){
-    this->size = 0;
-    this->queue = new HuffmanNo[96];
+Queue::Queue() {
+  front = this->size = 0;
+  queue = new HuffmanNo[capacity];
 }
 
-Fila::~Fila(){
-    delete[] this->queue;
+Queue::~Queue() {
+  delete[] queue;
 }
 
-bool Fila::isEmpty(){
-    return this->size == 0;
+bool Queue::isFull() {
+  return (this->size == this->capacity);
 }
 
-HuffmanNo Fila::getTop(){
-    if (isEmpty())
-    {
-        cout << "Fila vazia!" << endl;
-        exit(1);    
-    }
-
-    return this->queue[0];
+bool Queue::isEmpty() {
+  return (this->size == 0);
 }
 
-void Fila::push(HuffmanNo element){
-    if (this->size == 96)
-    {
-        cout << "Fila cheia!" << endl;
-        exit(1);
-    }
-    else
-    {
-        this->queue[this->size] = element;
-        this->size++;
-        this->minHeapify(this->size - 1);
-    }
+void Queue::enqueue(HuffmanNo item) {
+  if (isFull()) {
+    return;
+  }
+    this->queue[this->size] = item;
+    this->size++;
+    this->minHeapify(this->size - 1);
 }
 
-void Fila::pop(){
-    if (isEmpty())
-        throw "Fila vazia!";
-    else
-    {
+void Queue::dequeue() {
+  if (isEmpty()) {
+    throw "empty queue";
+  }
         this->queue[0] = this->queue[this->size - 1];
         this->size--;
         this->minHeapify(0);
-    }
+
 }
 
-void Fila::minHeapify(int index){
+void Queue::minHeapify(int index){
     int left = 2 * index + 1;
     int right = 2 * index + 2;
     int smallest = index;
@@ -93,13 +79,17 @@ void Fila::minHeapify(int index){
     }
 }
 
-int Fila::getSize(){
-    return this->size;
+
+HuffmanNo Queue::getFront() {
+  if (isEmpty()) {
+    cout << "empty queue" << endl;
+    exit(0);
+  }
+  return this->queue[this->front];
 }
 
-void Fila::print(){
-    for (int i = 0; i < this->size; i++)
-        cout << this->queue[i].c << " " << this->queue[i].freq << endl;
+int Queue::getSize(){
+    return this->size;
 }
 
 
