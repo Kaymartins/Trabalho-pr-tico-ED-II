@@ -24,6 +24,7 @@ string globalPath;
 unordered_map<char, string> codigo;
 
 
+
 // cria arquivo binário:
 void createBinary(string &path)
 {
@@ -406,10 +407,23 @@ string comprime(string s, int method)
     {   
         Huffman* h = new Huffman();
         comprime = h->comprime(s);
-        
+        codigo = h->getCodigo();
         return comprime;
     }else{
         return comprime;
+    }
+}
+
+string descomprime(string s, int method)
+{
+    string descomprime = "";
+    if(method == 0)
+    {   
+        Huffman* h = new Huffman();
+        descomprime = h->descomprime(s, codigo);
+        return descomprime;
+    }else{
+        return descomprime;
     }
 }
 
@@ -426,13 +440,13 @@ void compressTest(int method)
     cout << "Testando strings..." << endl;
 
     string str = "abracadabra";
-    cout << "antes do comprime" << endl;
+
     string comp = comprime(str, method);
-    cout << "dps" << endl;
-    //string orig = descomprime(comp, method);
+
+    string orig = descomprime(comp, method);
 
     cout << "String comprimida: " << comp << endl;
-    //cout << "String descomprimida: " << orig << endl << endl;
+    cout << "String descomprimida: " << orig << endl << endl;
 
     cout << "Testando arquivos..." << endl;
 

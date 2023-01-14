@@ -86,4 +86,27 @@ void Huffman::print(HuffmanNo* raiz, string str)
     print(raiz->dir, str + "1");
 }
 
+string Huffman::descomprime(string str, unordered_map<char, string> cod)
+{
+    string descomprimido = "";
+    string atual = "";
 
+    for (char c: str)
+    {
+        atual += c;
+        for (auto i: cod)
+        {
+            if (i.second == atual)
+            {
+                descomprimido += i.first;
+                atual = "";
+            }
+        }
+    }
+    return descomprimido;
+}
+
+unordered_map<char, string> Huffman::getCodigo()
+{
+    return codigo;
+}
