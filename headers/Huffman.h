@@ -45,7 +45,8 @@ class Huffman{
     void huffman(string str);
     void print(HuffmanNo* raiz, string str);
     string comprime(string str);
-    string descomprime(string str);
+    string descomprime(string str, unordered_map<char, string> cod);
+    unordered_map<char, string> getCodigo();
     
 };
 
