@@ -398,16 +398,16 @@ void treeTest(T arv, ProductReview *vet, int n)
     }
 }
 
-string comprime(string s, int i)
+string comprime(string s, int method)
 {
-    if(i == 0)
-    {
+    string comprime = "";
+    if(method == 0)
+    {   
         Huffman* h = new Huffman();
-        string comprimido = h->comprime(s);
-        delete h;
-        return comprimido;
+        comprime = h->comprime(s);
+        return comprime;
     }else{
-        return "";
+        return comprime;
     }
 }
 
@@ -449,7 +449,7 @@ int main(int argc, char *argv[])
         // OBS.: TODOS OS ARQUIVOS USADOS NO PROGRAMA (TANTO DE ENTRADA QUANTO DE SAÍDA) DEVEM ESTAR LOCALIZADOS NO DIRETÓRIO FORNECIDO
         // PELO USUÁRIO COMO ARGUMENTO DA LINHA DE COMANDO
         std::string path(argv[1]);
-        createBinary(path);
+        //createBinary(path);
 
         int registerIdx;
         cout << "Digite um indice de registro (-1 para sair): ";
