@@ -414,6 +414,41 @@ string comprime(string s, int method)
     }
 }
 
+void comprime(int metodo)
+{
+    string texto, comprimido;
+    ifstream file(globalPath + "/reviewsOrig.txt"); // abre o arquivo
+
+    if (file.is_open()) { // verifica se o arquivo foi aberto corretamente
+        string line;
+        while (getline(file, line)) { // lê cada linha do arquivo
+            texto += line; // adiciona a linha lida à string
+        }
+        file.close(); // fecha o arquivo
+
+        switch(metodo)
+        {
+            case 0: 
+                cout << "=== Teste Huffman ===" << endl << endl; 
+                cout << "Texto original do arquivo : " << texto << endl;
+                comprimido = comprime(texto, 0);
+                cout << "Texto comprimido : " << comprimido << endl;
+                break;
+        }
+
+        ofstream file2(globalPath + "/reviewsComp.bin" , ios::binary);
+        if(file2.is_open())
+        {
+            file2 << comprimido;
+            file2.close();
+        }else{
+            cout << "Erro ao abrir o arquivo 2." << endl;
+        }
+    } else {
+        cout << "Erro ao abrir o arquivo." << endl;
+    }
+}
+
 string descomprime(string s, int method)
 {
     string descomprime = "";
@@ -427,8 +462,46 @@ string descomprime(string s, int method)
     }
 }
 
+void descomprime(int metodo)
+{
+    string texto, descomprimido;
+    ifstream file(globalPath + "/reviewsComp.bin", ios::binary); // abre o arquivo
+    
+    if(file.is_open()){
+        string line;
+        while (getline(file, line)) { // lê cada linha do arquivo
+            texto += line; // adiciona a linha lida à string
+        }
+        file.close(); // fecha o arquivo
+
+        switch(metodo)
+        {
+            case 0: 
+                cout << "=== Teste Huffman ===" << endl << endl; 
+                cout << "Texto comprimido do arquivo : " << texto << endl;
+                descomprimido = descomprime(texto, 0);
+                cout << "Texto descomprimido : " << descomprimido << endl;
+                break;
+        }
+
+        ofstream file2(globalPath + "/reviewsDesc.txt");
+        if(file2.is_open())
+        {
+            file2 << descomprimido;
+            file2.close();
+        }else{
+            cout << "Erro ao abrir o arquivo 2." << endl;
+        }
+    }else{
+        cout << "Erro ao abrir o arquivo." << endl;
+    }
+}
+
 void compressTest(int method)
 {
+    ifstream input(globalPath + "/reviewsOrig.txt");
+
+    
     switch(method)
     {
         case 0: cout << "=== Teste Huffman ===" << endl << endl; break;
@@ -447,11 +520,11 @@ void compressTest(int method)
 
     cout << "String comprimida: " << comp << endl;
     cout << "String descomprimida: " << orig << endl << endl;
-
+ 
     cout << "Testando arquivos..." << endl;
 
-    // comprime(method); // essa função deve comprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsOrig.txt'
-    // descomprime(method); // essa função deve descomprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsComp.bin'
+    comprime(method); // essa função deve comprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsOrig.txt'
+    descomprime(method); // essa função deve descomprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsComp.bin'
 }
 
 
@@ -467,7 +540,7 @@ int main(int argc, char *argv[])
         // OBS.: TODOS OS ARQUIVOS USADOS NO PROGRAMA (TANTO DE ENTRADA QUANTO DE SAÍDA) DEVEM ESTAR LOCALIZADOS NO DIRETÓRIO FORNECIDO
         // PELO USUÁRIO COMO ARGUMENTO DA LINHA DE COMANDO
         std::string path(argv[1]);
-        //createBinary(path);
+        createBinary(path);
 
         int registerIdx;
         cout << "Digite um indice de registro (-1 para sair): ";
