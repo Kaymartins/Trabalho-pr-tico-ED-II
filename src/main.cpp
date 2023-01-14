@@ -21,6 +21,7 @@ default_random_engine gen;
 const int MAX = 7824483;
 
 string globalPath;
+unordered_map<char, string> codigo;
 
 
 // cria arquivo binário:
@@ -405,6 +406,7 @@ string comprime(string s, int method)
     {   
         Huffman* h = new Huffman();
         comprime = h->comprime(s);
+        
         return comprime;
     }else{
         return comprime;
@@ -449,7 +451,7 @@ int main(int argc, char *argv[])
         // OBS.: TODOS OS ARQUIVOS USADOS NO PROGRAMA (TANTO DE ENTRADA QUANTO DE SAÍDA) DEVEM ESTAR LOCALIZADOS NO DIRETÓRIO FORNECIDO
         // PELO USUÁRIO COMO ARGUMENTO DA LINHA DE COMANDO
         std::string path(argv[1]);
-        //createBinary(path);
+        createBinary(path);
 
         int registerIdx;
         cout << "Digite um indice de registro (-1 para sair): ";

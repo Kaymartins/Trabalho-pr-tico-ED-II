@@ -14,6 +14,18 @@ struct HuffmanNo
     int freq; //frequencia do nó
     HuffmanNo *esq, *dir; //ponteiros para os filhos
 
+    HuffmanNo(char c, int freq)
+    {
+        esq = dir = NULL;
+        this->c = c;
+        this->freq = freq;
+    }
+
+    HuffmanNo()
+    {
+        esq = dir = NULL;
+    }
+
 };
 
 struct comparaNos
@@ -27,12 +39,11 @@ struct comparaNos
 class Huffman{
     private:
         HuffmanNo* raiz;
-        string codigo[256];
-        void codigoHuffman(HuffmanNo* raiz, string str, string codigo[]);
+        unordered_map<char, string> codigo;
+        void codigoHuffman(HuffmanNo* raiz, string str);
     public:
-    HuffmanNo* getNo(char c, int freq, HuffmanNo* esq, HuffmanNo* dir);
     void huffman(string str);
-    
+    void print(HuffmanNo* raiz, string str);
     string comprime(string str);
     string descomprime(string str);
     
