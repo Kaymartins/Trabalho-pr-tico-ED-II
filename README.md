@@ -9,5 +9,5 @@
 4. Execute o comando `./main <caminho para pasta do arquivo csv>` como no exemplo abaixo:
 
 ## Exemplo Execução
-<img src="https://raw.githubusercontent.com/Kaymartins/Trabalho-pr-tico-ED-II/main/images/exemplo.png?token=GHSAT0AAAAAAB3HBSPGB2BIAXTFD6GGRK7EY3UHTPA">
+<img src="https://raw.githubusercontent.com/Kaymartins/Trabalho-pr-tico-ED-II/main/images/exemplo.png?token=GHSAT0AAAAAAB5L6JQ5V7XEQNRI75JRE63KY6EPZ5A">
 
