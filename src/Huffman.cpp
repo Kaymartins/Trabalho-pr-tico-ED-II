@@ -53,6 +53,8 @@ void Huffman::huffman(string str)
     //imprime o código de huffman para cada caractere
     print(raiz, "");
 
+    this->nComparacoes = pq->getComparacoes();
+
 }
 
 
@@ -110,3 +112,12 @@ unordered_map<char, string> Huffman::getCodigo()
 {
     return codigo;
 }
+
+int Huffman::taxaCompressao(string stringOriginal, string stringComprimido )
+{
+    double taxa = (stringComprimido.length()) / 8;
+    taxa = (stringOriginal.length() - taxa) / stringOriginal.length();
+    taxa *= 100;
+    return taxa;
+}
+

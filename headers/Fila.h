@@ -10,6 +10,7 @@ using namespace std;
 class Queue {
   private:
     int front, size;
+    int nComparacao;
     int capacity = 96;
     HuffmanNo* queue;
     void minHeapify(int i);
@@ -23,6 +24,7 @@ class Queue {
     void dequeue();
     int getSize();
     HuffmanNo getFront();
+    int getComparacoes();
 };
 
 Queue::Queue() {
@@ -66,10 +68,17 @@ void Queue::minHeapify(int index){
     int right = 2 * index + 2;
     int smallest = index;
 
-    if (left < this->size && this->queue[left].freq < this->queue[smallest].freq)
+    this->nComparacao++;
+    if (left < this->size && this->queue[left].freq < this->queue[smallest].freq){
         smallest = left;
-    if (right < this->size && this->queue[right].freq < this->queue[smallest].freq)
+    }
+
+    this->nComparacao++;
+    if (right < this->size && this->queue[right].freq < this->queue[smallest].freq){
         smallest = right;
+    }
+
+    this->nComparacao++;
     if (smallest != index)
     {
         HuffmanNo aux = this->queue[index];
@@ -90,6 +99,10 @@ HuffmanNo Queue::getFront() {
 
 int Queue::getSize(){
     return this->size;
+}
+
+int Queue::getComparacoes(){
+    return this->nComparacao;
 }
 
 

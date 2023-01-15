@@ -11,6 +11,7 @@
 #include "../headers/ArvoreVP.h"
 #include "../headers/ArvoreB.h"
 #include "../headers/Huffman.h"
+#include "../headers/LZW.h"
 
 using namespace std;
 using namespace chrono;
@@ -22,7 +23,6 @@ const int MAX = 7824483;
 
 string globalPath;
 unordered_map<char, string> codigo;
-
 
 
 // cria arquivo binário:
@@ -296,110 +296,6 @@ ProductReview *import(int n)
     return reviews;
 }
 
-// falta tratar colisões e adicionar registros não repetidos:
-void createTable(string &path, int registros)
-{
-    ProductReview *reviews = import(registros);
-    TabelaHash *hashTable = new TabelaHash(registros);
-
-    // atribui valores iniciais para o vetor de objetos RegistroHash:
-    for (int i = 0; i < registros; i++)
-    {
-        hashTable->inserirItem(reviews[i].getProductId());
-    }
-
-    cout << "Tabela criada com sucesso!" << endl;
-    cout << endl;
-
-    int p;
-    cout << "Digite a quantidade de produtos mais avaliados que voce deseja visualizar: ";
-    cin >> p;
-
-    hashTable->ordenaTabela(p);
-
-    cout << "Ordenacao concluida com sucesso!" << endl;
-
-    delete[] reviews;
-    delete hashTable;
-}
-
-void printPrompt(ProductReview *vet, int n)
-{
-    char imp;
-    cout << "Imprimir (s/n): ";
-    cin >> imp;
-
-    if(vet == NULL)
-        cout << "ALERTA: ponteiro nulo, nada a imprimir!" << endl;
-    else if(imp == 's')
-    {
-        for(int i = 0; i < n; i++)
-            vet[i].print();
-    }
-}
-
-void printPrompt(ArvoreVP *arv, int n)
-{
-    char imp;
-    cout << "Imprimir (s/n): ";
-    cin >> imp;
-
-    if(arv == NULL)
-        cout << "ALERTA: ponteiro nulo, nada a imprimir!" << endl;
-    else if(imp == 's')
-        arv->print();
-}
-
-void printPrompt(ArvoreB *arv, int n)
-{
-    char imp;
-    cout << "Imprimir (s/n): ";
-    cin >> imp;
-
-    if(arv == NULL)
-        cout << "ALERTA: ponteiro nulo, nada a imprimir!" << endl;
-    else if(imp == 's')
-        arv->print();
-}
-
-ProductReview* randomTest(int n)
-{
-    ProductReview *vet = new ProductReview[n];
-
-    for(int i = 0; i < n; i++)
-    {
-        string u("STR");
-        u += 'a'+rand()%('z'-'a');
-        //vet[i].userId = u; // ou essa linha ou a de baixo pode ser usada, dependendo de como foi implementado (a de baixo é preferencial)
-        vet[i].setUserId(u);
-    }
-
-    return vet;
-}
-
-template<typename T>
-void treeTest(T arv, ProductReview *vet, int n)
-{
-    for(int i = 0; i < n; i++)
-        arv->insere(&vet[i]);
-    printPrompt(vet, n);
-
-    string userId, productId;
-    cout << "Digite um par (userId, productId) para busca: ";
-    cin >> userId >> productId;
-    while(userId != "quit")
-    {
-        ProductReview *p = arv->busca(userId, productId);
-        if(p != NULL)
-            p->print();
-        else
-            cout << "Produto nao encontrado!" << endl;
-        
-        cout << "Digite outro par (userId, productId) para busca: ";
-        cin >> userId >> productId;
-    }
-}
-
 string comprime(string s, int method)
 {
     string comprime = "";
@@ -409,9 +305,17 @@ string comprime(string s, int method)
         comprime = h->comprime(s);
         codigo = h->getCodigo();
         return comprime;
-    }else{
+    }else if(method == 1){
+        //LZ77* lz77 = new LZ77();
+        //comprime = lz77->comprime(s);
+        //codigo = lz77->getCodigo();
+    }else if(method == 2) {
+        LZW* lzw = new LZW();
+        //comprime = lzw->comprime(s);
+        //codigo = lzw->getCodigo();
         return comprime;
     }
+    return comprime;
 }
 
 void comprime(int metodo)
@@ -497,239 +401,13 @@ void descomprime(int metodo)
     }
 }
 
-void compressTest(int method)
+void metricasOrdenacao()
 {
-    ifstream input(globalPath + "/reviewsOrig.txt");
-
-    
-    switch(method)
-    {
-        case 0: cout << "=== Teste Huffman ===" << endl << endl; break;
-        case 1: cout << "=== Teste LZ77 ===" << endl << endl; break;
-        case 2: cout << "=== Teste LZW ===" << endl << endl; break;
-        default: cout << "Metodo de compressao nao suportado" << endl << endl; break;
-    }
-    
-    cout << "Testando strings..." << endl;
-
-    string str = "abracadabra";
-
-    string comp = comprime(str, method);
-
-    string orig = descomprime(comp, method);
-
-    cout << "String comprimida: " << comp << endl;
-    cout << "String descomprimida: " << orig << endl << endl;
- 
-    cout << "Testando arquivos..." << endl;
-
-    comprime(method); // essa função deve comprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsOrig.txt'
-    descomprime(method); // essa função deve descomprimir um texto qualquer armazenado em '/diretorio/contendo/arquivos/reviewsComp.bin'
-}
-
-void metricasArvores()
-{
-    cout << "Inicializando contabilizacao de metricas de execução da arvore VP e da arvore B" << endl;
-    int m = 3;
-    int p = 1000000;
-    int b = 300;
-    int metricasComparacaoArvoreVP[m];
-    double metricasTempoArvoreVP[m];
-    int metricasComparacaoArvoreB[m];
-    double metricasTempoArvoreB[m];
-    int metricasComparacaoArvoreB2[m];
-    double metricasTempoArvoreB2[m];
-
-    ofstream saida(globalPath + "/saida.txt");
-
-            
-            for(int i = 0; i < m; i++)
-            {
-                
-                saida << "EXECUTANDO MÉTRICA " << i+1 << " DE " << m << endl;
-                saida << "Importaremos " << p << " registros aleatorios." << endl;
-                ProductReview *reviews = import(p);
-                ArvoreVP *arvoreVP = new ArvoreVP();
-                ArvoreB *arvoreB = new ArvoreB();
-                ArvoreB *arvoreB2 = new ArvoreB();
-
-                
-
-                saida << "VAMOS CRIAR AS METRICAS DA ARVORE VP" << endl;
-
-                high_resolution_clock::time_point start = high_resolution_clock::now();
-                for(int j=0; j<p; j++)
-                {
-                    arvoreVP->insere(&reviews[j]);
-                }
-                high_resolution_clock::time_point end = high_resolution_clock::now();
-                metricasTempoArvoreVP[i] = duration_cast<duration<double>>(end - start).count();
-
-                ProductReview *reviewsBusca = import(b);
-
-                start = high_resolution_clock::now();
-                for(int j=0; j<b; j++)
-                {
-                    ProductReview review = reviewsBusca[j];
-                    arvoreVP->busca(review.getUserId(), review.getProductId());
-                }
-                end = high_resolution_clock::now();
-
-                metricasTempoArvoreVP[i] += duration_cast<duration<double>>(end - start).count();
-
-                saida << "METRICAS " << i << " DA ARVORE VP CRIADAS : " << endl;
-                saida << "Numero de comparacoes : " << arvoreVP->getComparacoes() << endl;
-                saida << "Tempo : " << metricasTempoArvoreVP[i] << endl;
-
-                saida << "VAMOS CRIAR AS METRICAS DA ARVORE B COM M =  20 " << endl;
-                arvoreB->setT(20);
-                start = high_resolution_clock::now();
-                for(int j=0; j<p; j++)
-                {
-                    arvoreB->insere(&reviews[j]);
-                }
-                end = high_resolution_clock::now();
-                metricasTempoArvoreB[i] = duration_cast<duration<double>>(end - start).count();
-
-                start = high_resolution_clock::now();
-                for(int j=0; j<b; j++)
-                {
-                    ProductReview review = reviewsBusca[j];
-                    arvoreB->busca(review.getUserId(), review.getProductId());
-                }
-                end = high_resolution_clock::now();
-
-                metricasTempoArvoreB[i] += duration_cast<duration<double>>(end - start).count();
-
-                metricasComparacaoArvoreB[i] = arvoreB->getComparacoes();
-
-                saida << "METRICAS" << i << " DA ARVORE B COM M = 20 CRIADAS : " << endl;
-                saida << "Numero de comparacoes : " << arvoreB->getComparacoes() << endl;
-                saida << "Tempo : " << metricasTempoArvoreB[i] << endl;
-                metricasComparacaoArvoreB[i] = arvoreB->getComparacoes();
-
-                saida << "VAMOS CRIAR AS METRICAS DA ARVORE B COM M =  200 " << endl;
-                arvoreB2->setT(200);
-                start = high_resolution_clock::now();
-                for(int j=0; j<p; j++)
-                {
-                    arvoreB2->insere(&reviews[j]);
-                }
-                
-                end = high_resolution_clock::now();
-                metricasTempoArvoreB2[i] = duration_cast<duration<double>>(end - start).count();
-
-                saida << "METRICAS DA CRIACAO DA ARVORE B COM M = 200 : " << endl;
-                saida << "Numero de comparacoes : " << arvoreB2->getComparacoes() << endl;
-                saida << "Tempo : " << metricasTempoArvoreB2[i] << endl;
-
-
-                start = high_resolution_clock::now();
-                for(int j=0; j<b; j++)
-                {
-                    ProductReview review = reviewsBusca[j];
-                    arvoreB2->busca(review.getUserId(), review.getProductId());
-                }
-                end = high_resolution_clock::now();
-
-                metricasTempoArvoreB2[i] += duration_cast<duration<double>>(end - start).count();
-
-                saida << "METRICAS TOTAIS" << i << " DA ARVORE B COM M = 200 CRIADAS : " << endl;
-                saida << "Numero de comparacoes : " << arvoreB2->getComparacoes() << endl;
-                saida << "Tempo : " << metricasTempoArvoreB2[i] << endl;
-                metricasComparacaoArvoreB2[i] = arvoreB2->getComparacoes();
-            }
-
-            double mediaComparacoesArvoreVP = 0;
-            double mediaTempoArvoreVP = 0;
-            double mediaComparacoesArvoreB = 0;
-            double mediaTempoArvoreB = 0;
-            double mediaComparacoesArvoreB2 = 0;
-            double mediaTempoArvoreB2 = 0;
-
-            for(int i = 0; i < m; i++)
-            {
-                mediaComparacoesArvoreVP += metricasComparacaoArvoreVP[i];
-                mediaTempoArvoreVP += metricasTempoArvoreVP[i];
-                mediaComparacoesArvoreB += metricasComparacaoArvoreB[i];
-                mediaTempoArvoreB += metricasTempoArvoreB[i];
-                mediaComparacoesArvoreB2 += metricasComparacaoArvoreB2[i];
-                mediaTempoArvoreB2 += metricasTempoArvoreB2[i];
-            }
-            mediaComparacoesArvoreVP /= m;
-            mediaTempoArvoreVP /= m;
-            mediaComparacoesArvoreB /= m;
-            mediaTempoArvoreB /= m;
-            mediaComparacoesArvoreB2 /= m;
-            mediaTempoArvoreB2 /= m;
-
-            saida << "MÉDIA FINAL ARVORE VP :" << endl;
-            saida << "Numero de comparacoes : " << mediaComparacoesArvoreVP << endl;
-            saida << "Tempo: " << mediaTempoArvoreVP << endl;
-
-            saida << "MÉDIA FINAL ARVORE B COM M = 20:" << endl;
-            saida << "Numero de comparacoes : " << mediaComparacoesArvoreB << endl;
-            saida << "Tempo: " << mediaTempoArvoreB << endl;
-
-            saida << "MÉDIA FINAL ARVORE B COM M = 200:" << endl;
-            saida << "Numero de comparacoes : " << mediaComparacoesArvoreB2 << endl;
-            saida << "Tempo: " << mediaTempoArvoreB2 << endl;
-
-            saida.close();
-}
-
-
-
-int main(int argc, char const *argv[])
-{
-    if (argc < 2)
-    {
-        cout << "ERRO: Número de argumentos invalido! Passe a path do arquivo na execucao." << endl;
-        return 0;
-    }
-
-    int sortOrHash;
-
-    // atribui a path passada como argumento a variável path:
-    string path = argv[1];
-
-    // chama a função createBinary para criar o arquivo binário
-
-    ifstream verificaBin(path + "/reviews.bin");
-
-    if (verificaBin.is_open())
-    {
-        int recriarBin;
-        cout << "Arquivo binario ja existe!" << endl;
-        cout << "Deseja recriar o arquivo binario? (1 - Sim / 0 - Nao)" << endl;
-        cin >> recriarBin;
-
-        if (recriarBin)
-        {
-            createBinary(path);
-        }
-    }
-    else
-    {
-        createBinary(path);
-    }
-
-    cout << "Escolha a etapa a ser executada:" << endl;
-
-    cout << "(1) Ordenacao" << endl;
-    cout << "(2) Hashing" << endl;
-    cout << "(3) Teste Arvore AB e Arvore B(em construcao)" << endl;
-    cin >> sortOrHash;
-    cout << endl;
-
-    // Se a opção for 1, chama a função de ordenação
-    if (sortOrHash == 1)
-    {
-        int M = 3;
+    int M = 3;
         int *N;
         // quantidade de cojutos de dados para analise
         int linha = 0;
-        ifstream input(path + "/input.dat");
+        ifstream input(globalPath + "/input.dat");
         if (!input.is_open())
         {
             cout << "Erro ao ler o arquivo input.dat!" << endl;
@@ -948,110 +626,262 @@ int main(int argc, char const *argv[])
             saida << endl;
         }
 
+    saida.close();
+
+    cout << "Arquivo de saida com dados sobre os metodos de ordenacao gerado com sucesso!" << endl;
+}
+
+void metricasEstruturasBalanceadas()
+{
+    cout << "Inicializando contabilizacao de metricas de execução da arvore VP e da arvore B" << endl;
+    int m = 3;
+    int p = 1000000;
+    int b = 300;
+    int metricasComparacaoArvoreVP[m];
+    double metricasTempoArvoreVP[m];
+    int metricasComparacaoArvoreB[m];
+    double metricasTempoArvoreB[m];
+    int metricasComparacaoArvoreB2[m];
+    double metricasTempoArvoreB2[m];
+
+    ofstream saida(globalPath + "/saida.txt");
+
+            
+            for(int i = 0; i < m; i++)
+            {
+                
+                saida << "<<-------------------------- Executando " << i + 1 << " metrica -------------------------->>" << endl;
+                saida << "Importaremos " << p << " registros aleatorios." << endl;
+                ProductReview *reviews = import(p);
+                ArvoreVP *arvoreVP = new ArvoreVP();
+                ArvoreB *arvoreB = new ArvoreB();
+                ArvoreB *arvoreB2 = new ArvoreB();
+
+                
+
+                saida << "VAMOS CRIAR AS METRICAS DA ARVORE VP" << endl;
+
+                high_resolution_clock::time_point start = high_resolution_clock::now();
+                for(int j=0; j<p; j++)
+                {
+                    arvoreVP->insere(&reviews[j]);
+                }
+                high_resolution_clock::time_point end = high_resolution_clock::now();
+                metricasTempoArvoreVP[i] = duration_cast<duration<double>>(end - start).count();
+
+                ProductReview *reviewsBusca = import(b);
+
+                start = high_resolution_clock::now();
+                for(int j=0; j<b; j++)
+                {
+                    ProductReview review = reviewsBusca[j];
+                    arvoreVP->busca(review.getUserId(), review.getProductId());
+                }
+                end = high_resolution_clock::now();
+
+                metricasTempoArvoreVP[i] += duration_cast<duration<double>>(end - start).count();
+
+                saida << "METRICAS " << i << " DA ARVORE VP CRIADAS : " << endl;
+                saida << "Numero de comparacoes : " << arvoreVP->getComparacoes() << endl;
+                saida << "Tempo : " << metricasTempoArvoreVP[i] << endl;
+                metricasComparacaoArvoreVP[i] = arvoreVP->getComparacoes();
+
+                saida << "VAMOS CRIAR AS METRICAS DA ARVORE B COM M =  20 " << endl;
+                arvoreB->setT(20);
+                start = high_resolution_clock::now();
+                for(int j=0; j<p; j++)
+                {
+                    arvoreB->insere(&reviews[j]);
+                }
+                end = high_resolution_clock::now();
+                metricasTempoArvoreB[i] = duration_cast<duration<double>>(end - start).count();
+
+                start = high_resolution_clock::now();
+                for(int j=0; j<b; j++)
+                {
+                    ProductReview review = reviewsBusca[j];
+                    arvoreB->busca(review.getUserId(), review.getProductId());
+                }
+                end = high_resolution_clock::now();
+
+                metricasTempoArvoreB[i] += duration_cast<duration<double>>(end - start).count();
+
+                metricasComparacaoArvoreB[i] = arvoreB->getComparacoes();
+
+                saida << "METRICAS" << i << " DA ARVORE B COM M = 20 CRIADAS : " << endl;
+                saida << "Numero de comparacoes : " << arvoreB->getComparacoes() << endl;
+                saida << "Tempo : " << metricasTempoArvoreB[i] << endl;
+                metricasComparacaoArvoreB[i] = arvoreB->getComparacoes();
+
+                saida << "VAMOS CRIAR AS METRICAS DA ARVORE B COM M =  200 " << endl;
+                arvoreB2->setT(200);
+                start = high_resolution_clock::now();
+                for(int j=0; j<p; j++)
+                {
+                    arvoreB2->insere(&reviews[j]);
+                }
+                
+                end = high_resolution_clock::now();
+                metricasTempoArvoreB2[i] = duration_cast<duration<double>>(end - start).count();
+
+                start = high_resolution_clock::now();
+                for(int j=0; j<b; j++)
+                {
+                    ProductReview review = reviewsBusca[j];
+                    arvoreB2->busca(review.getUserId(), review.getProductId());
+                }
+                end = high_resolution_clock::now();
+
+                metricasTempoArvoreB2[i] += duration_cast<duration<double>>(end - start).count();
+
+                saida << "METRICAS TOTAIS" << i << " DA ARVORE B COM M = 200 CRIADAS : " << endl;
+                saida << "Numero de comparacoes : " << arvoreB2->getComparacoes() << endl;
+                saida << "Tempo : " << metricasTempoArvoreB2[i] << endl;
+                metricasComparacaoArvoreB2[i] = arvoreB2->getComparacoes();
+
+                delete arvoreVP;
+                delete arvoreB;
+                delete arvoreB2;
+                delete[] reviews;
+                delete[] reviewsBusca;
+            }
 
 
-        saida.close();
 
-        cout << "Arquivo de saida com dados sobre os metodos de ordenacao gerado com sucesso!" << endl;
-    }
-    else if (sortOrHash == 2)
+            double mediaComparacoesArvoreVP = 0;
+            double mediaTempoArvoreVP = 0;
+            double mediaComparacoesArvoreB = 0;
+            double mediaTempoArvoreB = 0;
+            double mediaComparacoesArvoreB2 = 0;
+            double mediaTempoArvoreB2 = 0;
+
+            for(int i = 0; i < m; i++)
+            {
+                mediaComparacoesArvoreVP += metricasComparacaoArvoreVP[i];
+                mediaTempoArvoreVP += metricasTempoArvoreVP[i];
+                mediaComparacoesArvoreB += metricasComparacaoArvoreB[i];
+                mediaTempoArvoreB += metricasTempoArvoreB[i];
+                mediaComparacoesArvoreB2 += metricasComparacaoArvoreB2[i];
+                mediaTempoArvoreB2 += metricasTempoArvoreB2[i];
+            }
+            mediaComparacoesArvoreVP /= m;
+            mediaTempoArvoreVP /= m;
+            mediaComparacoesArvoreB /= m;
+            mediaTempoArvoreB /= m;
+            mediaComparacoesArvoreB2 /= m;
+            mediaTempoArvoreB2 /= m;
+
+            saida << "MÉDIA FINAL ARVORE VP :" << endl;
+            saida << "Numero de comparacoes : " << mediaComparacoesArvoreVP << endl;
+            saida << "Tempo: " << mediaTempoArvoreVP << endl;
+
+            saida << "MÉDIA FINAL ARVORE B COM M = 20:" << endl;
+            saida << "Numero de comparacoes : " << mediaComparacoesArvoreB << endl;
+            saida << "Tempo: " << mediaTempoArvoreB << endl;
+
+            saida << "MÉDIA FINAL ARVORE B COM M = 200:" << endl;
+            saida << "Numero de comparacoes : " << mediaComparacoesArvoreB2 << endl;
+            saida << "Tempo: " << mediaTempoArvoreB2 << endl;
+
+            saida.close();
+}
+
+void metricasMetodosCompressao()
+{
+     cout << "Inicializando contabilizacao de metricas dos metodos de compressao" << endl;
+     int m = 3;
+
+     ofstream saida(globalPath + "/saida.txt"); 
+     for(int i = 0; i < m; i++)
+     {
+        int n = 100;
+
+        ProductReview *reviews = new ProductReview[n];
+        reviews = import(n);
+
+        string cadeia;
+
+        for(int j = 0; j < n; j++)
+        {
+            ProductReview review = reviews[j];
+            cadeia += review.getUserId();
+            cadeia += review.getProductId();
+            cadeia += review.getTimestamp();
+        }
+
+        saida << "<<-------------------------- Executando " << i + 1 << " metrica -------------------------->>" << endl;
+        saida << "Tamanho da cadeia original: " << cadeia.size() << endl;
+        saida << "cadeia original : " << cadeia << endl;
+
+        high_resolution_clock::time_point start = high_resolution_clock::now();
+        Huffman* h = new Huffman();
+        string comprimido = h->comprime(cadeia);
+        codigo = h->getCodigo();
+        high_resolution_clock::time_point end = high_resolution_clock::now();
+        double tempoExec = duration_cast<duration<double>>(end - start).count();
+        saida << "Tamanho da cadeia comprimida: " << comprimido.size() / 8 << endl;
+        saida << "cadeia comprimida : " << comprimido << endl;
+        saida << "Taxa de compressao:" << h->taxaCompressao(cadeia, comprimido) << " porcento" << endl;
+        saida << "Tempo de execucao: " << tempoExec << endl;
+
+     }
+
+} 
+
+
+
+int main(int argc, char const *argv[])
+{
+    if (argc < 2)
     {
-        cout << "Indique o numero de registros que deseja importar: ";
-        int n;
-        cin >> n;
-
-        cout << "Importaremos " << n << " registros aleatorios." << endl;
-
-        createTable(path, n);
-
+        cout << "ERRO: Número de argumentos invalido! Passe a path do arquivo na execucao." << endl;
         return 0;
     }
-    else if (sortOrHash == 3)
+
+    // atribui a path passada como argumento a variável path:
+    string path = argv[1];
+    globalPath = path;
+
+    ifstream verificaBin(path + "/reviews.bin");
+
+    if (verificaBin.is_open())
     {
-        int n;
-        cout << "ESCOLHA SUA OPCAO : " << endl;
-        cout << "1 - ESTRUTURAS BALANCEADAS " << endl;
-        cout << "2 - COMPRESSAO " << endl;
-        cin >> n;
-        
-        if(n == 1){
-            metricasArvores();
+        int recriarBin;
+        cout << "Arquivo binario ja existe!" << endl;
+        cout << "Deseja recriar o arquivo binario? (1 - Sim / 0 - Nao)" << endl;
+        cin >> recriarBin;
 
-            cout << "Importaremos " << n << " registros aleatorios." << endl;
-            ProductReview *reviews = import(n);
-            ArvoreVP *arvoreVP = new ArvoreVP();
-            ArvoreB *arvoreB = new ArvoreB();
-
-            cout << "Importacao concluida, vamos criar a arvore VP" << endl;
-
-            for(int i=0; i<n; i++)
-            {
-                arvoreVP->insere(&reviews[i]);
-            }
-
-            
-
-            cout << "Arvore VP criada com sucesso!" << endl;
-
-            //arvoreVP->imprimir();
-
-
-            cout << "Vamos criar a arvore B" << endl;
-            
-
-            cout << "n : " << n << endl;
-
-            for(int i=0; i<n; i++)
-            {
-                arvoreB->insere(&reviews[i]);
-            }
-
-            cout << "Arvore B criada com sucesso!" << endl;
-        
-            arvoreB->print();
-            
-
-
-            cout << "Indique o numero de registros que deseja pesquisar na Arvore :" << endl;
-            cin >> n;
-            ProductReview *reviewsPesquisa = import(n);
-
-            ProductReview *aux;
-
-            for(int i=0; i<n; i++)
-            {
-                ProductReview review = reviewsPesquisa[i];
-
-                aux = arvoreVP->busca(review.getUserId(), review.getProductId());
-
-                if(aux != NULL)
-                {
-                    cout << "Registro encontrado na arvore AB!" << endl;
-                    aux->print();
-                    
-                }else{
-                    cout << "Registro nao encontrado na arvore AB!" << endl;
-                }
-
-                aux = arvoreB->busca(review.getUserId(), review.getProductId());
-
-                if(aux != NULL)
-                {
-                    cout << "Registro encontrado na arvore B!" << endl;
-                    aux->print();
-                }else{
-                    cout << "Registro nao encontrado na arvore B!" << endl;
-                }
-
-            }
-            delete aux;
-            delete []reviewsPesquisa;
-            delete []reviews;
-            delete arvoreB;
-            delete arvoreVP;
-        } else {
-            cout << "Opcao invalida!" << endl;
-            cout << "Fechando do Programa" << endl;
+        if (recriarBin)
+        {
+            createBinary(path);
         }
+    }
+    else
+    {
+        createBinary(path);
+    }
+
+    cout << "Escolha a etapa a ser executada: " << endl;
+    cout << "1- Metricas dos algoritmos de ordenacao" << endl;
+    cout << "2- Metricas das estruturas balanceadas" << endl;
+    cout << "3- Metricas dos metodos de compressao" << endl;
+
+    int opcao;
+    cin >> opcao;
+
+    switch(opcao)
+    {
+        case 1:
+            metricasOrdenacao();
+            break;
+        case 2:
+            metricasEstruturasBalanceadas();
+            break;
+        case 3:
+            metricasMetodosCompressao();
+            break;
+        default:
+            cout << "Opcao invalida!" << endl;
+            break;
     }
 }

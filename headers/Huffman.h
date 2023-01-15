@@ -39,6 +39,7 @@ struct comparaNos
 class Huffman{
     private:
         HuffmanNo* raiz;
+        int nComparacoes;
         unordered_map<char, string> codigo;
         void codigoHuffman(HuffmanNo* raiz, string str);
     public:
@@ -47,6 +48,9 @@ class Huffman{
     string comprime(string str);
     string descomprime(string str, unordered_map<char, string> cod);
     unordered_map<char, string> getCodigo();
+    int getComparacoes(){return nComparacoes;};
+    int aumentaComparacoes(int n){return nComparacoes += n;};
+    int taxaCompressao(string stringOriginal, string stringComprimido);
     
 };
 

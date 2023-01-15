@@ -40,10 +40,11 @@ NoArvoreB* ArvoreB::auxBusca(string userId, string productId)
     {
         int i = 0;
         while(i < atual->n && userId + productId > atual->keys[i].getUserId() + atual->keys[i].getProductId()){
+            this->comp++;
             i++;
         }
 
-
+        this->comp++;
         if(i < atual->n && atual->keys[i].getUserId() + atual->keys[i].getProductId() == userId + productId)
             return atual;
 
@@ -61,7 +62,6 @@ ProductReview* ArvoreB::busca(string userId, string productId)
 
     NoArvoreB* aux = auxBusca(userId, productId);
 
-    this->comp++;
     if(aux == nullptr)
         return nullptr;
     else
