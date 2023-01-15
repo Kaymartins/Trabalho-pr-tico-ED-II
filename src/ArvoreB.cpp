@@ -39,12 +39,15 @@ NoArvoreB* ArvoreB::auxBusca(string userId, string productId)
     while(atual != nullptr)
     {
         int i = 0;
-        while(i < atual->n && userId + productId > atual->keys[i].getUserId() + atual->keys[i].getProductId())
+        while(i < atual->n && userId + productId > atual->keys[i].getUserId() + atual->keys[i].getProductId()){
             i++;
+        }
+
 
         if(i < atual->n && atual->keys[i].getUserId() + atual->keys[i].getProductId() == userId + productId)
             return atual;
 
+       
         if(atual->folha == true)
             return nullptr;
 
@@ -55,7 +58,10 @@ NoArvoreB* ArvoreB::auxBusca(string userId, string productId)
 
 ProductReview* ArvoreB::busca(string userId, string productId)
 {
+
     NoArvoreB* aux = auxBusca(userId, productId);
+
+    this->comp++;
     if(aux == nullptr)
         return nullptr;
     else
@@ -64,7 +70,9 @@ ProductReview* ArvoreB::busca(string userId, string productId)
 }
 
 void ArvoreB::insere(ProductReview* k)
-{
+{   
+
+    int comp = 0;
     if(raiz == nullptr)
     {
         //se a arvore estiver vazia cria novo nó
@@ -73,6 +81,7 @@ void ArvoreB::insere(ProductReview* k)
         raiz->n = 1; //aumenta o numero de chaves no nó
 
     }else{
+
         //se a raiz estiver cheia aumenta nós da arvore
         if(raiz->n == 2*t-1)
         {
@@ -83,21 +92,24 @@ void ArvoreB::insere(ProductReview* k)
             //operação de split da arvore
             s->divideFilho(0, raiz);
 
+            this->comp++;
             int i = 0;
             if(s->keys[0].getUserId() + s->keys[0].getProductId() < k->getUserId() + k->getProductId())
                 i++;
-            s->filho[i]->insereNaoCheio(k);
+            s->filho[i]->insereNaoCheio(k, comp);
+            aumentaComparacao(comp);
 
             raiz = s;
         }else{
-            raiz->insereNaoCheio(k);
+            raiz->insereNaoCheio(k,comp);
+            aumentaComparacao(comp);
         }
 
     }
 }
 
 //insere uma nova chave no nó que nao esta cheio
-void NoArvoreB::insereNaoCheio(ProductReview* k)
+void NoArvoreB::insereNaoCheio(ProductReview* k, int &comp)
 {
     int i = n-1;
 
@@ -105,6 +117,7 @@ void NoArvoreB::insereNaoCheio(ProductReview* k)
     {
         while(i >= 0 && keys[i].getUserId() + keys[i].getProductId() > k->getUserId() + k->getProductId())
         {
+            comp++;
             keys[i+1] = keys[i];
             i--;
         }
@@ -114,16 +127,19 @@ void NoArvoreB::insereNaoCheio(ProductReview* k)
     }else
     {
         while(i >= 0 && keys[i].getUserId() + keys[i].getProductId() > k->getUserId() + k->getProductId())
+        {
+            comp++;
             i--;
+        }
 
         if(filho[i+1]->n == 2*t-1)
         {
             divideFilho(i+1, filho[i+1]);
-
+            comp++;
             if(keys[i+1].getUserId() + keys[i+1].getProductId() < k->getUserId() + k->getProductId())
                 i++;
         }
-        filho[i+1]->insereNaoCheio(k);
+        filho[i+1]->insereNaoCheio(k, comp);
     }
     
 }
@@ -136,6 +152,7 @@ void NoArvoreB::divideFilho(int i, NoArvoreB *y)
     for(int j = 0; j < t-1; j++)
         z->keys[j] = y->keys[j+t];
 
+
     if( y->folha == false)
     {
         for(int j = 0; j < t; j++)
@@ -143,7 +160,7 @@ void NoArvoreB::divideFilho(int i, NoArvoreB *y)
     }
 
     y->n = t-1;
-
+    
     for(int j = n; j >= i+1; j--)
         filho[j+1] = filho[j];
 

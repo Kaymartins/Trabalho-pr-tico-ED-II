@@ -22,20 +22,28 @@ struct No{
     }
 };
 
+struct Metricas {
+    double comparacoes = 0;
+    double tempo = 0.0000000;
+
+};
+
 class ArvoreVP{
     private:
         No *raiz; 
+        Metricas metricas;
+        void atualizarMetricas(double comparacoes);
     
     protected:
-        void rotacaoEsquerda(No *&, No *&);
-        void rotacaoDireita(No *&, No *&);
-        void balancearInsercao(No *&, No *&);
+        void rotacaoEsquerda(No *&, No *&, int &comparacoes);
+        void rotacaoDireita(No *&, No *&, int &comparacoes);
+        void balancearInsercao(No *&, No *&, int &comparacoes);
     public:
-        ArvoreVP() : raiz(NULL){}
+        ArvoreVP() : raiz(NULL){};
         void insere(ProductReview *pr);
         ProductReview* busca(string userId, string productId);
         void print();
-
+        int getComparacoes();
 };
 
 #endif

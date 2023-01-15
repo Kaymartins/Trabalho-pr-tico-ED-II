@@ -1,15 +1,21 @@
 #include "../headers/RegistroHash.h"
 #include "../headers/ArvoreVP.h"
+#include <chrono>
 
-void ArvoreVP::rotacaoEsquerda(No *&raiz, No *&no){
+using namespace chrono;
+
+void ArvoreVP::rotacaoEsquerda(No *&raiz, No *&no, int &comparacoes){
+
     No *noDir = no->dir;
     no->dir = noDir->esq;
 
+    comparacoes++;
     if(no->dir != NULL)
         no->dir->pai = no;
 
     noDir->pai = no->pai;
 
+    comparacoes++;
     if(no->pai == NULL)
         raiz = noDir;
 
@@ -21,17 +27,21 @@ void ArvoreVP::rotacaoEsquerda(No *&raiz, No *&no){
 
     noDir->esq = no;
     no->pai = noDir;
+
 }
 
-void ArvoreVP::rotacaoDireita(No *&raiz, No *&no){
+void ArvoreVP::rotacaoDireita(No *&raiz, No *&no, int &comparacoes){
+    
     No *noEsq = no->esq;
     no->esq = noEsq->dir;
 
+    comparacoes++;
     if(no->esq != NULL)
         no->esq->pai = no;
 
     noEsq->pai = no->pai;
 
+    comparacoes++;
     if(no->pai == NULL)
         raiz = noEsq;
 
@@ -45,17 +55,19 @@ void ArvoreVP::rotacaoDireita(No *&raiz, No *&no){
     no->pai = noEsq;
 }
 
-void ArvoreVP::balancearInsercao(No *&raiz, No *&no){
+void ArvoreVP::balancearInsercao(No *&raiz, No *&no, int &comparacoes){
+
     No *pai = NULL;
     No *avo = NULL;
 
     while((no != raiz) && (no->cor != PRETO) && (no->pai->cor == VERMELHO)){
         pai = no->pai;
         avo = no->pai->pai;
-
+        comparacoes++;
         if(pai == avo->esq){
             No *tio = avo->dir;
-
+            
+            comparacoes++;
             if(tio != NULL && tio->cor == VERMELHO){
                 avo->cor = VERMELHO;
                 pai->cor = PRETO;
@@ -65,12 +77,10 @@ void ArvoreVP::balancearInsercao(No *&raiz, No *&no){
 
             else{
                 if(no == pai->dir){
-                    rotacaoEsquerda(raiz, pai);
-                    no = pai;
+                    rotacaoEsquerda(raiz, pai, comparacoes);
                     pai = no->pai;
                 }
-
-                rotacaoDireita(raiz, avo);
+                rotacaoDireita(raiz, avo, comparacoes);
                 swap(pai->cor, avo->cor);
                 no = pai;
             }
@@ -79,6 +89,7 @@ void ArvoreVP::balancearInsercao(No *&raiz, No *&no){
         else{
             No *tio = avo->esq;
 
+            comparacoes++;
             if((tio != NULL) && (tio->cor == VERMELHO)){
                 avo->cor = VERMELHO;
                 pai->cor = PRETO;
@@ -87,13 +98,15 @@ void ArvoreVP::balancearInsercao(No *&raiz, No *&no){
             }
 
             else{
+
+                comparacoes++;
+
                 if(no == pai->esq){
-                    rotacaoDireita(raiz, pai);
+                    rotacaoDireita(raiz, pai, comparacoes);
                     no = pai;
                     pai = no->pai;
                 }
-
-                rotacaoEsquerda(raiz, avo);
+                rotacaoEsquerda(raiz, avo, comparacoes);
                 swap(pai->cor, avo->cor);
                 no = pai;
             }
@@ -103,33 +116,46 @@ void ArvoreVP::balancearInsercao(No *&raiz, No *&no){
     raiz->cor = PRETO;
 }
 
-No* ABBInsert(No* raiz, No* no){
-
+No* ABBInsert(No* raiz, No* no, int &comparacoes){
     /*se a arvore é vazia retorna um novo nó*/
+    comparacoes++;
     if(raiz == NULL)
         return no;
 
     /*senão, percorre a arvore*/
+    comparacoes++;
     if(no->id < raiz->id){
-        raiz->esq = ABBInsert(raiz->esq, no);
+        raiz->esq = ABBInsert(raiz->esq, no, comparacoes);
         raiz->esq->pai = raiz;
     }
 
     else if(no->id > raiz->id){
-        raiz->dir = ABBInsert(raiz->dir, no);
+
+        raiz->dir = ABBInsert(raiz->dir, no, comparacoes);
         raiz->dir->pai = raiz;
     }
 
+
+
     /*retorna a raiz (sem alterações)*/
     return raiz;
+
 }
 
 void ArvoreVP::insere(ProductReview* pr){
+    high_resolution_clock::time_point start = high_resolution_clock::now();
+    int *comparacoes = new int;
+    double *tempo = new double;
+    *comparacoes = 0;
+    *tempo = 0;
     No *novo = new No(pr);
     
-    raiz = ABBInsert(raiz, novo);
+    raiz = ABBInsert(raiz, novo, *comparacoes);
 
-    balancearInsercao(raiz, novo);
+    balancearInsercao(raiz, novo, *comparacoes); 
+    high_resolution_clock::time_point end = high_resolution_clock::now();
+    *tempo += duration_cast<std::chrono::duration<double>>(end - start).count();
+    atualizarMetricas(*comparacoes);
 }
 
 
@@ -150,20 +176,36 @@ void ArvoreVP::print(){
 }
 
 ProductReview* ArvoreVP::busca(string userId, string productId){
+    high_resolution_clock::time_point start = high_resolution_clock::now();
     string idBuscado = userId + productId;
+    int comparacoes = 0;
     No *aux = raiz;
     
     while(aux != NULL){
-        if(idBuscado < aux->id)
+        comparacoes++;
+        if(idBuscado < aux->id){
+            atualizarMetricas(comparacoes);
             aux = aux->esq;
-
-        else if(idBuscado > aux->id)
+        }
+        else if(idBuscado > aux->id){
+            atualizarMetricas(comparacoes);
             aux = aux->dir;
 
-        else
+        }else{
+            atualizarMetricas(comparacoes);
             return aux->review;
+        }
     }
+    high_resolution_clock::time_point end = high_resolution_clock::now();
+    double time = duration_cast<duration<double>>(end - start).count();
+    atualizarMetricas(comparacoes);
 
     return NULL;
 }
 
+void ArvoreVP::atualizarMetricas(double comparacoes) {
+    metricas.comparacoes += comparacoes;
+}
+int ArvoreVP::getComparacoes() {
+    return metricas.comparacoes;
+}

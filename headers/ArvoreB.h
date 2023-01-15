@@ -5,7 +5,8 @@
 #include <algorithm>
 #include "ProductReview.h"
 
-const int NO_MAX_KEYS = 4;
+const int NO_MAX_KEYS = 20;
+
 
 class NoArvoreB
 {
@@ -18,7 +19,7 @@ class NoArvoreB
     public:
         NoArvoreB(int t, bool folha);
         ~NoArvoreB();
-        void insereNaoCheio(ProductReview* k);
+        void insereNaoCheio(ProductReview* k, int &comp);
         void divideFilho(int i, NoArvoreB* y);
         void imprime();
         
@@ -27,12 +28,12 @@ friend class ArvoreB;
 
 };
 
-
 class ArvoreB
 {
+    friend class NoArvoreB;
     NoArvoreB *raiz;
     int t; // grau minimo
-
+    int comp;
     public:
         ArvoreB(){ raiz = NULL; this->t = NO_MAX_KEYS;}
         
@@ -47,8 +48,18 @@ class ArvoreB
         ProductReview* busca(string userId, string productId);
 
         void insere(ProductReview* k);
-};
 
+        void setT(int t){this->t = t;};
+
+        int getComparacoes(){
+            return this->comp;
+        }
+
+        void aumentaComparacao(int comp){
+            this->comp += comp;
+        }
+
+};
 
 
 
