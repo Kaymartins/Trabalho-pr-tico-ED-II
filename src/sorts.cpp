@@ -47,16 +47,15 @@ void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrden
 	// realiza a ordenação do vetor original recebido como parâmetro no vetor temporário:
 	while (i <= meio && j <= final)
 	{
+		metricasOrdenacao[0]++;
 		if (a[i].getUserId() < a[j].getUserId())
 		{
-			metricasOrdenacao[0]++;
 			temp[k] = a[i];
 			k++;
 			i++;
 		}
 		else
 		{
-			metricasOrdenacao[0]++;
 			temp[k] = a[j];
 			k++;
 			j++;
@@ -66,6 +65,7 @@ void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrden
 	// aloca os elementos restantes da primeira parte do vetor original no vetor temporário:
 	while (i <= meio)
 	{
+		metricasOrdenacao[1]++;
 		temp[k] = a[i];
 		k++;
 		i++;
@@ -74,6 +74,7 @@ void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrden
 	// aloca os elementos restantes da segunda parte do vetor original no vetor temporário:
 	while (j <= final)
 	{
+		metricasOrdenacao[1]++;
 		temp[k] = a[j];
 		k++;
 		j++;
@@ -82,7 +83,6 @@ void merge(ProductReview *a, int inicio, int final, int meio, int *metricasOrden
 	// aloca os elementos do vetor temporário no vetor original:
 	for (i = inicio; i <= final; i++)
 	{
-		metricasOrdenacao[1]++;
 		a[i] = temp[i - inicio];
 	}
 
@@ -120,18 +120,19 @@ int particao(ProductReview vet[], int inicio, int final, int *metricasOrdenacao)
 	for (int j = inicio; j < final; j++)
 	{
 		// se o valor do elemento do vetor for menor que o pivô, posiciona o elemento no começo do vetor:
+		metricasOrdenacao[0]++;
 		if (vet[j].getUserId() <= pivo)
 		{
-			metricasOrdenacao[0]++;
 			i++;
-			trocar(&vet[i], &vet[j]);
 			metricasOrdenacao[1]++;
+			trocar(&vet[i], &vet[j]);
 		}
 	}
 
 	// troca os elementos do pivô com o elemento do índice "i+1":
-	trocar(&vet[i + 1], &vet[final]);
 	metricasOrdenacao[1]++;
+	trocar(&vet[i + 1], &vet[final]);
+	
 
 	// retorna o índice inicial dessa partição do vetor:
 	return (i + 1);
@@ -201,12 +202,12 @@ void insertionSort(ProductReview *vet, int esq, int dir, int *metricasOrdenacao)
 		int j = i - 1;
 		while (j >= esq && vet[j].getUserId() > temp.getUserId())
 		{
+			metricasOrdenacao[0]++;
 			vet[j + 1] = vet[j];
 			metricasOrdenacao[1]++;
 			j--;
 		}
 		vet[j + 1] = temp;
-		metricasOrdenacao[1]++;
 	}
 }
 

@@ -39,6 +39,7 @@ NoArvoreB* ArvoreB::auxBusca(string userId, string productId)
     while(atual != nullptr)
     {
         int i = 0;
+        this->comp++;
         while(i < atual->n && userId + productId > atual->keys[i].getUserId() + atual->keys[i].getProductId()){
             this->comp++;
             i++;

@@ -35,7 +35,7 @@ class ArvoreB
     int t; // grau minimo
     int comp;
     public:
-        ArvoreB(){ raiz = NULL; this->t = NO_MAX_KEYS;}
+        ArvoreB(){ raiz = NULL; this->t = NO_MAX_KEYS; this->comp = 0;}
         
 
         void print()

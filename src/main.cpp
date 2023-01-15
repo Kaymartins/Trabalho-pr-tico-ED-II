@@ -306,13 +306,9 @@ string comprime(string s, int method)
         codigo = h->getCodigo();
         return comprime;
     }else if(method == 1){
-        //LZ77* lz77 = new LZ77();
-        //comprime = lz77->comprime(s);
-        //codigo = lz77->getCodigo();
+        cout << "LZ77 nao implementado" << endl;
     }else if(method == 2) {
-        LZW* lzw = new LZW();
-        //comprime = lzw->comprime(s);
-        //codigo = lzw->getCodigo();
+        cout << "LZW nao implementado" << endl;
         return comprime;
     }
     return comprime;
@@ -338,6 +334,12 @@ void comprime(int metodo)
                 comprimido = comprime(texto, 0);
                 cout << "Texto comprimido : " << comprimido << endl;
                 break;
+            case 1:
+                cout << "LZ77 nao implementado." << endl;
+                break;
+            case 2:
+                cout << "LZW nao implementado." << endl;
+                break;
         }
 
         ofstream file2(globalPath + "/reviewsComp.bin" , ios::binary);
@@ -362,6 +364,7 @@ string descomprime(string s, int method)
         descomprime = h->descomprime(s, codigo);
         return descomprime;
     }else{
+        cout << "Metodo nao implementado." << endl;
         return descomprime;
     }
 }
@@ -385,6 +388,12 @@ void descomprime(int metodo)
                 cout << "Texto comprimido do arquivo : " << texto << endl;
                 descomprimido = descomprime(texto, 0);
                 cout << "Texto descomprimido : " << descomprimido << endl;
+                break;
+            case 1:
+                cout << "LZ77 NAO IMPLEMENTADO" << endl;
+                break;
+            case 2:
+                cout << "LZW NAO IMPLEMENTADO" << endl;
                 break;
         }
 
@@ -734,7 +743,7 @@ void metricasEstruturasBalanceadas()
 
                 metricasTempoArvoreB2[i] += duration_cast<duration<double>>(end - start).count();
 
-                saida << "METRICAS TOTAIS" << i << " DA ARVORE B COM M = 200 CRIADAS : " << endl;
+                saida << "METRICAS TOTAIS DA ARVORE B COM M = 200 CRIADAS : " << endl;
                 saida << "Numero de comparacoes : " << arvoreB2->getComparacoes() << endl;
                 saida << "Tempo : " << metricasTempoArvoreB2[i] << endl;
                 metricasComparacaoArvoreB2[i] = arvoreB2->getComparacoes();
@@ -792,6 +801,11 @@ void metricasMetodosCompressao()
      int m = 3;
 
      ofstream saida(globalPath + "/saida.txt"); 
+
+    int mediaTamOriginal = 0;
+    int mediaTamComprimido = 0;
+    double mediaTaxa = 0;
+
      for(int i = 0; i < m; i++)
      {
         int n = 100;
@@ -810,8 +824,10 @@ void metricasMetodosCompressao()
         }
 
         saida << "<<-------------------------- Executando " << i + 1 << " metrica -------------------------->>" << endl;
+        saida << "<<--------------------------------------------------------------------------------------->>" << endl;
         saida << "Tamanho da cadeia original: " << cadeia.size() << endl;
         saida << "cadeia original : " << cadeia << endl;
+        mediaTamOriginal += cadeia.size();
 
         high_resolution_clock::time_point start = high_resolution_clock::now();
         Huffman* h = new Huffman();
@@ -822,9 +838,18 @@ void metricasMetodosCompressao()
         saida << "Tamanho da cadeia comprimida: " << comprimido.size() / 8 << endl;
         saida << "cadeia comprimida : " << comprimido << endl;
         saida << "Taxa de compressao:" << h->taxaCompressao(cadeia, comprimido) << " porcento" << endl;
-        saida << "Tempo de execucao: " << tempoExec << endl;
 
+        mediaTamComprimido += comprimido.size() / 8;
+        mediaTaxa += h->taxaCompressao(cadeia, comprimido);
+
+
+        delete h;
+        delete [] reviews;
      }
+     saida << "MÉDIA FINAL METODO HUFFMAN :" << endl;
+     saida << "Tamanho original : " << mediaTamOriginal/m << endl;
+     saida << "Tamanho comprimido : " << mediaTamComprimido/m << endl;
+     saida << "Taxa de compressao : " << mediaTaxa/m << endl;
 
 } 
 
