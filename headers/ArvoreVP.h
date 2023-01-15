@@ -20,6 +20,10 @@ struct No{
         cor = VERMELHO;
         id = review->getUserId() + review->getProductId();
     }
+
+    ProductReview* getReview(){
+        return review;
+    }
 };
 
 struct Metricas {
