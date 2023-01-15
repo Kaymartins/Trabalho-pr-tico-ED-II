@@ -26,7 +26,10 @@ void NoArvoreB::imprime()
     for(i = 0; i < n; i++){
         if(folha == false)
             filho[i]->imprime();
-        cout << " " << keys[i].getUserId() << keys[i].getProductId() << endl; 
+        cout << "userId: " << keys[i].getUserId() << endl; 
+        cout << "productId:" <<  keys[i].getProductId() << endl;
+        cout << "rating:" <<  keys[i].getRating() << endl;
+        cout << "timestamp:" <<  keys[i].getTimestamp() << endl;
     }
 
     if(folha == false)
