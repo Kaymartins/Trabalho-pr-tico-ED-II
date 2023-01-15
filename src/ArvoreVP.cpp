@@ -167,7 +167,11 @@ void imprimirAux(No *raiz)
         return;
 
     imprimirAux(raiz->esq);
-    cout << raiz->id << "  " << endl;
+    ProductReview *pr = raiz->getReview();
+    cout << "userId :" << pr->getUserId() << endl;
+    cout << "productId :" << pr->getProductId() << endl;
+    cout << "rating :" << pr->getRating() << endl;
+    cout << "timestamp :" << pr->getTimestamp() << endl;
     imprimirAux(raiz->dir);
 }
 
